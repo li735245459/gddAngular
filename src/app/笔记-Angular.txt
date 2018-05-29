@@ -30,6 +30,9 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
 1、创建Angular项目:
 	d: && cd D:\WorkSpace\git && ng new gddAngular2
 
+	项目根目录自带.git文件,配置webStorm中github选项的用户名和密码
+	github仓库中新建项目并设置项目下载路劲到webStorm打开项目的Git-Repository-Remotest中
+
 2、下载并安装package.json文件中dependencies下的软件包:
 	d: && cd D:\WorkSpace\git\gddAngular2 && npm install(cnpm有bug)
 
