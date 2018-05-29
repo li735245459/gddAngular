@@ -1,0 +1,40 @@
+1、B3与B4最大的区别就是B4使用弹性盒子来布局,而不是使用浮动来布局
+	1) 弹性盒子是CSS3的一种新的布局模式,没有指定宽度的网格列将自动设置为等宽与等高列
+	2) 提供一种更加有效的方式来对一个容器中的子元素进行排列、对齐和分配空白空间
+		指定盒子类型:
+			display: flex | inline-flex
+		子元素排列方式:
+			flex-direction: row | row-reverse | column | column-reverse
+		子元素在横轴方向上的对齐方式:
+			justify-content: flex-start | flex-end | center | space-between | space-around
+		子元素在纵轴方向上的对齐方式：
+			align-items: flex-start | flex-end | center | baseline | stretch
+		子元素超出父容器时是否换行：
+			flex-wrap: nowrap | wrap | wrap-reverse | initial | inherit
+		子元素如何分配空间:
+			flex: auto | initial | none | inherit |  [ flex-grow ] || [ flex-shrink ] || [ flex-basis ]
+	3) 弹性设计有一个关键地方:Web页面中所有元素都使用“em”单位
+	  使用 em 和 rem 单位可以让我们的设计更加灵活,能够控制元素整体放大缩小,而不是固定大小(boder、width、height、padding、margin、line-height)
+	  rem单位转为像素值由html根元素的字体大小决定。此字体大小会受浏览器中设置的字体大小(默认16px)控制,除非显式重写一个具体单位
+    em单位转为像素值取决于当前元素的字体大小决定。此字体大小受从父元素继承过来的字体大小控制,除非显式重写与一个具体单位
+
+
+
+2、BootStrap核心:网格系统(随着屏幕或视口（viewport）尺寸的增加,统会自动分为最多12列)
+	1)网格类
+		.col- 针对所有设备
+		.col-sm- 平板 - 屏幕宽度等于或大于 576px
+		.col-md- 桌面显示器 - 屏幕宽度等于或大于 768px)
+		.col-lg- 大桌面显示器 - 屏幕宽度等于或大于 992px)
+		.col-xl- 超大桌面显示器 - 屏幕宽度等于或大于 1200px)
+	2)网格系统规则
+		网格每一行需要放在设置了.container(固定宽度)或.container-fluid(全屏宽度)类的容器中,这样就可以自动设置一些外边距与内边距
+
+3、果点点水果店
+  pc后台（Angular+SpringBoot）
+    登陆,注册,后台管理水果
+  小程序前端
+
+
+
+

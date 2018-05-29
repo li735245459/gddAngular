@@ -1,0 +1,193 @@
+﻿TS 是一种由微软开发编程语言,扩展了JS的语法
+  类 Classes
+  接口 Interfaces
+  模块 Modules
+  类型注解 Type annotations
+  编译时类型检查 Compile time type checking
+  Arrow 函数 (类似 C# 的 Lambda 表达式)
+AngularJS 是一款优秀的前端框架,主要考虑的是构建CRUD应用,可以实现前后端分离
+AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种情况用一些更轻量、简单的技术如jQuery可能会更好
+
+配置Angular开发环境:
+	1.安装Node.js®,自带安装NPM(随同NodeJS一起安装的包管理工具)
+		node -v
+		npm -v
+	2.安装Git
+  	git --version
+	3.使用淘宝npm镜像安装Angular-cli:可以创建和管理(测试,构建..)Angular项目
+		npm install -g cnpm --registry=https://registry.npm.taobao.org
+		cnpm install -g @angular/cli
+		ng -v
+		--
+    If you're using Angular CLI 1.0.0-beta.28 or less, you need to uninstall angular-cli package
+      npm uninstall -g angular-cli
+      npm uninstall --save-dev angular-cli
+    update Angular CLI to a new version
+      npm uninstall -g @angular/cli
+      npm cache verify # if npm version is < 5 then use `npm cache clean`
+      npm install -g @angular/cli@latest
+-------------------------------------------------
+1、创建Angular项目:
+	d: && cd D:\WorkSpace\git && ng new gddAngular2
+
+2、下载并安装package.json文件中dependencies下的软件包:
+	d: && cd D:\WorkSpace\git\gddAngular2 && npm install(cnpm有bug)
+
+3、启动Angular应用测试是否成功:
+	d: && cd D:\WorkSpace\git\gddAngular2 && ng serve --host 0.0.0.0 --port 4200
+	-- angular-cli通过代理方式启动:
+	ng serve --proxy-config proxy.config.json
+
+4、创建全局路由模块:
+  参考app.routing.module.ts模块文件(引入到根模块中)
+
+5、配置内存 Web API 包模拟数据服务器:
+  d: && cd D:\WorkSpace\git\gddAngular2 && cnpm install --save angular-in-memory-web-api@latest
+  参考dataSource.ts文件(引入到根模块中)
+
+6、集成bootstrap,font-awesome:
+  d: && cd D:\WorkSpace\git\gddAngular2 && cnpm install --save @ng-bootstrap/ng-bootstrap(引入到根模块中)
+  styles.css导入依赖CSS文件:
+    @import "assets/bootstrap-3.3.7/css/bootstrap.min.css";
+    @import "assets/font-awesome-4.7.0/css/font-awesome.min.css";
+
+7、创建组件等相关内容:  --flat
+  d: && cd D:\WorkSpace\git\gddAngular2
+    ng g c component/demo --module=app
+    ng g c component/demo/demos --module=app
+    ng g s service/demo
+    ng g cl model/demo
+    --
+    ng g d my-new-directive
+    ng g p my-new-pipe
+    ng g g my-new-guard
+    ng g i my-new-interface
+    ng g e my-new-enum
+    ng g m my-module
+    --
+    ng test
+    ng build --prod
+
+======Angular 是用 HTML 和 TypeScript 构建的web前端应用======
+	1)模块(NgModule),至少有一个根模块用于引导应用启动,通常还会有其他功能模块
+	2)组件(指令的一种): 至少有一个根组件
+		每个组件都会定义一个类,包含应用的数据和逻辑
+		组件中的构造函数只做初始化服务操作,持久化操作由ngOnInit负责调用服务来访问数据进行持久化操作
+
+    Angular依赖注入器负责创建服务的实例(不要手动使用new来创建),并把它们注入到指定的组件类的构造函数中,
+      这样就分离了服务和调用者的依赖降低了耦合度
+  3)指令:
+    	内置【结构指令】:
+    	  <div *ngIf="heroes.length > 3">{{myHero}}
+    			<ul>
+    				<li *ngFor="let hero of heroes; let i = index; let odd = odd; let even = even; let first = first; let last = last;" [class.info]="first || last" (click)="selectHero(hero)">
+    				  {{i}}--{{ hero }}
+    				</li>
+    			</ul>
+    			<container-element [ngSwitch]="switch_expression">
+    			  <some-element *ngSwitchCase="match_expression_1">...</some-element>
+    			  <some-element *ngSwitchCase="match_expression_2">...</some-element>
+    			  <some-element *ngSwitchDefault>...</some-element>
+    			</container-element>
+    		</div>
+  4)数据绑定: attribute唯一的作用是用来初始化元素和指令的状态。 当进行数据绑定时,只是在与元素和指令的 property 和事件打交道,而 attribute 就完全靠边站了
+     布尔值flase、数字0、空字符串""、控制null、未定义undefined、特殊数字NaN都表示假值
+
+    #双向绑定
+      <input name="name" [(ngModel)]="usre.name"/>
+      --
+      <input [ngModel]="user.email" (ngModelChange)="user.email = $event">
+
+    #元素的 property 绑定
+      <img [src]="heroImageUrl">
+      <div [class]="'p-a-1' + getClass()"></div>
+      <div [class.bg-success]="flag > 50"></div>
+      <div [style.font-size]="flag > 50 ? '24px' : '12px'"></div>
+      <button [attr.aria-label]="help">help</button>
+    #组件的 property 绑定
+      <app-hero-detail [hero]="currentHero" (deleteRequest)="deleteHero($event)"></app-hero-detail>
+        @Input()  hero: Hero;
+        @Output() deleteRequest = new EventEmitter<Hero>();
+    #指令的 property 绑定
+      <div [ngClass]="{'bg-success':flag > 50,'bg-fail':flag < 50}"></div>
+      <div [ngStyle]="{'font-style':flag > 50 ? 'italic' : 'normal','font-size':flag > 50 ? '24px' : '12px'}"></div>
+    ---
+    #元素的事件绑定
+      <button (click)="onSave($event.target.value)">Save</button>
+    #组件的事件绑定
+      <app-hero-detail (deleteRequest)="deleteHero()"></app-hero-detail>
+    #指令的事件绑定
+      <div (myClick)="clicked=$event">click me</div>
+  5)管道:
+  	{{item.price | currency:'¥':'code'}}
+  	{{"SPORTS STORE" | lowercase}}
+  	{{"SPORTS STORE" | uppercase}}
+  	{{"SPORTS STORE" | slice:0:4}}
+  	{{10 | percent}}
+  	{{'some string' | titlecase}} 将文本转换为titlecase
+  	{{today（'2018-10-29'） | date:'yyyy-MM-dd HH:mm:ss'}} #2018-05-17 09:54:25
+  	{{today | date:'yyyy-MM-dd'}} #2018-05-17
+  	{{today | date:'HH:mm:ss'}} #10:04:05
+  6)生命周期钩子
+    指令与组件共有的钩子
+      ngOnChanges 当数据绑定输入属性的值发生变化时调用
+      ngOnInit    在第一次 ngOnChanges 后调用
+      ngDoCheck   自定义的方法，用于检测和处理值的改变
+      ngOnDestroy 指令销毁前调用
+    组件特有的钩子
+      ngAfterContentInit      组件内容初始化之后调用
+      ngAfterContentChecked   组件每次检查内容时调用
+      ngAfterViewInit         组件相应的视图初始化之后调用
+      ngAfterViewChecked      组件每次检查视图时调用
+  7) 组件之间的交互
+    通过输入型绑定把数据从父组件传到子组件
+    父组件监听子组件的事件
+    父组件调用@ViewChild()来创建子组件对象并读取子组件的属性值或调用子组件的方法
+  8) 动态组件
+  9) 动画
+    Angular 的动画系统赋予了制作各种动画效果的能力，以构建出与原生 CSS 动画性能相同的动画
+  10) 表单:
+    a.模版驱动表单及验证: 异步
+      委托指令在模板创建表单控件,字段越来越多表单难以维护
+      <input type="text" name="email" ngModel>: ngModel 会将 <input> 注册成表单的子控件，这个子控件的名字就是 email
+    b.模型驱动表单及验证: 同步
+      在组件中通过代码的形式创建表单控件
+
+======观察者模式(发布订阅模式)======
+  多个[观察者]对象同时监听某一个[主题]对象,主题对象发生变化时就会通知所有的观察者对象自行更新
+  --
+  订阅：Observer(观察者对象) 通过 Observable 提供的 subscribe() 方法订阅消息
+  发布：Observable(可观察对象) 通过回调 next 方法向 Observer 发布消息
+======RxJS通过Observable实现响应式编程======
+  a.创建可观察对象的函数: fromPromise、interval、fromEvent、ajax、from , of
+    Create an observable from a promise
+    Create an observable from a counter
+    Create an observable from an event
+    Create an observable that creates an AJAX request
+  b.可观察对象常用操作符: map()、filter()、concat() 和 flatMap()
+    const squareOdd = of(1, 2, 3, 4, 5)
+      .pipe(
+        filter(n => n % 2 !== 0),
+        map(n => n * n)
+      );
+======Angular中的Observable======
+  1)事件发送器 EventEmitter,从组件的 @Output() 属性中发布一些值
+  2)HttpClient 从 HTTP 方法调用中返回了可观察对象
+  3)AsyncPipe 会订阅一个可观察对象或承诺，并返回其发出的最后一个值
+  4)路由器 (router)
+  5)响应式表单具有一些属性,它们使用可观察对象来监听表单控件的值
+======HttpClient: 提供了一个简化的API来实现HTTP客户端功能。它基于浏览器提供的XMLHttpRequest接口======
+  a.可测试性、强类型的请求和响应对象、发起请求与接收响应时的拦截器支持，以及更好的、基于可观察（Observable）对象的 API 以及流式错误处理机制
+  b.拦截请求和响应
+    认证 / 授权
+    控制缓存行为。比如 If-Modified-Since
+    XSRF 防护
+======Angular开发中的登陆与身份验证======
+  a.随着 CDN 的应用,移动端的逐渐兴起, Cookies 越来越不能满足复杂的、多域名下的身份验证需求
+  b.使用JWT实现安全认证
+    一个JWT类型的token一般由三部分组成,分别是Header、Payload和Signature,当然有时候会加一个token前缀
+      Header：记录token算法和类型的字段
+      Payload：记录所有数据的JSON对象，真正有效的数据都包含在这里
+      Signature：Signature是签名动作发生的地方,我们使用Base64URL编码头部,接着使用Base64URL编码payoad,然后把这段字符串和密钥一起使用哈希算法加密的结果就是signature.如果token中的信息被篡改了服务端可以根据签名校验发现这个行为
+    JWT的机制是保证了token的不可篡改性,但是不适合用来保存敏感信息
+

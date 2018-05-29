@@ -1,0 +1,127 @@
+<div class="container user-layout">
+  <!--top-->
+  <div class="row text-center top">
+    <div class="col-12">
+      <h1>用户注册{{user.hobby.length==0}}</h1>
+    </div>
+  </div>
+  <!--content-->
+  <div class="row content">
+    <div class="col-12">
+      <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)" style="width:80%;min-width:40em;">
+        <div class="form-group">
+          <div class="alert" [class.alert-danger]="message!='登录成功'" [class.alert-success]="message=='登录成功'"
+               *ngIf="message">{{message}}</div>
+        </div>
+        <div class="form-group form-input-i">
+          <i class="fa fa-user fa-lg"></i>
+          <input type="text" class="form-control" formControlName="name" name="name" [(ngModel)]="user.name"
+                 placeholder="{{formPlaceholder.name.title}}{{formPlaceholder.name.prompt}}">
+        </div>
+        <div class="form-group form-input-i">
+          <i class="fa fa-phone fa-lg"></i>
+          <input type="text" class="form-control" formControlName="phone" name="phone" [(ngModel)]="user.phone"
+                 placeholder="{{formPlaceholder.phone.title}}{{formPlaceholder.phone.prompt}}">
+        </div>
+        <div class="form-group form-input-i">
+          <i class="fa fa-envelope-o fa-lg"></i>
+          <input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"
+                 placeholder="{{formPlaceholder.email.title}}{{formPlaceholder.email.prompt}}">
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <div class="form-input-i">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="password" name="password" [(ngModel)]="user.password"
+                     placeholder="{{formPlaceholder.password.title}}{{formPlaceholder.password.prompt}}">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-input-i">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="rePassword" name="rePassword" [(ngModel)]="user.rePassword"
+                     placeholder="{{formPlaceholder.rePassword.title}}{{formPlaceholder.rePassword.prompt}}">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="radio-inline">
+            性别:
+          </label>
+          &nbsp;
+          <label class="radio-inline">
+            <input type="radio" formControlName="sex" name="sex" value="male" [checked]="user.sex=='male'" [(ngModel)]="user.sex">&nbsp;男
+          </label>
+          &nbsp;
+          <label class="radio-inline">
+            <input type="radio" formControlName="sex" name="sex" value="remale" [checked]="user.sex=='remale'" [(ngModel)]="user.sex">&nbsp;女
+          </label>
+        </div>
+        <div class="form-group">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              爱好:
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="hobby1" value="1" (change)="onCheckHobby($event.target.value)">篮球
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="hobby2" value="2" (change)="onCheckHobby($event.target.value)">足球
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="hobby3" value="3" (change)="onCheckHobby($event.target.value)">排球
+            </label>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-2">
+            <select class="form-control" formControlName="province" name="province" [(ngModel)]="user.province">
+              <option value="">请选择省</option>
+              <option value="1">江苏省</option>
+            </select>
+          </div>
+          <div class="col-2">
+            <select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city">
+              <option value="">请选择市</option>
+              <option value="1">南京市</option>
+            </select>
+          </div>
+          <div class="col-2">
+            <select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area">
+              <option value="">请选择区</option>
+              <option value="1">江宁区</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="form-input-i">
+              <i class="fa fa-home fa-lg"></i>
+              <input type="text" class="form-control" formControlName="address" name="address" [(ngModel)]="user.address"
+                     placeholder="{{formPlaceholder.address.title}}{{formPlaceholder.address.prompt}}">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <textarea class="form-control" rows="3" formControlName="introduce" name="introduce" [(ngModel)]="user.introduce"
+                    placeholder="{{formPlaceholder.introduce.title}}{{formPlaceholder.introduce.prompt}}"></textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-block btn-info" [disabled]="userForm.invalid==true||canSubmit==false||user.hobby.length==0||user.province==''||user.city==''||user.area==''">提交</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!--bottom-->
+  <div class="row text-center bottom">
+    <div class="col-12">
+      <a href="#" routerLink="/login">
+        <span>登陆</span><i class="fa fa-arrow-circle-o-right"></i>
+      </a>
+    </div>
+  </div>
+</div>
