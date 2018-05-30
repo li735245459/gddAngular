@@ -20,7 +20,6 @@ export class UserService {
     private http: HttpClient,
     private logService: LogService) { }
 
-    // --proxy-config proxy.config.json
   register(user: User): Observable<any> {
     return this.http.post<any>(`http://localhost:4200/gdd/user/register`, user, httpOptions).pipe(
       tap(_ => this.logService.show(`register`)),
