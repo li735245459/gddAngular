@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import { interval } from 'rxjs';
+import {interval} from 'rxjs';
 
-import { User } from '../../../model/user';
+import {User} from '../../../model/user';
+import {UserService} from '../../../service/user.service';
 
 @Component({
   selector: 'app-forget-password',
@@ -40,12 +41,17 @@ export class ForgetPasswordComponent implements OnInit {
   });
 
   constructor(
-    private router: Router) { }
+    private router: Router,
+    private userService: UserService) { }
 
   ngOnInit() {
   }
 
-  onGetCodeText(codeText): void {
+  /**
+   * 获取验证码
+   * @param codeText
+   */
+  onGetCodeText(email): void {
     this.canGetCode = false;
     const secondsCounter = interval(1000).subscribe(n => {
       this.seconds = 10 - n;
@@ -55,8 +61,16 @@ export class ForgetPasswordComponent implements OnInit {
         secondsCounter.unsubscribe();
       }
     });
+    console.log(email);
+    this.userService.sendEmail(email, 'forgetPassword').subscribe(result => {
+      console.log(result);
+    });
   }
 
+  /**
+   *  提交表单
+   * @param userForm
+   */
   onSubmit(userForm): void {
     if (userForm.valid) {
       this.user.codeType = 'forgetPassword';

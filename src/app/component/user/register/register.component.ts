@@ -4,6 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {User} from '../../../model/user';
 import {UserService} from '../../../service/user.service';
+import {equal} from 'assert';
 
 @Component({
   selector: 'app-register',
@@ -98,21 +99,14 @@ export class RegisterComponent implements OnInit {
       if (userForm.value.password === userForm.value.rePassword) {
         this.canSubmit = false;
         userForm.value.hobby = this.user.hobby;
-        console.log(userForm.value.password);
-        console.log(userForm.value.rePassword);
-        console.log(this.user.password);
-        console.log(this.user.rePassword);
-        this.userService.register(userForm.value).subscribe((result: any) => {
-            this.message = result.content;
-            if (result.code === 1) {
-              // 注册成功
+        this.userService.register(userForm.value).subscribe(result => {
+            this.message = result.message;
+            if (result.code === 1) {// 注册成功
               this.canSubmit = false;
               setTimeout(() => this.router.navigateByUrl('/login'), 1000);
-            } else if (result.code === 0) {
-              // 注册失败
+            } else if (result.code === 0) { // 注册失败
               this.canSubmit = true;
-            } else if (result.code === -1) {
-              // 该邮箱已被注册
+            } else if (result.code === 2) { // 该邮箱已被注册
               // 将hobby字符串转你成数组
               if (typeof this.user.hobby === 'string') {
                 this.user.hobby = this.user.hobby.split(',');

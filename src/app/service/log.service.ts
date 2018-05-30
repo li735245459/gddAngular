@@ -30,6 +30,10 @@ export class LogService {
 
   handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      console.error(error.status);
+      console.error(error.statusText);
+      console.error(error.url);
+      console.error(error.ok);
       this.show(`${operation} : ${error.message}`);
       return of(result as T);
     };

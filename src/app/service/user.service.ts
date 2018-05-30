@@ -6,6 +6,8 @@ import {Md5} from 'ts-md5';
 
 import { User } from '../model/user';
 import { LogService } from './log.service';
+import {ajax} from 'rxjs/ajax';
+import {Hero} from '../model/hero';
 
 
 const httpOptions = {
@@ -26,26 +28,35 @@ export class UserService {
    * @param {User} user
    * @returns {Observable<User>}
    */
-  register(user: any): Observable<any> {
+  register(userFormValue: any): Observable<any> {
     // 将hobby数组转化成字符串
-    user.hobby = user.hobby.join(',');
+    userFormValue.hobby = userFormValue.hobby.join(',');
     // 对密码进行加密
-    console.log(user);
-    user.password = Md5.hashStr(user.password).toString();
-    user.rePassword = Md5.hashStr(user.rePassword).toString();
-    return this.http.post<any>(`http://localhost:4200/gdd/user/register`, user, httpOptions).pipe(
+    userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString();
+    userFormValue.rePassword = Md5.hashStr(userFormValue.rePassword.trim()).toString();
+    return this.http.post<any>(`http://localhost:4200/gdd/user/register`, userFormValue, httpOptions).pipe(
       tap(_ => this.logService.show(`register success`)),
       catchError(this.logService.handleError<any>('register failed'))
     );
   }
 
-  login(user: any): Observable<any> {
+  login(userFormValue: any): Observable<any> {
     // 对密码进行加密
-    console.log(user);
-    user.password = Md5.hashStr(user.password).toString();
-    return this.http.post<any>(`http://localhost:4200/gdd/user/login`, user, httpOptions).pipe(
+    userFormValue.password = Md5.hashStr(userFormValue.password).toString();
+    return this.http.post<any>(`http://localhost:4200/gdd/user/login`, userFormValue, httpOptions).pipe(
       tap(_ => this.logService.show(`login success`)),
       catchError(this.logService.handleError<any>('login failed'))
+    );
+  }
+
+  /**
+   * 发送邮件 `${this.heroesUrl}/?id=${id}`
+   * @returns {Observable<any>}
+   */
+  sendEmail(email: String, codeType: String): Observable<any> {
+    return this.http.get<any>(`http://localhost:4200/gdd/user/sendEmail/${email}/${codeType}`).pipe(
+      tap(_ => this.logService.show(`sendEmail success`)),
+      catchError(this.logService.handleError<Hero>(`sendEmail failed`))
     );
   }
 }
