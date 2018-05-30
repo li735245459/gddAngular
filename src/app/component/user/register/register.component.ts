@@ -17,11 +17,12 @@ export class RegisterComponent implements OnInit {
   canSubmit = true;
   // User模型
   user: User = {
+    id: '',
     name: '李星',
     phone: '17502503714',
     email: 'lixing_java@163.com',
-    password: 'li12345',
-    rePassword: 'li12345',
+    password: '',
+    rePassword: '',
     sex: 'male',
     hobby: [],
     province: '1',
@@ -75,6 +76,10 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * 选择兴趣爱好
+   * @param hobby
+   */
   onCheckHobby(hobby): void {
     const index = this.user.hobby.indexOf(hobby);
     if (index === -1) {
@@ -84,20 +89,37 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  /**
+   * 提交注册表单
+   * @param userForm
+   */
   onSubmit(userForm): void {
-    // console.log(JSON.stringify(userForm.value));
-    // console.log(JSON.stringify(this.user));
     if (userForm.valid) {
-      // 校验密码是否一致
       if (userForm.value.password === userForm.value.rePassword) {
-        this.user.hobby = this.user.hobby.join(',');
-        // this.http.post<User>('/login').subscribe(
-        //
-        // );
-        // this.message = '注册成功';
-        // setTimeout(() => this.router.navigateByUrl('/login'), 1000);
-        this.userService.register(this.user).subscribe(
-          user => console.log(user)
+        this.canSubmit = false;
+        userForm.value.hobby = this.user.hobby;
+        console.log(userForm.value.password);
+        console.log(userForm.value.rePassword);
+        console.log(this.user.password);
+        console.log(this.user.rePassword);
+        this.userService.register(userForm.value).subscribe((result: any) => {
+            this.message = result.content;
+            if (result.code === 1) {
+              // 注册成功
+              this.canSubmit = false;
+              setTimeout(() => this.router.navigateByUrl('/login'), 1000);
+            } else if (result.code === 0) {
+              // 注册失败
+              this.canSubmit = true;
+            } else if (result.code === -1) {
+              // 该邮箱已被注册
+              // 将hobby字符串转你成数组
+              if (typeof this.user.hobby === 'string') {
+                this.user.hobby = this.user.hobby.split(',');
+              }
+              this.canSubmit = true;
+            }
+          }
         );
       } else {
         this.message = '密码不一致';

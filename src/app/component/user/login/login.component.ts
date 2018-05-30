@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
-import { User } from '../../../model/user';
+import {User} from '../../../model/user';
+import {UserService} from '../../../service/user.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
   // User模型
   user: User = {
     email: 'lixing_java@163.com',
-    password: 'li123456'
+    password: ''
   };
   // User模型字段说明
   userFormPlaceholder = {
@@ -35,24 +36,27 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(
-    private router: Router) { }
+    private router: Router,
+    private userService: UserService) { }
 
   ngOnInit() {
   }
 
+  /**
+   * 提交登录表单
+   * @param userForm
+   */
   onSubmit(userForm): void {
     if (userForm.valid) {
-      console.log(JSON.stringify(this.user));
-      if (userForm.value.email === 'lixing_java@163.com' && userForm.value.password === 'li123456') {
-        this.canSubmit = false;
-        this.messages = '登录成功';
-        setTimeout(() => this.router.navigateByUrl('heroes'), 1000);
-      } else {
-        this.canSubmit = true;
-        this.messages = '登录失败(邮箱或者密码错误)';
-      }
+      console.log(userForm.value.password);
+      this.userService.login(userForm.value).subscribe((result: any) => {
+        this.messages = result.content;
+        if (result.code === 1) {
+          this.canSubmit = false;
+          setTimeout(() => this.router.navigateByUrl('heroes'), 1000);
+        }
+      });
     } else {
-      this.canSubmit = true;
       this.messages = '表单校验失败';
     }
   }

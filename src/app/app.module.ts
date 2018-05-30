@@ -39,7 +39,9 @@ import { UserComponent } from './component/user/user.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule,
+    // ReactiveFormsModule,
+    //Support for using the ngModel input property and ngModelChange event with reactive form directives has been deprecated in Angular v6 and will be removed in Angular v7
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     HttpClientModule,
     // 模拟内存数据,生产环境需要关闭
     // HttpClientInMemoryWebApiModule.forRoot(

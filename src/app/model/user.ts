@@ -1,4 +1,7 @@
 export class User {
+  public id?: string;
+  public create_time?: string;
+  public cover?: string;
   public name?: string;
   public phone?: string;
   public email?: string;
@@ -6,11 +9,11 @@ export class User {
   public rePassword?: string;
   public sex?: string;
   public hobby?: any;
+  public introduce?: string;
   public province?: string;
   public city?: string;
   public area?: string;
   public address?: string;
-  public introduce?: string;
   public codeText?: string;
   public codeType?: string;
   public token?: string;

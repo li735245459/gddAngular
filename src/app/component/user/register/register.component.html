@@ -10,7 +10,7 @@
     <div class="col-12">
       <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)" style="width:80%;min-width:40em;">
         <div class="form-group">
-          <div class="alert" [class.alert-danger]="message!='登录成功'" [class.alert-success]="message=='登录成功'"
+          <div class="alert" [class.alert-danger]="message!='注册成功'" [class.alert-success]="message=='注册成功'"
                *ngIf="message">{{message}}</div>
         </div>
         <div class="form-group form-input-i">

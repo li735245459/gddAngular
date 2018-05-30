@@ -54,8 +54,12 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
   styles.css导入依赖CSS文件:
     @import "assets/bootstrap-3.3.7/css/bootstrap.min.css";
     @import "assets/font-awesome-4.7.0/css/font-awesome.min.css";
+7、引入md5
+  npm install ts-md5 --save
+  import {Md5} from "ts-md5";
+  Md5.hashStr('12334')
 
-7、创建组件等相关内容:  --flat
+8、创建组件等相关内容:  --flat
   d: && cd D:\WorkSpace\git\gddAngular2
     ng g c component/demo --module=app
     ng g c component/demo/demos --module=app

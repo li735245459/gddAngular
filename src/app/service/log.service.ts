@@ -21,7 +21,6 @@ export class LogService {
   }
 
   show(message: string) {
-    // this.log.content.push(this.date.toLocaleString() + `【${message}】`);
     console.log(this.date.toLocaleString() + `【${message}】`);
   }
 
@@ -31,8 +30,7 @@ export class LogService {
 
   handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      // console.error(error); // log to console instead
-      this.show(`${operation} failed: ${error.message}`);
+      this.show(`${operation} : ${error.message}`);
       return of(result as T);
     };
   }
