@@ -39,6 +39,7 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
 3、启动Angular应用测试是否成功:
 	d: && cd D:\WorkSpace\git\gddAngular2 && ng serve --host 0.0.0.0 --port 4200
 	-- angular-cli通过代理方式启动:
+	npm start
 	ng serve --proxy-config proxy.config.json
 
 4、创建全局路由模块:

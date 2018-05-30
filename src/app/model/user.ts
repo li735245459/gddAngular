@@ -5,7 +5,7 @@ export class User {
   public password?: string;
   public rePassword?: string;
   public sex?: string;
-  public hobby?: string[];
+  public hobby?: any;
   public province?: string;
   public city?: string;
   public area?: string;

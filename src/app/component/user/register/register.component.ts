@@ -90,6 +90,7 @@ export class RegisterComponent implements OnInit {
     if (userForm.valid) {
       // 校验密码是否一致
       if (userForm.value.password === userForm.value.rePassword) {
+        this.user.hobby = this.user.hobby.join(',');
         // this.http.post<User>('/login').subscribe(
         //
         // );
