@@ -51,7 +51,7 @@ export class ForgetPasswordComponent implements OnInit {
    * 获取验证码
    * @param codeText
    */
-  onGetCodeText(email): void {
+  onGetCodeText(receiver): void {
     this.canGetCode = false;
     const secondsCounter = interval(1000).subscribe(n => {
       this.seconds = 10 - n;
@@ -61,8 +61,8 @@ export class ForgetPasswordComponent implements OnInit {
         secondsCounter.unsubscribe();
       }
     });
-    console.log(email);
-    this.userService.sendEmail(email, 'forgetPassword').subscribe(result => {
+    console.log(receiver);
+    this.userService.sendEmail(receiver, '1').subscribe(result => {
       console.log(result);
     });
   }

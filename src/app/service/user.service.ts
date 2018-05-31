@@ -6,7 +6,6 @@ import {Md5} from 'ts-md5';
 
 import { User } from '../model/user';
 import { LogService } from './log.service';
-import {ajax} from 'rxjs/ajax';
 import {Hero} from '../model/hero';
 
 
@@ -53,8 +52,8 @@ export class UserService {
    * 发送邮件 `${this.heroesUrl}/?id=${id}`
    * @returns {Observable<any>}
    */
-  sendEmail(email: String, codeType: String): Observable<any> {
-    return this.http.get<any>(`http://localhost:4200/gdd/user/sendEmail/${email}/${codeType}`).pipe(
+  sendEmail(receiver: String, type: String): Observable<any> {
+    return this.http.get<any>(`http://localhost:4200/gdd/user/sendEmail/${receiver}/${type}`).pipe(
       tap(_ => this.logService.show(`sendEmail success`)),
       catchError(this.logService.handleError<Hero>(`sendEmail failed`))
     );
