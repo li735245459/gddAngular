@@ -61,9 +61,9 @@ export class ForgetPasswordComponent implements OnInit {
         secondsCounter.unsubscribe();
       }
     });
-    console.log(receiver);
-    this.userService.sendEmail(receiver, '1').subscribe(result => {
-      console.log(result);
+    this.userService.sendEmail('1', receiver).subscribe(result => {
+      this.message = result.message;
+      this.canGetCode = false;
     });
   }
 
@@ -74,7 +74,6 @@ export class ForgetPasswordComponent implements OnInit {
   onSubmit(userForm): void {
     if (userForm.valid) {
       this.user.codeType = 'forgetPassword';
-      console.log(this.user);
       if (this.user.email === 'lixing_java@163.com' && this.user.codeText === '8888') {
         this.canSubmit = true;
         this.message = '验证码正确';

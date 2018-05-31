@@ -20,16 +20,19 @@ export class LogService {
     private http: HttpClient) {
   }
 
-  show(message: string) {
-    console.log(this.date.toLocaleString() + `【${message}】`);
-  }
-
   clear() {
     this.log.content = [];
   }
 
+  show(message: string) {
+    console.log(this.date.toLocaleString() + `【${message}】`);
+  }
+
   handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      /**
+       * 导航到统一错误页面,错误信息如下
+       */
       console.error(error.status);
       console.error(error.statusText);
       console.error(error.url);

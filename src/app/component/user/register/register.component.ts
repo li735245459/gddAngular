@@ -100,11 +100,11 @@ export class RegisterComponent implements OnInit {
         this.canSubmit = false;
         userForm.value.hobby = this.user.hobby;
         this.userService.register(userForm.value).subscribe(result => {
-            this.message = result.message;
-            if (result.code === 1) {// 注册成功
+            this.message = result.msg;
+            if (result.code === 0) {// 注册成功
               this.canSubmit = false;
               setTimeout(() => this.router.navigateByUrl('/login'), 1000);
-            } else if (result.code === 0) { // 注册失败
+            } else if (result.code === 1) { // 注册失败
               this.canSubmit = true;
             } else if (result.code === 2) { // 该邮箱已被注册
               // 将hobby字符串转你成数组

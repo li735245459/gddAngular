@@ -34,7 +34,7 @@ export class UserService {
     userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString();
     userFormValue.rePassword = Md5.hashStr(userFormValue.rePassword.trim()).toString();
     return this.http.post<any>(`http://localhost:4200/gdd/user/register`, userFormValue, httpOptions).pipe(
-      tap(_ => this.logService.show(`register success`)),
+      tap(_ => this.logService.show(`register`)),
       catchError(this.logService.handleError<any>('register failed'))
     );
   }
@@ -43,7 +43,7 @@ export class UserService {
     // 对密码进行加密
     userFormValue.password = Md5.hashStr(userFormValue.password).toString();
     return this.http.post<any>(`http://localhost:4200/gdd/user/login`, userFormValue, httpOptions).pipe(
-      tap(_ => this.logService.show(`login success`)),
+      tap(_ => this.logService.show(`login`)),
       catchError(this.logService.handleError<any>('login failed'))
     );
   }
@@ -52,9 +52,9 @@ export class UserService {
    * 发送邮件 `${this.heroesUrl}/?id=${id}`
    * @returns {Observable<any>}
    */
-  sendEmail(receiver: String, type: String): Observable<any> {
-    return this.http.get<any>(`http://localhost:4200/gdd/user/sendEmail/${receiver}/${type}`).pipe(
-      tap(_ => this.logService.show(`sendEmail success`)),
+  sendEmail(type: String, receiver: String, ): Observable<any> {
+    return this.http.get<any>(`http://localhost:4200/gdd/user/sendEmail/${type}/${receiver}`).pipe(
+      tap(_ => this.logService.show(`sendEmail`)),
       catchError(this.logService.handleError<Hero>(`sendEmail failed`))
     );
   }

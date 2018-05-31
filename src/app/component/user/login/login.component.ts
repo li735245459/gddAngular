@@ -49,8 +49,8 @@ export class LoginComponent implements OnInit {
   onSubmit(userForm): void {
     if (userForm.valid) {
       this.userService.login(userForm.value).subscribe((result: any) => {
-        this.messages = result.message;
-        if (result.code === 1) {
+        this.messages = result.msg;
+        if (result.code === 0) {
           this.canSubmit = false;
           setTimeout(() => this.router.navigateByUrl('heroes'), 1000);
         }
