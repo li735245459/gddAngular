@@ -12,18 +12,16 @@ import {equal} from 'assert';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  // 表单校验成功后提交到数据库校验结果信息
-  message: string;
-  // true表示激活表单提交按钮,false表示禁用表单提交按钮
-  canSubmit = true;
-  // User模型
-  user: User = {
+  canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
+  checkCode: number; // 0表示校验成功, 1表示校验失败
+  msg: string; // 全局提示信息
+  user: User = { // User模型
     id: '',
     name: '李星',
     phone: '17502503714',
     email: 'lixing_java@163.com',
-    password: '',
-    rePassword: '',
+    password: 'li12345',
+    rePassword: 'li12345',
     sex: 'male',
     hobby: [],
     province: '1',
@@ -32,8 +30,7 @@ export class RegisterComponent implements OnInit {
     address: '谷里街道泉塘公寓12栋403',
     introduce: '',
   };
-  // User模型字段说明
-  formPlaceholder = {
+  formPlaceholder = { // User模型字段说明
     name: {'title': '姓名', 'prompt': '(2~4位汉子)'},
     phone: {'title': '手机号码', 'prompt': '(11位数字)'},
     email: {'title': '邮箱', 'prompt': '(you@example.com)'},
@@ -42,17 +39,16 @@ export class RegisterComponent implements OnInit {
     address: {'title': '详细地址', 'prompt': '(10~20位字符)'},
     introduce: {'title': '自我介绍', 'prompt': ''}
   };
-  // User表单
-  userForm = new FormGroup({
+  userForm = new FormGroup({ // User表单
     name: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[\u4e00-\u9fa5]{2,5}$')] ),
+      Validators.pattern('^[\u4e00-\u9fa5]{2,5}$')]),
     phone: new FormControl('', [
       Validators.required,
-      Validators.pattern('^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9])\\d{8}$')] ),
+      Validators.pattern('^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9])\\d{8}$')]),
     email: new FormControl('', [
       Validators.required,
-      Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')] ),
+      Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]),
     password: new FormControl('', [
       Validators.required,
       Validators.pattern('^[a-zA-Z]\\w{5,9}$')]),
@@ -72,13 +68,17 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService) { }
+    private userService: UserService) {
+  }
 
   ngOnInit() {
   }
 
   /**
-   * 选择兴趣爱好
+   * 选择爱好
+   *  选择时会将其id添加到hobby数组中
+   *  提交注册时会将hobby数组转化成hobby字符串
+   *  注册失败则在回调函数中将hobby字符串重新转换成hobby数组
    * @param hobby
    */
   onCheckHobby(hobby): void {
@@ -98,28 +98,38 @@ export class RegisterComponent implements OnInit {
     if (userForm.valid) {
       if (userForm.value.password === userForm.value.rePassword) {
         this.canSubmit = false;
+        this.checkCode = 0;
+        this.msg = '表单校验成功';
         userForm.value.hobby = this.user.hobby;
         this.userService.register(userForm.value).subscribe(result => {
-            this.message = result.msg;
-            if (result.code === 0) {// 注册成功
-              this.canSubmit = false;
+            /**
+             * 注册回调
+             */
+            if (result.code === 0) {
+              this.checkCode = 0;
+              this.msg = '注册成功';
               setTimeout(() => this.router.navigateByUrl('/login'), 1000);
-            } else if (result.code === 1) { // 注册失败
+            } else if (result.code === 13) {
               this.canSubmit = true;
-            } else if (result.code === 2) { // 该邮箱已被注册
-              // 将hobby字符串转你成数组
+              this.checkCode = 1;
+              this.msg = '邮箱已被注册';
               if (typeof this.user.hobby === 'string') {
-                this.user.hobby = this.user.hobby.split(',');
+                this.user.hobby = this.user.hobby.split(','); // 将hobby字符串转化成hobby数组
               }
+            } else {
               this.canSubmit = true;
+              this.checkCode = 1;
+              this.msg = result.msg;
             }
           }
         );
       } else {
-        this.message = '密码不一致';
+        this.checkCode = 1;
+        this.msg = '密码不一致';
       }
     } else {
-      this.message = '表单校验失败';
+      this.checkCode = 1;
+      this.msg = '表单校验失败';
     }
   }
 }

@@ -10,8 +10,8 @@
     <div class="col-12">
       <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)" style="width:80%;min-width:40em;">
         <div class="form-group">
-          <div class="alert" [class.alert-danger]="message!='注册成功'" [class.alert-success]="message=='注册成功'"
-               *ngIf="message">{{message}}</div>
+          <!--[class.alert-success]="checkCode==0" [class.alert-danger]="checkCode==1"-->
+          <div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
         </div>
         <div class="form-group form-input-i">
           <i class="fa fa-user fa-lg"></i>
@@ -65,17 +65,17 @@
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby1" value="1" (change)="onCheckHobby($event.target.value)">篮球
+              <input type="checkbox" class="form-check-input" name="hobby1" value=1 (change)="onCheckHobby($event.target.value)">篮球
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby2" value="2" (change)="onCheckHobby($event.target.value)">足球
+              <input type="checkbox" class="form-check-input" name="hobby2" value=2 (change)="onCheckHobby($event.target.value)">足球
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby3" value="3" (change)="onCheckHobby($event.target.value)">排球
+              <input type="checkbox" class="form-check-input" name="hobby3" value=3 (change)="onCheckHobby($event.target.value)">排球
             </label>
           </div>
         </div>

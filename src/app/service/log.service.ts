@@ -1,43 +1,35 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
 
-import { Log } from '../model/log';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
+import {Log} from '../model/log';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LogService {
-  private logUrl = 'api/heroes';
   log = new Log();
   date = new Date();
 
-  constructor(
-    private http: HttpClient) {
+  constructor() {
   }
 
   clear() {
     this.log.content = [];
   }
 
-  show(message: string) {
-    console.log(this.date.toLocaleString() + `【${message}】`);
+  print(message: string) {
+    console.log(this.date.toLocaleString() + ` 当前操作--${message}`);
   }
 
-  handleError<T> (operation = 'operation', result?: T) {
+  handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      /**
-       * 导航到统一错误页面,错误信息如下
-       */
-      console.error(error.status);
-      console.error(error.statusText);
-      console.error(error.url);
-      console.error(error.ok);
-      this.show(`${operation} : ${error.message}`);
+      // console.error(error);
+      // console.error(error.status); // 0
+      // console.error(error.statusText); // Unknown Error
+      // console.error(error.url); // null
+      // console.error(error.ok); // false
+      // console.error(error.message); // Http failure response for (unknown url): 0 Unknown Error
+      this.print(`${operation} : ${error.message}`);
       return of(result as T);
     };
   }

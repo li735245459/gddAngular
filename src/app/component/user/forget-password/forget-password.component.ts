@@ -12,37 +12,32 @@ import {UserService} from '../../../service/user.service';
   styleUrls: ['./forget-password.component.css']
 })
 export class ForgetPasswordComponent implements OnInit {
-  // 表单校验成功后提交到数据库校验结果信息
-  message: string;
-  // true表示激活表单提交按钮,false表示禁用表单提交按钮
-  canSubmit = true;
-  // true表示激活发送验证码按钮,false表示禁用发送验证码按钮
-  canGetCode = true;
-  // 倒计时
-  seconds = 0;
-  // User模型
-  user: User = {
+  canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
+  checkCode: number; // 0表示成功,1表示失败
+  msg: string; // 全局提示信息
+  second = 10; // 倒计时等待时间,单位秒
+  waitSeconds = 0;
+  user: User = { // User模型
     email: 'lixing_java@163.com',
-    codeText: '8888'
+    code: ''
   };
-  // User模型字段说明
-  userFormPlaceholder = {
+  formPlaceholder = { // User模型字段说明
     email: {'title': '邮箱', 'prompt': 'you@example.com'},
-    codeText: {'title': '验证码', 'prompt': '8888'},
+    code: {'title': '验证码', 'prompt': '8888'},
   };
-  // User表单
-  userForm = new FormGroup({
+  userForm = new FormGroup({ // User表单
     email: new FormControl('', [
       Validators.required,
-      Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')] ),
-    codeText: new FormControl('', [
+      Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]),
+    code: new FormControl('', [
       Validators.required,
       Validators.pattern('^[A-Za-z0-9]{4}$')])
   });
 
   constructor(
     private router: Router,
-    private userService: UserService) { }
+    private userService: UserService) {
+  }
 
   ngOnInit() {
   }
@@ -52,18 +47,20 @@ export class ForgetPasswordComponent implements OnInit {
    * @param codeText
    */
   onGetCodeText(receiver): void {
-    this.canGetCode = false;
     const secondsCounter = interval(1000).subscribe(n => {
-      this.seconds = 10 - n;
-      if (this.seconds === 1) {
-        this.canGetCode = true;
-        this.seconds = 0;
+      this.waitSeconds = this.second - n;
+      if (this.waitSeconds === 0) {
         secondsCounter.unsubscribe();
       }
     });
     this.userService.sendEmail('1', receiver).subscribe(result => {
-      this.message = result.message;
-      this.canGetCode = false;
+      if (result.code === 0) {
+        this.checkCode = 0;
+        this.msg = '验证码发送成功,注意查收';
+      } else {
+        this.checkCode = 1;
+        this.msg = result.code;
+      }
     });
   }
 
@@ -73,17 +70,24 @@ export class ForgetPasswordComponent implements OnInit {
    */
   onSubmit(userForm): void {
     if (userForm.valid) {
-      this.user.codeType = 'forgetPassword';
-      if (this.user.email === 'lixing_java@163.com' && this.user.codeText === '8888') {
-        this.canSubmit = true;
-        this.message = '验证码正确';
-        setTimeout(() => this.router.navigateByUrl('modifyPassword' + '?email=' + this.user.email), 500);
-      } else {
-        this.canSubmit = true;
-        this.message = '验证码错误';
-      }
+      this.canSubmit = false;
+      this.checkCode = 0;
+      this.msg = '表单校验成功';
+      this.userService.checkEmailCode('1', userForm.value.email, userForm.value.code).subscribe(result => {
+        if (result.code === 0) {
+          this.canSubmit = false;
+          this.checkCode = 0;
+          this.msg = '邮箱、验证码正确';
+          setTimeout(() => this.router.navigateByUrl('/modifyPassword?email=' + this.user.email), 500);
+        } else {
+          this.canSubmit = true;
+          this.checkCode = 1;
+          this.msg = result.msg;
+        }
+      });
     } else {
-      this.canSubmit = true;
+      this.checkCode = 1;
+      this.msg = '表单校验失败';
     }
   }
 

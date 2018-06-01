@@ -5,7 +5,7 @@ import { HeroesComponent } from './component/hero/heroes/heroes.component';
 import { HeroComponent } from './component/hero/hero.component';
 import { DashboardComponent} from './component/hero/dashboard/dashboard.component';
 import { SearchComponent } from './component/hero/search/search.component';
-import { Page404Component } from './component/page404/page404.component';
+import {ErrorComponent} from './component/error/error.component';
 import { LoginComponent } from './component/user/login/login.component';
 import { RegisterComponent } from './component/user/register/register.component';
 import { ModifyPasswordComponent } from './component/user/modify-password/modify-password.component';
@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'modifyPassword', component: ModifyPasswordComponent },
-  { path: '**', component: Page404Component },
+  { path: '**', component: ErrorComponent },
 ];
 
 /**

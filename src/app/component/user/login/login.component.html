@@ -10,19 +10,20 @@
     <div class="col-12">
       <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">
         <div class="form-group">
-          <div class="alert" [class.alert-danger]="messages!='登录成功'" [class.alert-success]="messages=='登录成功'"
-               *ngIf="messages">{{messages}}
+          <div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'"
+               *ngIf="msg">{{msg}}
           </div>
         </div>
         <div class="form-group form-input-i">
           <i class="fa fa-envelope-o fa-lg"></i>
           <input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"
-                 placeholder="{{userFormPlaceholder.email.title}}">
+                 placeholder="{{formPlaceholder.email.title}}">
         </div>
         <div class="form-group form-input-i">
           <i class="fa fa-key fa-lg"></i>
-          <input type="password" class="form-control" formControlName="password" name="password" [(ngModel)]="user.password"
-                 placeholder="{{userFormPlaceholder.password.title}}">
+          <input type="password" class="form-control" formControlName="password" name="password"
+                 [(ngModel)]="user.password"
+                 placeholder="{{formPlaceholder.password.title}}">
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-block btn-info" [disabled]="userForm.invalid==true||canSubmit==false">登录

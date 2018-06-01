@@ -11,25 +11,21 @@ import {UserService} from '../../../service/user.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  // 表单校验成功后提交到数据库校验结果信息
-  messages: string;
-  // true表示激活表单提交按钮,false表示禁用表单提交按钮
-  canSubmit = true;
-  // User模型
-  user: User = {
+  canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
+  checkCode: number; // 0表示校验成功, 1表示校验失败
+  msg: string; // 全局提示信息
+  user: User = { // User模型
     email: 'lixing_java@163.com',
-    password: ''
+    password: 'li12345'
   };
-  // User模型字段说明
-  userFormPlaceholder = {
+  formPlaceholder = { // User模型字段说明
     email: {'title': '邮箱', 'prompt': 'you@example.com'},
     password: {'title': '密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
   };
-  // User表单
-  userForm = new FormGroup({
+  userForm = new FormGroup({ // User表单
     email: new FormControl('', [
       Validators.required,
-      Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')] ),
+      Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]),
     password: new FormControl('', [
       Validators.required,
       Validators.pattern('^[a-zA-Z]\\w{5,9}$')])
@@ -37,7 +33,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService) { }
+    private userService: UserService) {
+  }
 
   ngOnInit() {
   }
@@ -48,15 +45,27 @@ export class LoginComponent implements OnInit {
    */
   onSubmit(userForm): void {
     if (userForm.valid) {
+      this.canSubmit = false;
+      this.checkCode = 0;
+      this.msg = '表单校验成功';
       this.userService.login(userForm.value).subscribe((result: any) => {
-        this.messages = result.msg;
+        /**
+         *  登陆回调
+         */
         if (result.code === 0) {
           this.canSubmit = false;
+          this.checkCode = 0;
+          this.msg = '登陆成功';
           setTimeout(() => this.router.navigateByUrl('heroes'), 1000);
+        } else {
+          this.canSubmit = true;
+          this.checkCode = 1;
+          this.msg = result.msg;
         }
       });
     } else {
-      this.messages = '表单校验失败';
+      this.checkCode = 1;
+      this.msg = '表单校验失败';
     }
   }
 

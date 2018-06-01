@@ -14,7 +14,5 @@ export class User {
   public city?: string;
   public area?: string;
   public address?: string;
-  public codeText?: string;
-  public codeType?: string;
-  public token?: string;
+  public code?: string;
 }

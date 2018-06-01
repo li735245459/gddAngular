@@ -31,7 +31,7 @@ export class HeroService {
    */
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl).pipe(
-      tap(heroes => this.logService.show(`fetched heroes`)),
+      tap(heroes => this.logService.print(`fetched heroes`)),
       catchError(this.logService.handleError('getHeroes', []))
     );
   }
@@ -46,7 +46,7 @@ export class HeroService {
         map(heroes => heroes[0]),
         tap(h => {
           const outcome = h ? `fetched` : `did not find`;
-          this.logService.show(`${outcome} hero id=${id}`);
+          this.logService.print(`${outcome} hero id=${id}`);
         }),
         catchError(this.logService.handleError<Hero>(`getHero id=${id}`))
       );
@@ -58,7 +58,7 @@ export class HeroService {
    */
   updateHero (hero: Hero): Observable<any> {
     return this.http.put(this.heroesUrl, hero, httpOptions).pipe(
-      tap(_ => this.logService.show(`updated hero id=${hero.id}`)),
+      tap(_ => this.logService.print(`updated hero id=${hero.id}`)),
       catchError(this.logService.handleError<any>('updateHero'))
     );
   }
@@ -71,7 +71,7 @@ export class HeroService {
     const id = typeof hero === 'number' ? hero : hero.id;
     const url = `${this.heroesUrl}/${id}`;
     return this.http.delete<Hero>(url, httpOptions).pipe(
-      tap(_ => this.logService.show(`deleted hero id=${id}`)),
+      tap(_ => this.logService.print(`deleted hero id=${id}`)),
       catchError(this.logService.handleError<Hero>('deleteHero'))
     );
   }
@@ -82,7 +82,7 @@ export class HeroService {
    */
   addHero (hero: Hero): Observable<Hero> {
     return this.http.post<Hero>(this.heroesUrl, hero, httpOptions).pipe(
-      tap((item: Hero) => this.logService.show(`added hero id=${item.id}`)),
+      tap((item: Hero) => this.logService.print(`added hero id=${item.id}`)),
       catchError(this.logService.handleError<Hero>('addHero'))
     );
   }
@@ -96,7 +96,7 @@ export class HeroService {
       return of([]);
     }
     return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
-      tap(_ => this.logService.show(`found heroes matching "${term}"`)),
+      tap(_ => this.logService.print(`found heroes matching "${term}"`)),
       catchError(this.logService.handleError<Hero[]>('searchHeroes', []))
     );
   }
