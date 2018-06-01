@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {Md5} from 'ts-md5';
+import {ActivatedRoute} from '@angular/router';
 
 import {User} from '../../../model/user';
+import {UserService} from '../../../service/user.service';
 
 @Component({
   selector: 'app-modify-password',
@@ -10,51 +13,64 @@ import {User} from '../../../model/user';
   styleUrls: ['./modify-password.component.css']
 })
 export class ModifyPasswordComponent implements OnInit {
-  // 表单校验成功后提交到数据库校验结果信息
-  message: string;
-  // true表示激活表单提交按钮,false表示禁用表单提交按钮
-  canSubmit = true;
-  // User模型
-  user: User = {};
-  // User模型字段说明
-  userFormPlaceholder = {
+  canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
+  checkCode: number; // 0表示成功,1表示失败
+  msg: string; // 全局提示信息
+  id: string; // 修改密码唯凭证
+  user: User = {}; // User模型
+  formPlaceholder = { // User模型字段说明
     password: {'title': '新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
     rePassword: {'title': '重复新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
   };
-  // User表单
-  userForm = new FormGroup({
+  userForm = new FormGroup({ // User表单
     password: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[a-zA-Z]\\w{5,9}$')] ),
+      Validators.pattern('^[a-zA-Z]\\w{5,9}$')]),
     rePassword: new FormControl('', [
       Validators.required,
       Validators.pattern('^[a-zA-Z]\\w{5,9}$')])
   });
 
   constructor(
-    private router: Router) { }
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private userService: UserService) {
+  }
 
   ngOnInit() {
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
   onSubmit(userForm): void {
+    console.log(userForm.value);
     if (userForm.valid) {
+      this.canSubmit = false;
+      this.checkCode = 0;
+      this.msg = '表单校验成功';
+      userForm.value.id = this.id;
       if (this.user.password === this.user.rePassword) {
-          if (this.user.password === 'li12345') {
-            this.message = '修改成功';
+        userForm.value.password = Md5.hashStr(userForm.value.password);
+        userForm.value.rePassword = userForm.value.password;
+        this.userService.modifyPassword(userForm.value).subscribe(result => {
+          if (result.code === 0) {
             this.canSubmit = false;
-            setTimeout(() => this.router.navigateByUrl('heroes'), 1000);
+            this.checkCode = 0;
+            this.msg = '修改成功';
+            setTimeout(() => this.router.navigateByUrl('login'), 1000);
           } else {
-            this.message = '修改失败';
             this.canSubmit = true;
+            this.checkCode = 1;
+            this.msg = result.msg;
           }
+        });
       } else {
-        this.message = '两次输入的密码不一致';
         this.canSubmit = true;
+        this.checkCode = 1;
+        this.msg = '两次输入的密码不一致';
       }
     } else {
-      this.message = '表单验证失败';
-      this.canSubmit = true;
+      this.checkCode = 1;
+      this.msg = '表单验证失败';
     }
   }
 

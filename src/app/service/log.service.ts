@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
+import {Router} from '@angular/router';
 
 import {Log} from '../model/log';
 
@@ -10,7 +11,7 @@ export class LogService {
   log = new Log();
   date = new Date();
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   clear() {
@@ -29,7 +30,8 @@ export class LogService {
       // console.error(error.url); // null
       // console.error(error.ok); // false
       // console.error(error.message); // Http failure response for (unknown url): 0 Unknown Error
-      this.print(`${operation} : ${error.message}`);
+      // this.print(`${operation} : ${error.message}`);
+      this.router.navigateByUrl('error/' + error.message);
       return of(result as T);
     };
   }

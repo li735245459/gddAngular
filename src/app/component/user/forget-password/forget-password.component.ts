@@ -15,7 +15,7 @@ export class ForgetPasswordComponent implements OnInit {
   canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
   checkCode: number; // 0表示成功,1表示失败
   msg: string; // 全局提示信息
-  second = 10; // 倒计时等待时间,单位秒
+  second = 30; // 倒计时等待时间,单位秒
   waitSeconds = 0;
   user: User = { // User模型
     email: 'lixing_java@163.com',
@@ -59,7 +59,7 @@ export class ForgetPasswordComponent implements OnInit {
         this.msg = '验证码发送成功,注意查收';
       } else {
         this.checkCode = 1;
-        this.msg = result.code;
+        this.msg = result.msg;
       }
     });
   }
@@ -78,7 +78,7 @@ export class ForgetPasswordComponent implements OnInit {
           this.canSubmit = false;
           this.checkCode = 0;
           this.msg = '邮箱、验证码正确';
-          setTimeout(() => this.router.navigateByUrl('/modifyPassword?email=' + this.user.email), 500);
+          setTimeout(() => this.router.navigateByUrl(`modifyPassword/${result.data.id}`), 500);
         } else {
           this.canSubmit = true;
           this.checkCode = 1;

@@ -20,7 +20,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
-  { path: 'modifyPassword', component: ModifyPasswordComponent },
+  { path: 'modifyPassword/:id', component: ModifyPasswordComponent },
+  { path: 'error/:msg', component: ErrorComponent },
   { path: '**', component: ErrorComponent },
 ];
 

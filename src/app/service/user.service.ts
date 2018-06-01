@@ -67,10 +67,22 @@ export class UserService {
    * @param {String} email
    * @param {String} code
    */
-  checkEmailCode(type: String, email: String, code: String) {
+  checkEmailCode(type: String, email: String, code: String): Observable<any> {
     return this.http.get<any>(`http://localhost:4200/gdd/email/checkEmailCode/${type}/${email}/${code}`).pipe(
       tap(_ => this.logService.print(`checkEmailCode`)),
       catchError(this.logService.handleError<Hero>(`checkEmailCode failed`))
+    );
+  }
+
+  /**
+   * 修改密码
+   * @param userFormValue
+   * @returns {Observable<any>}
+   */
+  modifyPassword(userFormValue: any): Observable<any> {
+    return this.http.put(`http://localhost:4200/gdd/user/modifyPassword`, userFormValue, httpOptions).pipe(
+      tap(_ => this.logService.print(`modifyPassword`)),
+      catchError(this.logService.handleError<Hero>(`modifyPassword failed`))
     );
   }
 }
