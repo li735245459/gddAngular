@@ -24,14 +24,13 @@ export class LogService {
 
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      // console.error(error);
-      // console.error(error.status); // 0
-      // console.error(error.statusText); // Unknown Error
-      // console.error(error.url); // null
-      // console.error(error.ok); // false
-      // console.error(error.message); // Http failure response for (unknown url): 0 Unknown Error
       // this.print(`${operation} : ${error.message}`);
-      this.router.navigateByUrl('error/' + error.message);
+      console.error(`status:${error.status}`);
+      console.error(`statusText:${error.statusText}`); // Unknown Error
+      console.error(`url:${error.url}`);
+      console.error(`ok:${error.ok}`);
+      console.error(`message:${error.message}`);
+      this.router.navigateByUrl(`error/${error.statusText}`);
       return of(result as T);
     };
   }
