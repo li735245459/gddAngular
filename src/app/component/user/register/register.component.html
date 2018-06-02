@@ -65,37 +65,37 @@
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby1" value=1 (change)="onCheckHobby($event.target.value)">篮球
+              <input type="checkbox" class="form-check-input" name="hobby1" value=1 (change)="onChangeHobby($event.target.value)">篮球
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby2" value=2 (change)="onCheckHobby($event.target.value)">足球
+              <input type="checkbox" class="form-check-input" name="hobby2" value=2 (change)="onChangeHobby($event.target.value)">足球
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby3" value=3 (change)="onCheckHobby($event.target.value)">排球
+              <input type="checkbox" class="form-check-input" name="hobby3" value=3 (change)="onChangeHobby($event.target.value)">排球
             </label>
           </div>
         </div>
         <div class="form-group row">
-          <div class="col-2">
-            <select class="form-control" formControlName="province" name="province" [(ngModel)]="user.province">
-              <option value="">请选择省</option>
-              <option value="1">江苏省</option>
+          <div class="col-2" *ngIf="provinceList">
+            <select class="form-control" formControlName="province" name="province" [(ngModel)]="user.province" (change)="onChangeProvince($event.target)">
+              <option value="0">请选择省</option>
+              <option value="{{item.id}}" *ngFor="let item of provinceList;">{{item.name}}</option>
             </select>
           </div>
-          <div class="col-2">
-            <select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city">
-              <option value="">请选择市</option>
-              <option value="1">南京市</option>
+          <div class="col-2" *ngIf="cityList">
+            <select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city" (change)="onChangeCity($event.target)">
+              <option value="0">请选择市</option>
+              <option value="{{item.id}}" *ngFor="let item of cityList;">{{item.name}}</option>
             </select>
           </div>
-          <div class="col-2">
-            <select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area">
-              <option value="">请选择区</option>
-              <option value="1">江宁区</option>
+          <div class="col-2" *ngIf="areaList">
+            <select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area" (change)="onChangeArea($event.target)">
+              <option value="0">请选择区</option>
+              <option value="{{item.id}}" *ngFor="let item of areaList;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-6">

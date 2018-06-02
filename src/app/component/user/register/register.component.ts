@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {User} from '../../../model/user';
 import {UserService} from '../../../service/user.service';
-import {equal} from 'assert';
+import {china} from '../../../dataSource';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +15,9 @@ export class RegisterComponent implements OnInit {
   canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
   checkCode: number; // 0表示校验成功, 1表示校验失败
   msg: string; // 全局提示信息
+  provinceList: any; // 省级数据
+  cityList: any; // 级联市级数据
+  areaList: any; // 级联区级数据
   user: User = { // User模型
     id: '',
     name: '李星',
@@ -24,9 +27,9 @@ export class RegisterComponent implements OnInit {
     rePassword: 'li12345',
     sex: 'male',
     hobby: [],
-    province: '1',
-    city: '1',
-    area: '1',
+    province: '0',
+    city: '0',
+    area: '0',
     address: '谷里街道泉塘公寓12栋403',
     introduce: '',
   };
@@ -72,6 +75,7 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.provinceList = china; // 初始化: 加载省级数据
   }
 
   /**
@@ -81,7 +85,7 @@ export class RegisterComponent implements OnInit {
    *  注册失败则在回调函数中将hobby字符串重新转换成hobby数组
    * @param hobby
    */
-  onCheckHobby(hobby): void {
+  onChangeHobby(hobby): void {
     const index = this.user.hobby.indexOf(hobby);
     if (index === -1) {
       this.user.hobby.push(hobby);
@@ -91,16 +95,48 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
+   * 选择省: 设置当前省级数据并级联出其市级数据
+   * @param province
+   */
+  onChangeProvince(selectedOption): void {
+    this.user.province = selectedOption.value; // 设置省级数据
+    this.user.city = '0';
+    this.cityList = '';
+    this.areaList = '';
+    this.cityList = this.provinceList[selectedOption.selectedIndex - 1].cityList; // 级联市级数据
+  }
+
+  /**
+   * 选择市: 设置当前市级数据并级联出其区级数据
+   * @param selectedOption
+   */
+  onChangeCity(selectedOption): void {
+    this.user.city = selectedOption.value; // 设置市级数据
+    this.user.area = '0';
+    this.areaList = '';
+    this.areaList = this.cityList[selectedOption.selectedIndex - 1].areaList; // 级联区级数据
+  }
+
+  /**
+   * 选择区: 设置当前区级数据
+   * @param selectedOption
+   */
+  onChangeArea(selectedOption): void {
+    this.user.area = selectedOption.value; // 设置区级数据
+  }
+
+  /**
    * 提交注册表单
    * @param userForm
    */
   onSubmit(userForm): void {
-    if (userForm.valid) {
+    if (userForm.valid && this.user.province !== '0' && this.user.city !== '0' &&
+      ((this.areaList === '' && this.user.area === '0') || (this.areaList !== '' && this.user.area !== '0'))) {
       if (userForm.value.password === userForm.value.rePassword) {
         this.canSubmit = false;
         this.checkCode = 0;
         this.msg = '表单校验成功';
-        userForm.value.hobby = this.user.hobby;
+        userForm.value.hobby = this.user.hobby; //
         this.userService.register(userForm.value).subscribe(result => {
             /**
              * 注册回调
