@@ -30,7 +30,8 @@ export class LogService {
       console.error(`url:${error.url}`);
       console.error(`ok:${error.ok}`);
       console.error(`message:${error.message}`);
-      this.router.navigateByUrl(`error/${error.statusText}`);
+      const errorMag = error.statusText + ':' + error.status;
+      this.router.navigateByUrl(`error/${errorMag}`);
       return of(result as T);
     };
   }
