@@ -19,6 +19,7 @@ import {ForgetPasswordComponent} from './component/user/forget-password/forget-p
 import {ModifyPasswordComponent} from './component/user/modify-password/modify-password.component';
 import {UserComponent} from './component/user/user.component';
 import {ErrorComponent} from './component/error/error.component';
+import { HomeComponent } from './component/home/home.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {ErrorComponent} from './component/error/error.component';
     ModifyPasswordComponent,
     UserComponent,
     ErrorComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

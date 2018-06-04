@@ -91,7 +91,7 @@ export class UserService {
    * @param {String} token
    * @returns {boolean}
    */
-  checkJWT(token: String): Observable<any> {
+  checkJWT(): Observable<any> {
     const jwt = sessionStorage.getItem('jwt');
     const email = sessionStorage.getItem('email');
     return this.http.get(`http://localhost:4200/gdd/user/checkJwt/${jwt}/${email}`).pipe(

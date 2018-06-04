@@ -11,6 +11,7 @@ import {RegisterComponent} from './component/user/register/register.component';
 import {ModifyPasswordComponent} from './component/user/modify-password/modify-password.component';
 import {ForgetPasswordComponent} from './component/user/forget-password/forget-password.component';
 import {AppRoutingGuardService} from './app.routing.guard.service';
+import {HomeComponent} from './component/home/home.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -23,6 +24,7 @@ const routes: Routes = [
   {path: 'forgetPassword', component: ForgetPasswordComponent, canActivate: [AppRoutingGuardService]},
   {path: 'modifyPassword/:id', component: ModifyPasswordComponent, canActivate: [AppRoutingGuardService]},
   {path: 'error/:msg', component: ErrorComponent, canActivate: [AppRoutingGuardService]},
+  {path: 'home', component: HomeComponent, canActivate: [AppRoutingGuardService]},
   {path: '**', component: ErrorComponent},
 ];
 

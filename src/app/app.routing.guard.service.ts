@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Router} from '@angular/router';
+import {UserService} from './service/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ import {Router} from '@angular/router';
 export class AppRoutingGuardService implements CanActivate {
 
   constructor(
-    private router: Router) {
+    private router: Router,
+    private userService: UserService) {
   }
 
   /**
@@ -22,33 +24,26 @@ export class AppRoutingGuardService implements CanActivate {
     state: RouterStateSnapshot): boolean {
 
     const path = route.routeConfig.path; // 当前路由
+    console.log(path);
+
     const notGuardRoute = ['login', 'register', 'forgetPassword']; // 不需要路由守卫的路由
     if (notGuardRoute.indexOf(path) >= 0) {
+      /**
+       * 登录、注册、忘记密码无需拦截
+       */
       return true;
     } else {
-      this.router.navigate(['login']);
+      /**
+       * 其他页面需要拦截,判断jwt是否有效,有效放行,无效拦截跳转到登录页面
+       */
+      this.userService.checkJWT().subscribe(result => {
+        if (result.code === 0) {
+          return true;
+        } else {
+          this.router.navigateByUrl('error/登录超时!');
+          return false;
+        }
+      });
     }
-    // if (!isLogin) {
-    //   // 未登录，跳转到login
-    //   this.router.navigate(['login']);
-    //   return false;
-    // } else {
-    //   // 已登录，跳转到当前路由
-    //   return true;
-    // }
-
-    // 当前路由是login时
-    // if (path === 'login') {
-    //   if (!isLogin) {
-    //     // 未登录，跳转到当前路由
-    //     return true;
-    //   } else {
-    //     // 已登录，跳转到home
-    //     this.router.navigate(['home']);
-    //     return false;
-    //   }
-    // }
-
-    // }
   }
 }
