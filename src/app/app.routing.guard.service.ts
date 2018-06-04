@@ -20,12 +20,14 @@ export class AppRoutingGuardService implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
-    const path = route.routeConfig.path; // 当前路由名称
-    console.log(path);
 
-    const nextRoute = ['home']; // 需要路由守卫的路由集合
-    return true;
-    // if (nextRoute.indexOf(path) >= 0) {
+    const path = route.routeConfig.path; // 当前路由
+    const notGuardRoute = ['login', 'register', 'forgetPassword']; // 不需要路由守卫的路由
+    if (notGuardRoute.indexOf(path) >= 0) {
+      return true;
+    } else {
+      this.router.navigate(['login']);
+    }
     // if (!isLogin) {
     //   // 未登录，跳转到login
     //   this.router.navigate(['login']);
