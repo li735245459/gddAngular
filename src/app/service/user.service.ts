@@ -85,4 +85,18 @@ export class UserService {
       catchError(this.logService.handleError<Hero>(`modifyPassword failed`))
     );
   }
+
+  /**
+   * 检查token的有效性
+   * @param {String} token
+   * @returns {boolean}
+   */
+  checkJWT(token: String): Observable<any> {
+    const jwt = sessionStorage.getItem('jwt');
+    const email = sessionStorage.getItem('email');
+    return this.http.get(`http://localhost:4200/gdd/user/checkJwt/${jwt}/${email}`).pipe(
+      tap(_ => this.logService.print(`checkJWT`)),
+      catchError(this.logService.handleError<Hero>(`checkJWT failed`))
+    );
+  }
 }

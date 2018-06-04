@@ -19,6 +19,7 @@ import {ForgetPasswordComponent} from './component/user/forget-password/forget-p
 import {ModifyPasswordComponent} from './component/user/modify-password/modify-password.component';
 import {UserComponent} from './component/user/user.component';
 import {ErrorComponent} from './component/error/error.component';
+import {AppRoutingGuardService} from './app.routing.guard.service';
 
 @NgModule({
   declarations: [

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-error',
@@ -7,12 +7,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./error.component.css']
 })
 export class ErrorComponent implements OnInit {
-  msg = '系统错误';
+  msg = '非法访问';
 
-  constructor(private activatedRoute: ActivatedRoute) { }
+  constructor(private activatedRoute: ActivatedRoute) {
+  }
 
   ngOnInit() {
-    this.msg = this.activatedRoute.snapshot.paramMap.get('msg');
+    const msg = this.activatedRoute.snapshot.paramMap.get('msg');
+    if (msg) {
+      this.msg = msg;
+    }
   }
 
 }

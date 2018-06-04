@@ -56,6 +56,9 @@ export class LoginComponent implements OnInit {
           this.canSubmit = false;
           this.checkCode = 0;
           this.msg = '登陆成功';
+          // localStorage.setItem('token', result.data.token); // 本地存储token,永久存在
+          // sessionStorage.removeItem('token');
+          sessionStorage.setItem('token', result.data.token); // 本地存储token,随浏览器窗口存在
           setTimeout(() => this.router.navigateByUrl('heroes'), 1000);
         } else {
           this.canSubmit = true;

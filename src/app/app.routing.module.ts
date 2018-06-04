@@ -1,28 +1,29 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { HeroesComponent } from './component/hero/heroes/heroes.component';
-import { HeroComponent } from './component/hero/hero.component';
-import { DashboardComponent} from './component/hero/dashboard/dashboard.component';
-import { SearchComponent } from './component/hero/search/search.component';
+import {HeroesComponent} from './component/hero/heroes/heroes.component';
+import {HeroComponent} from './component/hero/hero.component';
+import {DashboardComponent} from './component/hero/dashboard/dashboard.component';
+import {SearchComponent} from './component/hero/search/search.component';
 import {ErrorComponent} from './component/error/error.component';
-import { LoginComponent } from './component/user/login/login.component';
-import { RegisterComponent } from './component/user/register/register.component';
-import { ModifyPasswordComponent } from './component/user/modify-password/modify-password.component';
-import { ForgetPasswordComponent } from './component/user/forget-password/forget-password.component';
+import {LoginComponent} from './component/user/login/login.component';
+import {RegisterComponent} from './component/user/register/register.component';
+import {ModifyPasswordComponent} from './component/user/modify-password/modify-password.component';
+import {ForgetPasswordComponent} from './component/user/forget-password/forget-password.component';
+import {AppRoutingGuardService} from './app.routing.guard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'heroes', component: HeroesComponent },
-  { path: 'hero/:id', component: HeroComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'search', component: SearchComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'forgetPassword', component: ForgetPasswordComponent },
-  { path: 'modifyPassword/:id', component: ModifyPasswordComponent },
-  { path: 'error/:msg', component: ErrorComponent },
-  { path: '**', component: ErrorComponent },
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: 'heroes', component: HeroesComponent},
+  {path: 'hero/:id', component: HeroComponent},
+  {path: 'dashboard', component: DashboardComponent},
+  {path: 'search', component: SearchComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'forgetPassword', component: ForgetPasswordComponent, canActivate: [AppRoutingGuardService]},
+  {path: 'modifyPassword/:id', component: ModifyPasswordComponent, canActivate: [AppRoutingGuardService]},
+  {path: 'error/:msg', component: ErrorComponent, canActivate: [AppRoutingGuardService]},
+  {path: '**', component: ErrorComponent},
 ];
 
 /**
@@ -32,7 +33,8 @@ const routes: Routes = [
  * 它会配置你传入的所有路由、让你能访问路由器指令并注册 RouterService
  */
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
