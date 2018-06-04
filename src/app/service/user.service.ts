@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpHeaders, HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Md5} from 'ts-md5';
 
@@ -93,10 +93,11 @@ export class UserService {
    */
   checkJWT(): Observable<any> {
     const jwt = sessionStorage.getItem('jwt');
-    const email = sessionStorage.getItem('email');
-    return this.http.get(`http://localhost:4200/gdd/user/checkJwt/${jwt}/${email}`).pipe(
-      tap(_ => this.logService.print(`checkJWT`)),
-      catchError(this.logService.handleError<Hero>(`checkJWT failed`))
-    );
+    const email = sessionStorage.getItem('id');
+    // return this.http.get(`http://localhost:4200/gdd/user/checkJwt/${jwt}/${email}`).pipe(
+    //   tap(_ => this.logService.print(`checkJWT`)),
+    //   catchError(this.logService.handleError<Hero>(`checkJWT failed`))
+    // );
+    return of([]);
   }
 }

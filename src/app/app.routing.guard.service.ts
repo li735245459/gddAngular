@@ -19,31 +19,33 @@ export class AppRoutingGuardService implements CanActivate {
    * @param {RouterStateSnapshot} state
    * @returns {boolean}
    */
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): boolean {
-
-    const path = route.routeConfig.path; // 当前路由
-    console.log(path);
-
-    const notGuardRoute = ['login', 'register', 'forgetPassword']; // 不需要路由守卫的路由
-    if (notGuardRoute.indexOf(path) >= 0) {
-      /**
-       * 登录、注册、忘记密码无需拦截
-       */
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    const notGuardRouteStr = 'login;register;forgetPassword;';
+    const path = route.routeConfig.path;
+    if (notGuardRouteStr.indexOf(path)) {
       return true;
     } else {
-      /**
-       * 其他页面需要拦截,判断jwt是否有效,有效放行,无效拦截跳转到登录页面
-       */
-      this.userService.checkJWT().subscribe(result => {
-        if (result.code === 0) {
-          return true;
-        } else {
-          this.router.navigateByUrl('error/登录超时!');
-          return false;
-        }
-      });
+
+      return false;
     }
+
+    // if (notGuardRoute.indexOf(path) >= 0) {
+    //   /**
+    //    * 登录、注册、忘记密码无需拦截
+    //    */
+    //   return true;
+    // } else {
+    //   /**
+    //    * 其他页面需要拦截,判断jwt是否有效,有效放行,无效拦截跳转到登录页面
+    //    */
+    //   this.userService.checkJWT().subscribe(result => {
+    //     if (result.code === 0) {
+    //       return true;
+    //     } else {
+    //       this.router.navigateByUrl('error/登录超时!');
+    //       return false;
+    //     }
+    //   });
+    // }
   }
 }

@@ -7,7 +7,7 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./error.component.css']
 })
 export class ErrorComponent implements OnInit {
-  msg = '非法访问';
+  msg = '您访问的页面不存在';
 
   constructor(private activatedRoute: ActivatedRoute) {
   }
