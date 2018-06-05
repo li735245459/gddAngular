@@ -14,7 +14,7 @@ export class AppRoutingGuardService implements CanActivate {
   }
 
   /**
-   * 返回值 true: 跳转到当前路由 false: 不跳转到当前路由
+   * true:跳转到当前路由;false:不跳转到当前路由
    * @param {ActivatedRouteSnapshot} route
    * @param {RouterStateSnapshot} state
    * @returns {boolean}
@@ -25,27 +25,7 @@ export class AppRoutingGuardService implements CanActivate {
     if (notGuardRouteStr.indexOf(path)) {
       return true;
     } else {
-
-      return false;
+      return true;
     }
-
-    // if (notGuardRoute.indexOf(path) >= 0) {
-    //   /**
-    //    * 登录、注册、忘记密码无需拦截
-    //    */
-    //   return true;
-    // } else {
-    //   /**
-    //    * 其他页面需要拦截,判断jwt是否有效,有效放行,无效拦截跳转到登录页面
-    //    */
-    //   this.userService.checkJWT().subscribe(result => {
-    //     if (result.code === 0) {
-    //       return true;
-    //     } else {
-    //       this.router.navigateByUrl('error/登录超时!');
-    //       return false;
-    //     }
-    //   });
-    // }
   }
 }

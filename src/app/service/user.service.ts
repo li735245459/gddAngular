@@ -40,6 +40,11 @@ export class UserService {
     );
   }
 
+  /**
+   * 用户登陆
+   * @param userFormValue
+   * @returns {Observable<any>}
+   */
   login(userFormValue: any): Observable<any> {
     // 对密码进行加密
     userFormValue.password = Md5.hashStr(userFormValue.password).toString();
@@ -84,20 +89,5 @@ export class UserService {
       tap(_ => this.logService.print(`modifyPassword`)),
       catchError(this.logService.handleError<Hero>(`modifyPassword failed`))
     );
-  }
-
-  /**
-   * 检查token的有效性
-   * @param {String} token
-   * @returns {boolean}
-   */
-  checkJWT(): Observable<any> {
-    const jwt = sessionStorage.getItem('jwt');
-    const email = sessionStorage.getItem('id');
-    // return this.http.get(`http://localhost:4200/gdd/user/checkJwt/${jwt}/${email}`).pipe(
-    //   tap(_ => this.logService.print(`checkJWT`)),
-    //   catchError(this.logService.handleError<Hero>(`checkJWT failed`))
-    // );
-    return of([]);
   }
 }
