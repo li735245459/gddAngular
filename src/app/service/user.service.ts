@@ -59,6 +59,7 @@ export class UserService {
    * @returns {Observable<any>}
    */
   sendEmail(type: String, receiver: String): Observable<any> {
+    httpOptions.headers.set('authorization', 'bearer ' + sessionStorage.getItem('jwt'));
     return this.http.get<any>(`http://localhost:4200/gdd/email/send/${type}/${receiver}`).pipe(
       tap(_ => this.logService.print(`sendEmail`)),
       catchError(this.logService.handleError<Hero>(`sendEmail failed`))
@@ -88,6 +89,17 @@ export class UserService {
     return this.http.put(`http://localhost:4200/gdd/user/modifyPassword`, userFormValue, httpOptions).pipe(
       tap(_ => this.logService.print(`modifyPassword`)),
       catchError(this.logService.handleError<Hero>(`modifyPassword failed`))
+    );
+  }
+
+  /**
+   * 跳转到主页
+   * @returns {Observable<any>}
+   */
+  home(): Observable<any> {
+    return this.http.get<any>(`http://localhost:4200/gdd/user/home`).pipe(
+      tap(_ => this.logService.print(`home`)),
+      catchError(this.logService.handleError<Hero>(`home failed`))
     );
   }
 }

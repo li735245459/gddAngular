@@ -22,9 +22,9 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
-  {path: 'error/:msg', component: ErrorComponent, canActivate: [AppRoutingGuardService]},
-  {path: 'modifyPassword/:id', component: ModifyPasswordComponent, canActivate: [AppRoutingGuardService]},
+  {path: 'modifyPassword/:id', component: ModifyPasswordComponent},
   {path: 'home', component: HomeComponent, canActivate: [AppRoutingGuardService]},
+  {path: 'error/:msg', component: ErrorComponent, canActivate: [AppRoutingGuardService]},
   {path: '**', component: ErrorComponent},
 ];
 

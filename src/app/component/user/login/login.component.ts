@@ -59,7 +59,9 @@ export class LoginComponent implements OnInit {
           // localStorage.setItem('token', result.data.token); // 本地存储jwt,永久存在
           sessionStorage.removeItem('jwt');
           sessionStorage.setItem('jwt', result.data.jwt); // 本地存储jwt,随浏览器窗口共存亡
-          setTimeout(() => this.router.navigateByUrl('home'), 1000);
+          setTimeout(() => {
+            this.router.navigateByUrl('home');
+          }, 1000);
         } else {
           this.canSubmit = true;
           this.checkCode = 1;
