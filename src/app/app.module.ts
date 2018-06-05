@@ -5,7 +5,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
 
-import {InMemoryDb} from './dataSource';
+import {InMemoryDb} from './data/dataSource';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app.routing.module';
 import {HeroesComponent} from './component/hero/heroes/heroes.component';

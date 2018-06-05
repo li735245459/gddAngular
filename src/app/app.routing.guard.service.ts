@@ -6,6 +6,9 @@ import {UserService} from './service/user.service';
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * 全局路由卫士
+ */
 export class AppRoutingGuardService implements CanActivate {
 
   constructor(
@@ -20,9 +23,9 @@ export class AppRoutingGuardService implements CanActivate {
    * @returns {boolean}
    */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const notGuardRouteStr = 'login;register;forgetPassword;';
+    const notGuardRoute = 'login;register;forgetPassword;';
     const path = route.routeConfig.path;
-    if (notGuardRouteStr.indexOf(path)) {
+    if (notGuardRoute.indexOf(path)) {
       return true;
     } else {
       return true;
