@@ -15,10 +15,6 @@ import {HomeComponent} from './component/home/home.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'heroes', component: HeroesComponent},
-  {path: 'hero/:id', component: HeroComponent},
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'search', component: SearchComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},

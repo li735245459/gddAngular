@@ -44,13 +44,16 @@ export class LoginComponent implements OnInit {
    * @param userForm
    */
   onSubmit(userForm): void {
+    /**
+     * 登陆表单校验成功
+     */
     if (userForm.valid) {
       this.canSubmit = false;
       this.checkCode = 0;
       this.msg = '表单校验成功';
-      this.userService.login(userForm.value).subscribe((result: any) => {
+      this.userService.login(userForm.value).subscribe((result) => {
         /**
-         *  登陆回调
+         *  登陆成功
          */
         if (result.code === 0) {
           this.canSubmit = false;
@@ -63,12 +66,18 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl('home');
           }, 1000);
         } else {
+          /**
+           * 登陆失败
+           */
           this.canSubmit = true;
           this.checkCode = 1;
           this.msg = result.msg;
         }
       });
     } else {
+      /**
+       * 登陆表单校验失败
+       */
       this.checkCode = 1;
       this.msg = '表单校验失败';
     }

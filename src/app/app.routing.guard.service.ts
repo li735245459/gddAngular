@@ -23,12 +23,7 @@ export class AppRoutingGuardService implements CanActivate {
    * @returns {boolean}
    */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const notGuardRoute = 'login;register;forgetPassword;';
     const path = route.routeConfig.path;
-    if (notGuardRoute.indexOf(path)) {
-      return true;
-    } else {
-      return true;
-    }
+    return true;
   }
 }

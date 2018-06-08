@@ -25,7 +25,6 @@ import { HomeComponent } from './component/home/home.component';
   declarations: [
     AppComponent,
     HeroesComponent,
-    HeroComponent,
     LogComponent,
     DashboardComponent,
     SearchComponent,

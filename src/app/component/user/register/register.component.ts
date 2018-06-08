@@ -130,16 +130,22 @@ export class RegisterComponent implements OnInit {
    * @param userForm
    */
   onSubmit(userForm): void {
+    /**
+     * 注册表单校验成功
+     */
     if (userForm.valid && this.user.province !== '0' && this.user.city !== '0' &&
       ((this.areaList === '' && this.user.area === '0') || (this.areaList !== '' && this.user.area !== '0'))) {
       if (userForm.value.password === userForm.value.rePassword) {
+        /**
+         * 密码一致
+         */
         this.canSubmit = false;
         this.checkCode = 0;
         this.msg = '表单校验成功';
-        userForm.value.hobby = this.user.hobby; //
-        this.userService.register(userForm.value).subscribe(result => {
+        userForm.value.hobby = this.user.hobby;
+        this.userService.register(userForm.value).subscribe((result) => {
             /**
-             * 注册回调
+             * 注册成功
              */
             if (result.code === 0) {
               this.checkCode = 0;
@@ -153,6 +159,9 @@ export class RegisterComponent implements OnInit {
                 this.user.hobby = this.user.hobby.split(','); // 将hobby字符串转化成hobby数组
               }
             } else {
+              /**
+               * 注册失败
+               */
               this.canSubmit = true;
               this.checkCode = 1;
               this.msg = result.msg;
@@ -160,10 +169,16 @@ export class RegisterComponent implements OnInit {
           }
         );
       } else {
+        /**
+         * 密码不一致
+         */
         this.checkCode = 1;
         this.msg = '密码不一致';
       }
     } else {
+      /**
+       * 注册表单校验失败
+       */
       this.checkCode = 1;
       this.msg = '表单校验失败';
     }

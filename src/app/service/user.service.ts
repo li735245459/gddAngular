@@ -1,23 +1,22 @@
 import {Injectable} from '@angular/core';
 import {HttpHeaders, HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {catchError, map, retry, tap} from 'rxjs/operators';
 import {Md5} from 'ts-md5';
 
 import {User} from '../model/user';
 import {LogService} from './log.service';
-import {Hero} from '../model/hero';
-
 
 const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json'
+  })
 };
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
   constructor(
     private http: HttpClient,
     private logService: LogService) {
@@ -29,14 +28,15 @@ export class UserService {
    * @returns {Observable<User>}
    */
   register(userFormValue: any): Observable<any> {
-    // 将hobby数组转化成字符串
-    userFormValue.hobby = userFormValue.hobby.join(',');
-    // 对密码进行加密
-    userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString();
-    userFormValue.rePassword = Md5.hashStr(userFormValue.rePassword.trim()).toString();
+    userFormValue.hobby = userFormValue.hobby.join(','); // 将hobby数组转化成字符串
+    userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString(); // 对密码进行加密
+    userFormValue.rePassword = userFormValue.password;
     return this.http.post<any>(`http://localhost:4200/gdd/user/register`, userFormValue, httpOptions).pipe(
-      tap(_ => this.logService.print(`用户注册`)),
-      catchError(this.logService.handleError<any>('register failed'))
+      tap((responseObj) => {
+        // 查看Observable中的值,使用那些值做一些事情,并且把它们传出来.这种tap回调不会改变这些值本身
+        this.logService.print(`用户注册:${responseObj.msg}`);
+      }),
+      catchError(this.logService.handleError<any>('用户注册'))
     );
   }
 
@@ -49,8 +49,11 @@ export class UserService {
     // 对密码进行加密
     userFormValue.password = Md5.hashStr(userFormValue.password).toString();
     return this.http.post<any>(`http://localhost:4200/gdd/user/login`, userFormValue, httpOptions).pipe(
-      tap(_ => this.logService.print(`login`)),
-      catchError(this.logService.handleError<any>('login failed'))
+      tap((responseObj) => {
+        this.logService.print(`用户登陆:${responseObj.msg}`);
+      }),
+      retry(2),
+      catchError(this.logService.handleError<any>('用户登陆'))
     );
   }
 
@@ -60,8 +63,10 @@ export class UserService {
    */
   sendEmail(type: String, receiver: String): Observable<any> {
     return this.http.get<any>(`http://localhost:4200/gdd/email/send/${type}/${receiver}`).pipe(
-      tap(_ => this.logService.print(`sendEmail`)),
-      catchError(this.logService.handleError<Hero>(`sendEmail failed`))
+      tap((responseObj) => {
+        this.logService.print(`忘记密码模块发送邮箱验证码:${responseObj.msg}`);
+      }),
+      catchError(this.logService.handleError<any>(`忘记密码模块发送邮箱验证码`))
     );
   }
 
@@ -74,8 +79,10 @@ export class UserService {
    */
   checkEmailCode(type: String, email: String, code: String): Observable<any> {
     return this.http.get<any>(`http://localhost:4200/gdd/email/checkEmailCode/${type}/${email}/${code}`).pipe(
-      tap(_ => this.logService.print(`checkEmailCode`)),
-      catchError(this.logService.handleError<Hero>(`checkEmailCode failed`))
+      tap((responseObj) => {
+        this.logService.print(`忘记密码模块校验邮箱验证码:${responseObj.msg}`);
+      }),
+      catchError(this.logService.handleError<any>(`忘记密码模块校验邮箱验证码`))
     );
   }
 
@@ -85,9 +92,11 @@ export class UserService {
    * @returns {Observable<any>}
    */
   modifyPassword(userFormValue: any): Observable<any> {
-    return this.http.put(`http://localhost:4200/gdd/user/modifyPassword`, userFormValue, httpOptions).pipe(
-      tap(_ => this.logService.print(`modifyPassword`)),
-      catchError(this.logService.handleError<Hero>(`modifyPassword failed`))
+    return this.http.put<any>(`http://localhost:4200/gdd/user/modifyPassword`, userFormValue, httpOptions).pipe(
+      tap((responseObj) => {
+        this.logService.print(`忘记密码模块修改密码:${responseObj.msg}`);
+      }),
+      catchError(this.logService.handleError<any>(`忘记密码模块修改密码`))
     );
   }
 
@@ -96,10 +105,12 @@ export class UserService {
    * @returns {Observable<any>}
    */
   home(): Observable<any> {
-    httpOptions.headers.set('anthorization', 'bearer ' + sessionStorage.getItem('jwt'));
+    httpOptions.headers = httpOptions.headers.set('Authorization', 'Bearer' + sessionStorage.getItem('jwt'));
     return this.http.get<any>(`http://localhost:4200/gdd/user/home`, httpOptions).pipe(
-      tap(_ => this.logService.print(`home`)),
-      catchError(this.logService.handleError<Hero>(`home failed`))
+      tap((responseObj) => {
+        this.logService.print(`登陆首页:${responseObj.msg}`);
+      }),
+      catchError(this.logService.handleError<any>(`登陆首页`))
     );
   }
 }

@@ -8,6 +8,7 @@ import {UserService} from '../../service/user.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  msg = '正在加载...';
 
   constructor(private userService: UserService) {
   }

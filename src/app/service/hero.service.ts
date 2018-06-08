@@ -32,7 +32,7 @@ export class HeroService {
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl).pipe(
       tap(heroes => this.logService.print(`fetched heroes`)),
-      catchError(this.logService.handleError('getHeroes', []))
+      // catchError(this.logService.handleError('getHeroes', []))
     );
   }
 
@@ -48,7 +48,7 @@ export class HeroService {
           const outcome = h ? `fetched` : `did not find`;
           this.logService.print(`${outcome} hero id=${id}`);
         }),
-        catchError(this.logService.handleError<Hero>(`getHero id=${id}`))
+        // catchError(this.logService.handleError<Hero>(`getHero id=${id}`))
       );
   }
 
@@ -59,7 +59,7 @@ export class HeroService {
   updateHero (hero: Hero): Observable<any> {
     return this.http.put(this.heroesUrl, hero, httpOptions).pipe(
       tap(_ => this.logService.print(`updated hero id=${hero.id}`)),
-      catchError(this.logService.handleError<any>('updateHero'))
+      // catchError(this.logService.handleError<any>('updateHero'))
     );
   }
 
@@ -72,7 +72,7 @@ export class HeroService {
     const url = `${this.heroesUrl}/${id}`;
     return this.http.delete<Hero>(url, httpOptions).pipe(
       tap(_ => this.logService.print(`deleted hero id=${id}`)),
-      catchError(this.logService.handleError<Hero>('deleteHero'))
+      // catchError(this.logService.handleError<Hero>('deleteHero'))
     );
   }
 
@@ -83,7 +83,7 @@ export class HeroService {
   addHero (hero: Hero): Observable<Hero> {
     return this.http.post<Hero>(this.heroesUrl, hero, httpOptions).pipe(
       tap((item: Hero) => this.logService.print(`added hero id=${item.id}`)),
-      catchError(this.logService.handleError<Hero>('addHero'))
+      // catchError(this.logService.handleError<Hero>('addHero'))
     );
   }
 
@@ -97,7 +97,7 @@ export class HeroService {
     }
     return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
       tap(_ => this.logService.print(`found heroes matching "${term}"`)),
-      catchError(this.logService.handleError<Hero[]>('searchHeroes', []))
+      // catchError(this.logService.handleError<Hero[]>('searchHeroes', []))
     );
   }
 }
