@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Router} from '@angular/router';
-import {UserService} from './service/user.service';
+import {UserService} from '../service/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import {UserService} from './service/user.service';
 /**
  * 全局路由卫士
  */
-export class AppRoutingGuardService implements CanActivate {
+export class RoutingGuardService implements CanActivate {
 
   constructor(
     private router: Router,
@@ -17,7 +17,8 @@ export class AppRoutingGuardService implements CanActivate {
   }
 
   /**
-   * true:跳转到当前路由;false:不跳转到当前路由
+   * true:跳转到当前路由
+   * false:不跳转到当前路由
    * @param {ActivatedRouteSnapshot} route
    * @param {RouterStateSnapshot} state
    * @returns {boolean}

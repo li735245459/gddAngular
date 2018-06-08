@@ -7,9 +7,8 @@ import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
 
 import {InMemoryDb} from './data/dataSource';
 import {AppComponent} from './app.component';
-import {AppRoutingModule} from './app.routing.module';
+import {RoutingModule} from './routing/routing.module';
 import {HeroesComponent} from './component/hero/heroes/heroes.component';
-import {HeroComponent} from './component/hero/hero.component';
 import {LogComponent} from './component/log/log.component';
 import {DashboardComponent} from './component/hero/dashboard/dashboard.component';
 import {SearchComponent} from './component/hero/search/search.component';
@@ -24,10 +23,7 @@ import { HomeComponent } from './component/home/home.component';
 @NgModule({
   declarations: [
     AppComponent,
-    HeroesComponent,
     LogComponent,
-    DashboardComponent,
-    SearchComponent,
     LoginComponent,
     RegisterComponent,
     ForgetPasswordComponent,
@@ -38,17 +34,22 @@ import { HomeComponent } from './component/home/home.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    // 表单模块
     FormsModule,
-    // ReactiveFormsModule,
+    // 模型表单模块
     // Support for using the ngModel input property and ngModelChange
     // event with reactive form directives has been deprecated in Angular v6 and will be removed in Angular v7
+    // ReactiveFormsModule,
     ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
+    // HttpClient模块
     HttpClientModule,
     // 模拟内存数据,生产环境需要关闭
     // HttpClientInMemoryWebApiModule.forRoot(
     //   InMemoryDb, { dataEncapsulation: false }
     // ),
+    // 路由模块
+    RoutingModule,
+    // bootstrap模块
     NgbModule.forRoot(),
   ],
   providers: [],
