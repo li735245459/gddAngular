@@ -56,7 +56,7 @@ export class ModifyPasswordComponent implements OnInit {
             this.canSubmit = false;
             this.checkCode = 0;
             this.msg = '修改成功';
-            setTimeout(() => this.router.navigateByUrl('login'), 1000);
+            setTimeout(() => this.router.navigateByUrl('/login'), 1000);
           } else {
             this.canSubmit = true;
             this.checkCode = 1;

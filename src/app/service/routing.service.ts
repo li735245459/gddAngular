@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Router} from '@angular/router';
-import {UserService} from '../service/user.service';
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import {UserService} from '../service/user.service';
 /**
  * 全局路由卫士
  */
-export class RoutingGuardService implements CanActivate {
+export class RoutingService implements CanActivate {
 
   constructor(
     private router: Router,
@@ -25,6 +25,7 @@ export class RoutingGuardService implements CanActivate {
    */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const path = route.routeConfig.path;
+    console.log(`全局路由卫士:${path}`);
     return true;
   }
 }
