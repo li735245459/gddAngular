@@ -161,43 +161,39 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
     b.模型驱动表单及验证: 同步
       在组件中通过代码的形式创建表单控件
 
-======观察者模式(发布订阅模式)======
-  多个[观察者]对象同时监听某一个[主题]对象,主题对象发生变化时就会通知所有的观察者对象自行更新
-  --
-  订阅：Observer(观察者对象) 通过 Observable 提供的 subscribe() 方法订阅消息
-  发布：Observable(可观察对象) 通过回调 next 方法向 Observer 发布消息
-======RxJS通过Observable实现响应式编程======
-  a.创建可观察对象的函数: fromPromise、interval、fromEvent、ajax、from , of
-    Create an observable from a promise
-    Create an observable from a counter
-    Create an observable from an event
-    Create an observable that creates an AJAX request
-  b.可观察对象常用操作符: map()、filter()、concat() 和 flatMap()
-    const squareOdd = of(1, 2, 3, 4, 5)
-      .pipe(
+======RxJS库======
+使用Observable可观察对象进行响应式编程(面向数据流和变更传播的异步编程)的库
+Observable可观察对象用于在发布者和订阅者之间传递消息
+从Observable可观察对象中获取消息需要调用它的subscribe订阅函数,该函数会传递一个Observer观察者对象用于处理消息(next,error,complete)
+1)创建可观察对象的函数:
+  //创建一个可观测的承诺
+  import { fromPromise } from 'rxjs';
+    const data = fromPromise(fetch('/api/endpoint'));
+  //创建一个可观测的计数器
+  import { interval } from 'rxjs';
+    const secondsCounter = interval(1000);
+  //创建一个可观察到的事件
+  import { fromEvent } from 'rxjs';
+    const mouseMoves = fromEvent(document.getElementById('my-element'), 'mousemove');
+  //创建一个可观测的,创造了一个AJAX请求
+  import { ajax } from 'rxjs/ajax';
+    const apiData = ajax('/api/data');
+  //构造函数
+2)使用管道来把操作符链接起来:
+    import { filter, map, tap, retry } from 'rxjs/operators';
+    const squareOdd = of(1, 2, 3, 4, 5).pipe(
         filter(n => n % 2 !== 0),
-        map(n => n * n)
+        map(n => n * n),
+        tap(n => console.log(n)),
+        retry(2)
       );
-======Angular中的Observable======
-  1)事件发送器 EventEmitter,从组件的 @Output() 属性中发布一些值
-  2)HttpClient 从 HTTP 方法调用中返回了可观察对象
-  3)AsyncPipe 会订阅一个可观察对象或承诺，并返回其发出的最后一个值
-  4)路由器 (router)
-  5)响应式表单具有一些属性,它们使用可观察对象来监听表单控件的值
-======Angular开发中的登陆与身份验证======
-  a.随着 CDN 的应用,移动端的逐渐兴起, Cookies 越来越不能满足复杂的、多域名下的身份验证需求
-  b.使用JWT实现安全认证
-    一个JWT类型的token一般由三部分组成,分别是Header、Payload和Signature,当然有时候会加一个token前缀
-      Header：记录token算法和类型的字段
-      Payload：记录所有数据的JSON对象，真正有效的数据都包含在这里
-      Signature：Signature是签名动作发生的地方,我们使用Base64URL编码头部,接着使用Base64URL编码payoad,然后把这段字符串和密钥一起使用哈希算法加密的结果就是signature.如果token中的信息被篡改了服务端可以根据签名校验发现这个行为
-    JWT的机制是保证了token的不可篡改性,但是不适合用来保存敏感信息
-======HttpClient: 提供了一个简化的API来实现HTTP客户端功能。它基于浏览器提供的XMLHttpRequest接口======
-  a.可测试性、强类型的请求和响应对象、发起请求与接收响应时的拦截器支持，以及更好的、基于可观察（Observable）对象的 API 以及流式错误处理机制
-  b.拦截请求和响应
-    认证 / 授权
-    控制缓存行为。比如 If-Modified-Since
-    XSRF 防护
+3)angular中的Observable可观察对象:
+  事件发送器 EventEmitter
+  HttpClient 从 HTTP 方法调用中返回了可观察对象
+======HttpClient: 实现HTTP请求,基于浏览器提供的XMLHttpRequest接口======
+1)拦截请求和响应
+
+
 ======http拦截器
 全局处理错误
 统一进行身份验证一类的处理

@@ -16,19 +16,18 @@ import {ModifyPasswordComponent} from './component/user/modify-password/modify-p
 import {UserComponent} from './component/user/user.component';
 import {ErrorComponent} from './component/error/error.component';
 import {HomeComponent} from './component/home/home.component';
-import {RoutingService} from './service/routing.service';
+import {GlobalRoutingGuard} from './router/global.routing.guard';
+import {httpInterceptor} from './Interceptor/interpector';
 
 const appRoutes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
   {path: 'modifyPassword/:id', component: ModifyPasswordComponent},
-  {path: 'home', component: HomeComponent, canActivate: [RoutingService]},
-  {path: 'error/:msg', component: ErrorComponent, canActivate: [RoutingService]},
-  // URL为空时就会访问这里因此它通常会作为起点.这个默认路由会重定向到/login并显示LoginComponent
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
-  // 当所请求的URL不匹配前面定义的路由表中的任何路径时路由器就会选择此路由
-  {path: '**', component: ErrorComponent},
+  {path: 'home', component: HomeComponent, canActivate: [GlobalRoutingGuard]},
+  {path: 'error/:msg', component: ErrorComponent, canActivate: [GlobalRoutingGuard]},
+  {path: '', redirectTo: '/login', pathMatch: 'full'}, // URL为空时就会访问这里因此它通常会作为起点.这个默认路由会重定向到/login并显示LoginComponent
+  {path: '**', component: ErrorComponent}, // 当所请求的URL不匹配前面定义的路由表中的任何路径时路由器就会选择此路由
 ];
 
 @NgModule({
@@ -63,7 +62,7 @@ const appRoutes: Routes = [
     // bootstrap模块
     NgbModule.forRoot(),
   ],
-  providers: [],
+  providers: [httpInterceptor],
   bootstrap: [AppComponent]
 })
 export class AppModule {

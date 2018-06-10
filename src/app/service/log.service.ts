@@ -13,7 +13,8 @@ export class LogService {
   }
 
   print(message: string) {
-    console.log(this.date.toLocaleString() + ` ${message}`);
+    const nowDateTime = this.date.toLocaleString();
+    console.log(`【${nowDateTime}】-【${message}】`);
   }
 
   handleError<T>(operation = 'operation', result?: T) {

@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Router} from '@angular/router';
-import {UserService} from './user.service';
+import {UserService} from '../service/user.service';
 
-@Injectable({
-  providedIn: 'root'
-})
 /**
  * 全局路由卫士
  */
-export class RoutingService implements CanActivate {
+@Injectable({
+  providedIn: 'root'
+})
+export class GlobalRoutingGuard implements CanActivate {
 
   constructor(
     private router: Router,
@@ -25,7 +25,7 @@ export class RoutingService implements CanActivate {
    */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const path = route.routeConfig.path;
-    console.log(`全局路由卫士:${path}`);
+    console.log(`全局路由卫士,即将访问的页面: ${path}`);
     return true;
   }
 }

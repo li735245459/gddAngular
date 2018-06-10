@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {HttpHeaders, HttpClient} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {catchError, map, retry, tap} from 'rxjs/operators';
+import {catchError, retry, tap} from 'rxjs/operators';
 import {Md5} from 'ts-md5';
 
 import {User} from '../model/user';
 import {LogService} from './log.service';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-};
+// const httpOptions = {
+//   headers: new HttpHeaders({
+//     'Content-Type': 'application/json'
+//   })
+// };
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class UserService {
     userFormValue.hobby = userFormValue.hobby.join(','); // 将hobby数组转化成字符串
     userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString(); // 对密码进行加密
     userFormValue.rePassword = userFormValue.password;
-    return this.http.post<any>(`http://localhost:4200/gdd/user/register`, userFormValue, httpOptions).pipe(
+    return this.http.post<any>(`http://localhost:4200/gdd/user/register`, userFormValue).pipe(
       tap((responseObj) => {
         // 查看Observable中的值,使用那些值做一些事情,并且把它们传出来.这种tap回调不会改变这些值本身
         this.logService.print(`用户注册:${responseObj.msg}`);
@@ -48,7 +48,7 @@ export class UserService {
   login(userFormValue: any): Observable<any> {
     // 对密码进行加密
     userFormValue.password = Md5.hashStr(userFormValue.password).toString();
-    return this.http.post<any>(`http://localhost:4200/gdd/user/login`, userFormValue, httpOptions).pipe(
+    return this.http.post<any>(`http://localhost:4200/gdd/user/login`, userFormValue).pipe(
       tap((responseObj) => {
         this.logService.print(`用户登陆:${responseObj.msg}`);
       }),
@@ -92,7 +92,7 @@ export class UserService {
    * @returns {Observable<any>}
    */
   modifyPassword(userFormValue: any): Observable<any> {
-    return this.http.put<any>(`http://localhost:4200/gdd/user/modifyPassword`, userFormValue, httpOptions).pipe(
+    return this.http.put<any>(`http://localhost:4200/gdd/user/modifyPassword`, userFormValue).pipe(
       tap((responseObj) => {
         this.logService.print(`忘记密码模块修改密码:${responseObj.msg}`);
       }),
@@ -105,8 +105,8 @@ export class UserService {
    * @returns {Observable<any>}
    */
   home(): Observable<any> {
-    httpOptions.headers = httpOptions.headers.set('Authorization', 'Bearer' + sessionStorage.getItem('jwt'));
-    return this.http.get<any>(`http://localhost:4200/gdd/user/home`, httpOptions).pipe(
+    // httpOptions.headers = httpOptions.headers.set('Authorization', 'Bearer' + sessionStorage.getItem('jwt'));
+    return this.http.get<any>(`http://localhost:4200/gdd/user/home`).pipe(
       tap((responseObj) => {
         this.logService.print(`登陆首页:${responseObj.msg}`);
       }),
