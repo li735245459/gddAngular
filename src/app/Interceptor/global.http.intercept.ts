@@ -23,16 +23,11 @@ export class GlobalHttpIntercept implements HttpInterceptor {
    * @returns {Observable<HttpEvent<any>>}
    */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const domain = 'http://localhost:4200/';
     let globalReq = req.clone({setHeaders: {'Content-Type': 'application/json'}});
-    if (!globalReq.url.startsWith(domain)) {
-      const reqUrl = domain + globalReq.url;
-      globalReq = globalReq.clone({url: reqUrl});
-    }
-    this.logService.print(`全局HTTP拦截器发起请求${globalReq.url}`);
-    if (globalReq.url.includes('gdd/user/register') || globalReq.url.includes('gdd/user/login')
-      || globalReq.url.includes('gdd/email/send') || globalReq.url.includes('gdd/email/checkEmailCode')
-      || globalReq.url.includes('gdd/user/modifyPassword')) {
+    this.logService.print(`全局HTTP拦截器发起请求${req.url}`);
+    if (req.url.includes('gdd/user/register') || req.url.includes('gdd/user/login')
+      || req.url.includes('gdd/email/send') || req.url.includes('gdd/email/checkEmailCode')
+      || req.url.includes('gdd/user/modifyPassword')) {
       // console.log(`该类型的请求无需远程校验jwt`);
     } else {
       // console.log(`该类型的请求需要远程校验jwt`);

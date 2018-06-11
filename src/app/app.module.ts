@@ -18,6 +18,7 @@ import {ErrorComponent} from './component/error/error.component';
 import {HomeComponent} from './component/home/home.component';
 import {GlobalRoutingGuard} from './router/global.routing.guard';
 import {httpInterceptor} from './Interceptor/interpectors';
+import { IndexComponent } from './component/index/index.component';
 
 const appRoutes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -36,6 +37,7 @@ const appRoutes: Routes = [
     LogComponent,
     LoginComponent,
     RegisterComponent,
+    IndexComponent,
     ForgetPasswordComponent,
     ModifyPasswordComponent,
     UserComponent,

@@ -22,7 +22,7 @@ export class UserService {
     userFormValue.hobby = userFormValue.hobby.join(','); // 将hobby数组转化成字符串
     userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString(); // 对密码进行加密
     userFormValue.rePassword = userFormValue.password;
-    return this.http.post<any>(`gdd/user/register`, userFormValue);
+    return this.http.post<any>(`/gdd/user/register`, userFormValue);
   }
 
   /**
@@ -33,7 +33,7 @@ export class UserService {
   login(userFormValue: any): Observable<any> {
     // 对密码进行加密
     userFormValue.password = Md5.hashStr(userFormValue.password).toString();
-    return this.http.post<any>(`gdd/user/login`, userFormValue);
+    return this.http.post<any>(`/gdd/user/login`, userFormValue);
   }
 
   /**
@@ -41,7 +41,7 @@ export class UserService {
    * @returns {Observable<any>}
    */
   sendEmail(type: String, receiver: String): Observable<any> {
-    return this.http.get<any>(`gdd/email/send/${type}/${receiver}`);
+    return this.http.get<any>(`/gdd/email/send/${type}/${receiver}`);
   }
 
   /**
@@ -52,7 +52,7 @@ export class UserService {
    * @param {String} code
    */
   checkEmailCode(type: String, email: String, code: String): Observable<any> {
-    return this.http.get<any>(`gdd/email/checkEmailCode/${type}/${email}/${code}`);
+    return this.http.get<any>(`/gdd/email/checkEmailCode/${type}/${email}/${code}`);
   }
 
   /**
@@ -61,7 +61,7 @@ export class UserService {
    * @returns {Observable<any>}
    */
   modifyPassword(userFormValue: any): Observable<any> {
-    return this.http.put<any>(`gdd/user/modifyPassword`, userFormValue);
+    return this.http.put<any>(`/gdd/user/modifyPassword`, userFormValue);
   }
 
   /**
@@ -69,6 +69,6 @@ export class UserService {
    * @returns {Observable<any>}
    */
   home(): Observable<any> {
-    return this.http.get<any>(`gdd/user/home`);
+    return this.http.get<any>(`/gdd/user/home`);
   }
 }
