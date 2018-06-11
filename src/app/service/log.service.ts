@@ -40,7 +40,8 @@ export class LogService {
         default:
           this.msg = `未知错误`;
       }
-      this.router.navigateByUrl(`error/${this.msg}`);
+      this.print(`${operation}--状态码:${error.status},错误信息:${error.message}`);
+      this.router.navigateByUrl(`error`);
       return of(result as T);
     };
   }

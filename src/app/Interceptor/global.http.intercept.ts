@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest} from '@angular/common/http';
+import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
+
+import {LogService} from '../service/log.service';
 
 /**
  * 全局http拦截器: 监视和转换从应用发送到服务器的 HTTP 请求
@@ -10,6 +12,10 @@ import {tap} from 'rxjs/operators';
 @Injectable()
 export class GlobalHttpIntercept implements HttpInterceptor {
 
+  constructor(
+    private logService: LogService) {
+  }
+
   /**
    * intercept 方法会把请求转换成一个最终返回 HTTP 响应体的 Observable
    * @param {HttpRequest<any>} req
@@ -17,19 +23,31 @@ export class GlobalHttpIntercept implements HttpInterceptor {
    * @returns {Observable<HttpEvent<any>>}
    */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const domain = 'http://localhost:4200/';
     let globalReq = req.clone({setHeaders: {'Content-Type': 'application/json'}});
-    const reqUrl = req.url;
-    if (reqUrl.includes('/gdd/user/register') || reqUrl.includes('/gdd/user/login')
-      || reqUrl.includes('/gdd/email/send') || reqUrl.includes('/gdd/email/checkEmailCode')
-      || reqUrl.includes('/gdd/user/modifyPassword')) {// 该类型的请求无需jwt校验
-    } else {// 该类型的请求需要jwt校验
+    if (!globalReq.url.startsWith(domain)) {
+      const reqUrl = domain + globalReq.url;
+      globalReq = globalReq.clone({url: reqUrl});
+    }
+    this.logService.print(`全局HTTP拦截器发起请求${globalReq.url}`);
+    if (globalReq.url.includes('gdd/user/register') || globalReq.url.includes('gdd/user/login')
+      || globalReq.url.includes('gdd/email/send') || globalReq.url.includes('gdd/email/checkEmailCode')
+      || globalReq.url.includes('gdd/user/modifyPassword')) {
+      // console.log(`该类型的请求无需远程校验jwt`);
+    } else {
+      // console.log(`该类型的请求需要远程校验jwt`);
       globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + sessionStorage.getItem('jwt')}});
     }
     /**
      * handle() 方法也会把 HTTP 请求转换成 HttpEvents 组成的 Observable，它最终包含的是来自服务器的响应
      */
     return next.handle(globalReq).pipe(
-
+      catchError(this.logService.handleError<any>(`${globalReq.url}请求发生错误`)), // 错误处理
+      tap(event => { // 查看响应数据
+        if (event instanceof HttpResponse) {
+          this.logService.print(`全局HTTP拦截器响应请求${globalReq.url}--状态:${event.statusText},信息:${event.body.msg}`);
+        }
+      })
     );
   }
 }
