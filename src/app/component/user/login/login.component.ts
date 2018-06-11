@@ -12,7 +12,7 @@ import {UserService} from '../../../service/user.service';
 })
 export class LoginComponent implements OnInit {
   canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
-  checkCode: number; // 0表示校验成功, 1表示校验失败
+  checkCode: number; // 0表示成功, 1表示失败
   msg: string; // 全局提示信息
   user: User = { // User模型
     email: 'lixing_java@163.com',
@@ -59,7 +59,6 @@ export class LoginComponent implements OnInit {
           this.canSubmit = false;
           this.checkCode = 0;
           this.msg = '登陆成功';
-          // localStorage.setItem('token', result.data.token); // 本地存储jwt,永久存在
           sessionStorage.removeItem('jwt');
           sessionStorage.setItem('jwt', result.data.jwt); // 本地存储jwt,随浏览器窗口共存亡
           setTimeout(() => {
