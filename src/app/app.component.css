@@ -1,36 +1,79 @@
-h1 {
-  font-size: 1.2em;
-  color: #999;
-  margin-bottom: 0;
-}
-h2 {
-  font-size: 2em;
-  margin-top: 0;
-  padding-top: 0;
-}
-nav a {
-  padding: 5px 10px;
-  text-decoration: none;
-  margin-top: 10px;
-  display: inline-block;
-  background-color: #eee;
-  border-radius: 4px;
-}
-nav a:visited, a:link {
-  color: #607D8B;
-}
-nav a:hover {
-  color: #039be5;
-  background-color: #CFD8DC;
-}
-nav a.active {
-  color: #039be5;
+.header {
+  background-color: #e5cd68;
 }
 
-.a{
+.header-main {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
 }
-.b{
-  flex: 1;
+
+.body{
+  background-color: #ffffff;
+}
+
+.footer {
+  background-color: #5d5d5d;
+}
+
+/* log */
+.log h1 {
+  margin: 0.5em 0em;
+}
+
+.log a {
+  color: #ffffff;
+}
+
+.log a:hover {
+  color: #ffffff;
+}
+
+/* top-nav导航 */
+.top-nav {
+  position: relative;
+}
+
+.top-nav img {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: none;
+}
+
+.top-nav ul li {
+  padding: 0.5em 1em;
+}
+
+.top-nav a {
+  color: #ffffff;
+}
+
+.top-nav a:hover {
+  color: #886741;
+}
+
+.active{
+  border-bottom: 1px solid #886741;
+}
+
+/* 底部 */
+.footer-main .qrcode{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.footer-main .qrcode img{
+  width: 5em;
+  height: 5em;
+  margin: 1em 0.5em;
+}
+.footer-main .copy-right{
+  text-align: center;
+  padding: 0.5em 0em;
 }
 

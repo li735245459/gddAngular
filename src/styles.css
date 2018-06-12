@@ -1,40 +1,65 @@
 /*bootstrap4*/
-@import "assets/bootstrap-4.1.1/css/bootstrap.min.css";
+/*@import "assets/bootstrap-4.1.1/css/bootstrap.min.css";*/
 /*font-awesome*/
-@import "assets/font-awesome-4.7.0/css/font-awesome.min.css";
+/*@import "assets/font-awesome-4.7.0/css/font-awesome.min.css";*/
 
-input.ng-dirty.ng-invalid{
+h4, h5, h6,
+h1, h2, h3 {margin: 0;}
+p {margin: 0;}
+
+a:hover {
+  text-decoration: none;
+}
+ul{
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+ul li{
+  list-style: none;
+  display: inline-block;
+  text-align: center;
+}
+
+input.ng-dirty.ng-invalid {
   border: 2px solid #ff0000;
 }
-input.ng-dirty.ng-valid{
+
+input.ng-dirty.ng-valid {
   border: 2px solid #6bc502;
 }
 
 /*user组件*/
-.user-layout{
+.user-layout {
   background-color: white;
 }
-  /*top*/
-.user-layout .top h1{
+
+/*top*/
+.user-layout .top h1 {
   color: #4AA4B4;
   margin: 2rem 0;
 }
-  /*bottom*/
-.user-layout .bottom a{
-   color: #58B4BB;
-   font-size: 1em;
-   font-weight: bold;
+
+/*bottom*/
+.user-layout .bottom a {
+  color: #58B4BB;
+  font-size: 1em;
+  font-weight: bold;
 }
-.user-layout .bottom a:hover{
+
+.user-layout .bottom a:hover {
   color: #138892;
   text-decoration: none;
 }
-  /*content*/
-.user-layout .content{
-  justify-content:center;
+
+/*content*/
+.user-layout .content {
+  justify-content: center;
   margin-bottom: 2em;
 }
-.user-layout .content form{
+
+.user-layout .content form {
   width: 50%;
   min-width: 30em;
   margin: 0 auto;
@@ -42,16 +67,19 @@ input.ng-dirty.ng-valid{
   border: 1px solid #dedede;
   padding: 2em 2em;
 }
-.user-layout .content form .form-input-i{
+
+.user-layout .content form .form-input-i {
   position: relative;
 }
-.user-layout .content form .form-input-i .fa{
+
+.user-layout .content form .form-input-i .fa {
   color: gray;
   position: absolute;
   left: 0.5em;
   top: 0.5em;
 }
-.user-layout .content form input{
+
+.user-layout .content form input {
   padding-left: 2.2em;
 }
 

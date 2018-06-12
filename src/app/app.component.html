@@ -1,8 +1,43 @@
-<h1>{{title}}</h1>
-<nav  >
-  <a routerLink="/dashboard">Dashboard</a>
-  <a routerLink="/heroes">Heroes</a>
-</nav>
-
-<router-outlet></router-outlet>
+<!--header start here-->
+<div class="header">
+  <div class="container">
+    <div class="header-main">
+      <div class="log">
+        <h1><a href="javascript:void(0);">GDD 宠物馆</a></h1>
+      </div>
+      <div class="top-nav">
+        <ul>
+          <li (click)="onMenu($event)" routerLink="/"><a href="javascript:void(0);" [class.active]="menuText == '首页'">首页</a></li>
+          <li (click)="onMenu($event)" routerLink="/"><a href="javascript:void(0);" [class.active]="menuText == 'About'">About</a></li>
+          <li (click)="onMenu($event)" routerLink="/"><a href="javascript:void(0);" [class.active]="menuText == 'Gallery'">Gallery</a></li>
+          <li (click)="onMenu($event)" routerLink="/"><a href="javascript:void(0);" [class.active]="menuText == 'Typo'">Typo</a></li>
+          <li (click)="onMenu($event)" routerLink="login"><a href="javascript:void(0);" [class.active]="menuText == '登陆'">登陆</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!--body start here-->
+<div class="body">
+  <div class="container">
+    <div class="body-main">
+      <!--路由出口-->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<!--footer start here-->
+<div class="footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="qrcode">
+          <img src="../assets/img/weixin.jpg" alt="添加微信"/>
+          <img src="../assets/img/weixin.jpg" alt="添加微信"/>
+      </div>
+      <div class="copy-right">
+        <span>Copyright &copy; 2018.Company name All rights reserved</span>
+      </div>
+    </div>
+  </div>
+</div>
 
