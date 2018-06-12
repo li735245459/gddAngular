@@ -1,50 +1,41 @@
-<!--轮播图片 start here-->
-<ngb-carousel>
-  <ng-template ngbSlide *ngFor="let item of banners;let i = index;">
-    <img src="../../../assets/img/h{{i+1}}.jpg" alt="Random first slide" style="width: 100%;height: 30em;">
-    <div class="carousel-caption">
-      <h3>10 seconds between slides...</h3>
-      <p>This carousel uses customized default values.</p>
-    </div>
-  </ng-template>
-</ngb-carousel>
-<!--热门推荐 start here-->
-<div class="flex-row-layout-1">
-  <div class="title"><h2>热门推荐</h2></div>
-  <div class="item" *ngFor="let item of hotPets;let i = index;">
-    <img src="../../../assets/img/h{{i+1}}.jpg">
-    <div class="detail">
-      <h5><a class="name">德国边牧</a></h5>
-      <p class="introduce">
-        边境牧羊犬原产于苏格兰边境，为柯利牧羊犬的一种，具有强烈的牧羊本能，天性聪颖、善于察言观色，能准确明白主人的指示
-      </p>
-      <a class="like" href="javascript:void(0);">喜欢</a>
+<!--header-->
+<div class="header">
+  <div class="container">
+    <div class="header-main">
+      <div class="log">
+        <h1><a href="javascript:void(0);">GDD 宠物馆</a></h1>
+      </div>
+      <div class="top-nav">
+        <ul>
+          <li [class.click]="menuText == '首页'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="/">首页</a></li>
+          <li [class.click]="menuText == '萌宝基地'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="pets">萌宝基地</a></li>
+          <li [class.click]="menuText == '关于我们'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="about">关于我们</a></li>
+          <li [class.click]="menuText == '管理员登陆'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="/login">管理员登陆</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
-<!--服务 start here-->
-<div class="flex-row-layout-1">
-  <div class="title"><h2>热门服务</h2></div>
-  <div class="item" *ngFor="let item of hotTerms;let i = index;" style="height:15em;">
-    <img src="../../../assets/img/t{{i+1}}.jpg" style="height:12em;">
-    <div class="detail" style="height:10em;">
-      <h5><a class="name">剪刀杀手</a></h5>
-      <p class="introduce" style="border:0;min-height:2em;">
-        边境牧羊犬原产于苏格兰边境
-      </p>
+<!--body-->
+<div class="body">
+  <div class="container">
+    <div class="body-main">
+      <!--路由出口-->
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-<!--时尚达人 start here-->
-<div class="flex-row-layout-1">
-  <div class="title"><h2>时尚达人</h2></div>
-  <div class="item" *ngFor="let item of hotTerms;let i = index;" style="height:15em;">
-    <img src="../../../assets/img/t{{i+1}}.jpg" style="height:12em;">
-    <div class="detail" style="height:10em;">
-      <h5><a class="name">剪刀杀手</a></h5>
-      <p class="introduce" style="border:0;min-height:2em;">
-        边境牧羊犬原产于苏格兰边境
-      </p>
+<!--footer-->
+<div class="footer" id="footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="qrcode">
+        <img src="../assets/img/weixin.jpg"/>
+        <img src="../assets/img/weixin.jpg"/>
+      </div>
+      <div class="copy-right">
+        <span>Copyright &copy; 2018.Company name All rights reserved</span>
+      </div>
     </div>
   </div>
 </div>

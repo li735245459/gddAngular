@@ -1,0 +1,63 @@
+.flex-row-layout-1{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 0.5em;
+}
+
+.flex-row-layout-1 .title{
+  width: 100%;
+  color: #000000;
+  text-align: center;
+  margin-top: 4em;
+}
+
+.flex-row-layout-1 .item{ /* 容器内图片和文本垂直排列 */
+  width: 25%;
+  min-width: 200px; /* 设置容器最小宽度,防止浏览器缩小排版混乱 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2em;
+}
+
+.flex-row-layout-1 .item img{
+  width: 90%;
+  height: 10em;
+}
+.flex-row-layout-1 .item .detail{ /* 容器内标题和文本垂直排列,容器左右内边距1em */
+  width: 90%;
+  text-align: center;
+  border-bottom: 1px solid #D8D8D8;
+  border-left: 1px solid #D8D8D8;
+  border-right: 1px solid #D8D8D8;
+  border-radius: 2px;
+  padding: 0em 1em;
+}
+
+.flex-row-layout-1 .item .detail a.name{ /* 标题设置上下外边距0.5em */
+  color: #886741;
+  display: inline-block;
+  margin: 0.5em 0em;
+}
+
+.flex-row-layout-1 .item .detail .introduce{ /* 文本设置行高 */
+  min-height: 8em; /* 设置文本容器最小高度,防止文本长度不一导致外部容器高度参差不齐 */
+  font-size: 0.9em;
+  color: #717171;
+  line-height: 1.7em;
+  border-bottom: 1px solid #CBCBCB;
+}
+.flex-row-layout-1 .item .detail a.like{
+  color: #717171;
+  display: inline-block;
+  margin: 1em 0em;
+}
+.flex-row-layout-1 .item .detail a.like:hover{
+  color: #e5cd68;
+}
+
+
+
+

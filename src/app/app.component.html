@@ -1,42 +1,42 @@
-<!--header start here-->
-<div class="header">
-  <div class="container">
-    <div class="header-main">
-      <div class="log">
-        <h1><a href="javascript:void(0);">GDD 宠物馆</a></h1>
-      </div>
-      <div class="top-nav">
-        <ul>
-          <li [class.click]="menuText == '首页'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="/">首页</a></li>
-          <li [class.click]="menuText == '萌宝基地'"><a href="javascript:void(0);" (click)="onMenu($event)">萌宝基地</a></li>
-          <li [class.click]="menuText == '关于我们'"><a href="javascript:void(0);" (click)="onMenu($event)">关于我们</a></li>
-          <li [class.click]="menuText == '管理员登陆'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="login">管理员登陆</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-<!--body start here-->
-<div class="body">
-  <div class="container">
-    <div class="body-main">
-      <!--路由出口-->
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
-<!--footer start here-->
-<div class="footer" id="footer">
-  <div class="container">
-    <div class="footer-main">
-      <div class="qrcode">
-          <img src="../assets/img/weixin.jpg"/>
-          <img src="../assets/img/weixin.jpg"/>
-      </div>
-      <div class="copy-right">
-        <span>Copyright &copy; 2018.Company name All rights reserved</span>
-      </div>
-    </div>
-  </div>
-</div>
+<!--&lt;!&ndash;header start here&ndash;&gt;-->
+<!--<div class="header">-->
+  <!--<div class="container">-->
+    <!--<div class="header-main">-->
+      <!--<div class="log">-->
+        <!--<h1><a href="javascript:void(0);">GDD 宠物馆</a></h1>-->
+      <!--</div>-->
+      <!--<div class="top-nav">-->
+        <!--<ul>-->
+          <!--<li [class.click]="menuText == '首页'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="/">首页</a></li>-->
+          <!--<li [class.click]="menuText == '萌宝基地'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="pets">萌宝基地</a></li>-->
+          <!--<li [class.click]="menuText == '关于我们'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="about">关于我们</a></li>-->
+          <!--<li [class.click]="menuText == '管理员登陆'"><a href="javascript:void(0);" (click)="onMenu($event)">管理员登陆</a></li>-->
+        <!--</ul>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash;body start here&ndash;&gt;-->
+<!--<div class="body">-->
+  <!--<div class="container">-->
+    <!--<div class="body-main">-->
+      <!--&lt;!&ndash;路由出口&ndash;&gt;-->
+<router-outlet></router-outlet>
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash;footer start here&ndash;&gt;-->
+<!--<div class="footer" id="footer">-->
+  <!--<div class="container">-->
+    <!--<div class="footer-main">-->
+      <!--<div class="qrcode">-->
+          <!--<img src="../assets/img/weixin.jpg"/>-->
+          <!--<img src="../assets/img/weixin.jpg"/>-->
+      <!--</div>-->
+      <!--<div class="copy-right">-->
+        <!--<span>Copyright &copy; 2018.Company name All rights reserved</span>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
 

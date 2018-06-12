@@ -3,20 +3,31 @@
 /*font-awesome*/
 /*@import "assets/font-awesome-4.7.0/css/font-awesome.min.css";*/
 
-h4, h5, h6,
-h1, h2, h3 {margin: 0;}
-p {margin: 0;}
+body {
+  /*min-width: 1024px;*/
+  /*min-height: 768px;*/
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
 
 a:hover {
   text-decoration: none;
 }
-ul{
+
+ul {
   list-style: none;
   text-align: center;
   margin: 0;
   padding: 0;
 }
-ul li{
+
+ul li {
   list-style: none;
   display: inline-block;
   text-align: center;

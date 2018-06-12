@@ -15,14 +15,24 @@ import {ForgetPasswordComponent} from './component/user/forget-password/forget-p
 import {ModifyPasswordComponent} from './component/user/modify-password/modify-password.component';
 import {UserComponent} from './component/user/user.component';
 import {ErrorComponent} from './component/error/error.component';
-import {HomeComponent} from './component/home/home.component';
 import {GlobalRoutingGuard} from './router/global.routing.guard';
 import {httpInterceptor} from './Interceptor/interpectors';
 import {IndexComponent} from './component/index/index.component';
+import {PetsComponent} from './component/index/pets/pets.component';
+import {PetComponent} from './component/index/pets/pet/pet.component';
+import {AboutComponent} from './component/index/about/about.component';
+import {HomeComponent} from './component/index/home/home.component';
 
 const appRoutes: Routes = [
-  {path: 'index', component: IndexComponent},
-  {path: 'home', component: HomeComponent, canActivate: [GlobalRoutingGuard]},
+  {
+    path: 'index', component: IndexComponent, children: [
+      {path: 'home', component: HomeComponent},
+      {path: 'about', component: AboutComponent},
+      {path: 'pets', component: PetsComponent},
+      {path: '', component: HomeComponent}
+    ]
+  },
+  {path: 'pet/:id', component: PetComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
@@ -39,11 +49,14 @@ const appRoutes: Routes = [
     LoginComponent,
     RegisterComponent,
     IndexComponent,
+    PetsComponent,
+    PetComponent,
+    HomeComponent,
+    AboutComponent,
     ForgetPasswordComponent,
     ModifyPasswordComponent,
     UserComponent,
-    ErrorComponent,
-    HomeComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
