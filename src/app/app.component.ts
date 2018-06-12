@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,9 +7,14 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Tour of Heroes';
   menuText = '首页';
 
+  constructor(public router: Router) {}
+
+  /**
+   * 菜单按钮事件
+   * @param event
+   */
   onMenu(event): void {
     this.menuText = event.target.text;
   }

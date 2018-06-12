@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-index',
@@ -6,8 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit {
+  hotPets = [1, 2, 3, 4];
+  hotTerms = [1, 2, 3, 4];
+  banners = [1, 2, 3];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
