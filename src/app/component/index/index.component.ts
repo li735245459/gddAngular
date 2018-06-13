@@ -38,12 +38,4 @@ export class IndexComponent implements OnInit {
   ngOnInit() {
   }
 
-  /**
-   * 菜单按钮事件
-   * @param event
-   */
-  onMenu(event): void {
-    this.menuText = event.target.text;
-  }
-
 }

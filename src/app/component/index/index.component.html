@@ -7,9 +7,16 @@
       </div>
       <div class="top-nav">
         <ul>
-          <li [class.click]="menuText == '首页'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="/">首页</a></li>
-          <li [class.click]="menuText == '萌宝基地'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="pets">萌宝基地</a></li>
-          <li [class.click]="menuText == '管理员登陆'"><a href="javascript:void(0);" (click)="onMenu($event)" routerLink="/login">管理员登陆</a></li>
+          <li>
+            <a href="javascript:void(0);" routerLink="/" routerLinkActive="click"
+               [routerLinkActiveOptions]="{exact: true}">首页</a>
+          </li>
+          <li>
+            <a href="javascript:void(0);" routerLink="pets" routerLinkActive="click">萌宝基地</a>
+          </li>
+          <li>
+            <a href="javascript:void(0);" routerLink="/login">管理员登陆</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -19,8 +26,7 @@
 <div class="body">
   <div class="container">
     <div class="body-main">
-      <!--路由出口-->
-      <router-outlet></router-outlet>
+      <router-outlet></router-outlet><!--路由出口-->
     </div>
   </div>
 </div>
