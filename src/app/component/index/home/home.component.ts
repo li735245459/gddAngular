@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-index',
-  templateUrl: './index.component.html',
-  styleUrls: ['./index.component.css']
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
-export class IndexComponent implements OnInit {
+export class HomeComponent implements OnInit {
   menuText = '首页';
   hotPets = [
     {name: '德国边牧', introduce: '边境牧羊犬原产于苏格兰边境', img: '../../../assets/img/h1.jpg'},
