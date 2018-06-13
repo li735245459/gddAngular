@@ -1,4 +1,10 @@
-<p>
-  pets works!
-  <a href="#" routerLink="/pet/1">123</a>
-</p>
+<div class="flex-row-layout-1">
+  <div class="item" *ngFor="let item of hotPets;let i = index;">
+    <img src="{{item.img}}">
+    <div class="detail">
+      <h5><a class="name">{{item.name}}</a></h5>
+      <p class="introduce">{{item.introduce}}</p>
+      <a class="like" href="{{item.link}}">查看详情</a>
+    </div>
+  </div>
+</div>
