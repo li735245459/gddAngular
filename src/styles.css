@@ -39,58 +39,58 @@ input.ng-dirty.ng-valid {
   border: 2px solid #6bc502;
 }
 
-/*user组件*/
-.user-layout {
-  background-color: white;
-}
+/*!*user组件*!*/
+/*.user-layout {*/
+  /*background-color: white;*/
+/*}*/
 
-/*top*/
-.user-layout .top h1 {
-  color: #4AA4B4;
-  margin: 2rem 0;
-}
+/*!*top*!*/
+/*.user-layout .top h1 {*/
+  /*color: #4AA4B4;*/
+  /*margin: 2rem 0;*/
+/*}*/
 
-/*bottom*/
-.user-layout .bottom a {
-  color: #58B4BB;
-  font-size: 1em;
-  font-weight: bold;
-}
+/*!*bottom*!*/
+/*.user-layout .bottom a {*/
+  /*color: #58B4BB;*/
+  /*font-size: 1em;*/
+  /*font-weight: bold;*/
+/*}*/
 
-.user-layout .bottom a:hover {
-  color: #138892;
-  text-decoration: none;
-}
+/*.user-layout .bottom a:hover {*/
+  /*color: #138892;*/
+  /*text-decoration: none;*/
+/*}*/
 
-/*content*/
-.user-layout .content {
-  justify-content: center;
-  margin-bottom: 2em;
-}
+/*!*content*!*/
+/*.user-layout .content {*/
+  /*justify-content: center;*/
+  /*margin-bottom: 2em;*/
+/*}*/
 
-.user-layout .content form {
-  width: 50%;
-  /*min-width: 30em;*/
-  margin: 0 auto;
-  border-radius: 0.5em;
-  border: 1px solid #dedede;
-  padding: 2em 2em;
-}
+/*.user-layout .content form {*/
+  /*width: 50%;*/
+  /*!*min-width: 30em;*!*/
+  /*margin: 0 auto;*/
+  /*border-radius: 0.5em;*/
+  /*border: 1px solid #dedede;*/
+  /*padding: 2em 2em;*/
+/*}*/
 
-.user-layout .content form .form-input-i {
-  position: relative;
-}
+/*.user-layout .content form .form-input-i {*/
+  /*position: relative;*/
+/*}*/
 
-.user-layout .content form .form-input-i .fa {
-  color: gray;
-  position: absolute;
-  left: 0.5em;
-  top: 0.5em;
-}
+/*.user-layout .content form .form-input-i .fa {*/
+  /*color: gray;*/
+  /*position: absolute;*/
+  /*left: 0.5em;*/
+  /*top: 0.5em;*/
+/*}*/
 
-.user-layout .content form input {
-  padding-left: 2.2em;
-}
+/*.user-layout .content form input {*/
+  /*padding-left: 2.2em;*/
+/*}*/
 
 /**
 

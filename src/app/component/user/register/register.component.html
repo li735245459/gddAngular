@@ -6,12 +6,14 @@
     </div>
   </div>
   <!--body-->
-  <div class="row body">
-    <div class="col-sm-12 col-md-10 col-lg-8 col-xl-8" style="margin: 0 auto;">
-      <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)" style="width:80%;min-width:40em;">
+  <div class="row text-left body">
+    <div class="col-sm-12 col-md-12 col-lg-10 col-xl-10" style="margin: 0 auto;"><!--自适应设置-->
+      <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">
         <!--全局消息-->
         <div class="form-group">
-          <div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+          <div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'"
+               *ngIf="msg">{{msg}}
+          </div>
         </div>
         <!--姓名-->
         <div class="form-group user-field">
@@ -20,102 +22,125 @@
                  placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
         </div>
         <!--手机号码-->
-        <!--<div class="form-group user-field">-->
-          <!--<i class="fa fa-phone fa-lg"></i>-->
-          <!--<input type="text" class="form-control" formControlName="phone" name="phone" [(ngModel)]="user.phone"-->
-                 <!--placeholder="{{placeholder.phone.title}}{{placeholder.phone.prompt}}">-->
-        <!--</div>-->
-        <!--<div class="form-group user-field">-->
-          <!--<i class="fa fa-envelope-o fa-lg"></i>-->
-          <!--<input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"-->
-                 <!--placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">-->
-        <!--</div>-->
-        <!--<div class="form-group row">-->
-          <!--<div class="col-6">-->
-            <!--<div class="user-field">-->
-              <!--<i class="fa fa-key fa-lg"></i>-->
-              <!--<input type="password" class="form-control" formControlName="password" name="password" [(ngModel)]="user.password"-->
-                     <!--placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="col-6">-->
-            <!--<div class="user-field">-->
-              <!--<i class="fa fa-key fa-lg"></i>-->
-              <!--<input type="password" class="form-control" formControlName="rePassword" name="rePassword" [(ngModel)]="user.rePassword"-->
-                     <!--placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-          <!--<label class="radio-inline">-->
-            <!--性别:-->
-          <!--</label>-->
-          <!--&nbsp;-->
-          <!--<label class="radio-inline">-->
-            <!--<input type="radio" formControlName="sex" name="sex" value="male" [checked]="user.sex=='male'" [(ngModel)]="user.sex">&nbsp;男-->
-          <!--</label>-->
-          <!--&nbsp;-->
-          <!--<label class="radio-inline">-->
-            <!--<input type="radio" formControlName="sex" name="sex" value="remale" [checked]="user.sex=='remale'" [(ngModel)]="user.sex">&nbsp;女-->
-          <!--</label>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-          <!--<div class="form-check form-check-inline">-->
-            <!--<label class="form-check-label">-->
-              <!--爱好:-->
-            <!--</label>-->
-          <!--</div>-->
-          <!--<div class="form-check form-check-inline">-->
-            <!--<label class="form-check-label">-->
-              <!--<input type="checkbox" class="form-check-input" name="hobby1" value=1 (change)="onChangeHobby($event.target.value)">篮球-->
-            <!--</label>-->
-          <!--</div>-->
-          <!--<div class="form-check form-check-inline">-->
-            <!--<label class="form-check-label">-->
-              <!--<input type="checkbox" class="form-check-input" name="hobby2" value=2 (change)="onChangeHobby($event.target.value)">足球-->
-            <!--</label>-->
-          <!--</div>-->
-          <!--<div class="form-check form-check-inline">-->
-            <!--<label class="form-check-label">-->
-              <!--<input type="checkbox" class="form-check-input" name="hobby3" value=3 (change)="onChangeHobby($event.target.value)">排球-->
-            <!--</label>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="form-group row">-->
-          <!--<div class="col-2" *ngIf="provinceList">-->
-            <!--<select class="form-control" formControlName="province" name="province" [(ngModel)]="user.province" (change)="onChangeProvince($event.target)">-->
-              <!--<option value="0">请选择省</option>-->
-              <!--<option value="{{item.id}}" *ngFor="let item of provinceList;">{{item.name}}</option>-->
-            <!--</select>-->
-          <!--</div>-->
-          <!--<div class="col-2" *ngIf="cityList">-->
-            <!--<select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city" (change)="onChangeCity($event.target)">-->
-              <!--<option value="0">请选择市</option>-->
-              <!--<option value="{{item.id}}" *ngFor="let item of cityList;">{{item.name}}</option>-->
-            <!--</select>-->
-          <!--</div>-->
-          <!--<div class="col-2" *ngIf="areaList">-->
-            <!--<select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area" (change)="onChangeArea($event.target)">-->
-              <!--<option value="0">请选择区</option>-->
-              <!--<option value="{{item.id}}" *ngFor="let item of areaList;">{{item.name}}</option>-->
-            <!--</select>-->
-          <!--</div>-->
-          <!--<div class="col-6">-->
-            <!--<div class="user-field">-->
-              <!--<i class="fa fa-home fa-lg"></i>-->
-              <!--<input type="text" class="form-control" formControlName="address" name="address" [(ngModel)]="user.address"-->
-                     <!--placeholder="{{placeholder.address.title}}{{placeholder.address.prompt}}">-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-          <!--<textarea class="form-control" rows="3" formControlName="introduce" name="introduce" [(ngModel)]="user.introduce"-->
-                    <!--placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>-->
-        <!--</div>-->
-        <!--&lt;!&ndash;登陆按钮&ndash;&gt;-->
-        <!--<div class="form-group">-->
-          <!--<button type="submit" class="btn btn-block btn-info" [disabled]="userForm.invalid==true||canSubmit==false||user.hobby.length==0||user.province==''||user.city==''||user.area==''">提交</button>-->
-        <!--</div>-->
+        <div class="form-group user-field">
+          <i class="fa fa-phone fa-lg"></i>
+          <input type="text" class="form-control" formControlName="phone" name="phone" [(ngModel)]="user.phone"
+                 placeholder="{{placeholder.phone.title}}{{placeholder.phone.prompt}}">
+        </div>
+        <!--邮箱-->
+        <div class="form-group user-field">
+          <i class="fa fa-envelope-o fa-lg"></i>
+          <input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"
+                 placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">
+        </div>
+        <!--密码-->
+        <div class="form-group row">
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="password" name="password"
+                     [(ngModel)]="user.password"
+                     placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="rePassword" name="rePassword"
+                     [(ngModel)]="user.rePassword"
+                     placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">
+            </div>
+          </div>
+        </div>
+        <!--性别-->
+        <div class="form-group row">
+          <div class="col">
+            <label class="radio-inline">
+              性别:
+            </label>
+            &nbsp;
+            <label class="radio-inline">
+              <input type="radio" formControlName="sex" name="sex" value="male" [checked]="user.sex=='male'"
+                     [(ngModel)]="user.sex">&nbsp;男
+            </label>
+            &nbsp;
+            <label class="radio-inline">
+              <input type="radio" formControlName="sex" name="sex" value="remale" [checked]="user.sex=='remale'"
+                     [(ngModel)]="user.sex">&nbsp;女
+            </label>
+          </div>
+        </div>
+        <!--爱好-->
+        <div class="form-group">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              爱好:
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="hobby1" value=1
+                     (change)="onChangeHobby($event.target.value)">篮球
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="hobby2" value=2
+                     (change)="onChangeHobby($event.target.value)">足球
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="hobby3" value=3
+                     (change)="onChangeHobby($event.target.value)">排球
+            </label>
+          </div>
+        </div>
+        <!--地址-->
+        <div class="form-group row">
+          <div class="col-2" *ngIf="provinceList">
+            <select class="form-control" formControlName="province" name="province" [(ngModel)]="user.province"
+                    (change)="onChangeProvince($event.target)">
+              <option value="0">请选择省</option>
+              <option value="{{item.id}}" *ngFor="let item of provinceList;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-2" *ngIf="cityList">
+            <select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city"
+                    (change)="onChangeCity($event.target)">
+              <option value="0">请选择市</option>
+              <option value="{{item.id}}" *ngFor="let item of cityList;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-2" *ngIf="areaList">
+            <select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area"
+                    (change)="onChangeArea($event.target)">
+              <option value="0">请选择区</option>
+              <option value="{{item.id}}" *ngFor="let item of areaList;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-home fa-lg"></i>
+              <input type="text" class="form-control" formControlName="address" name="address"
+                     [(ngModel)]="user.address"
+                     placeholder="{{placeholder.address.title}}{{placeholder.address.prompt}}">
+            </div>
+          </div>
+        </div>
+        <!--自我介绍-->
+        <div class="form-group">
+        <textarea class="form-control" rows="3" formControlName="introduce" name="introduce"
+                  [(ngModel)]="user.introduce"
+                  placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>
+        </div>
+        <!--登陆按钮-->
+        <div class="form-group">
+          <button type="submit" class="btn btn-block btn-info"
+                  [disabled]="userForm.invalid==true||canSubmit==false||user.hobby.length==0||user.province==''||user.city==''||user.area==''">
+            提交
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -128,3 +153,5 @@
     </div>
   </div>
 </div>
+
+
