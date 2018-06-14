@@ -33,15 +33,6 @@ export class RegisterComponent implements OnInit {
     address: '谷里街道泉塘公寓12栋403',
     introduce: '',
   };
-  formPlaceholder = { // User模型字段说明
-    name: {'title': '姓名', 'prompt': '(2~4位汉子)'},
-    phone: {'title': '手机号码', 'prompt': '(11位数字)'},
-    email: {'title': '邮箱', 'prompt': '(you@example.com)'},
-    password: {'title': '密码', 'prompt': '(字母开头的6~10位字母、数字和下划线)'},
-    rePassword: {'title': '重复密码', 'prompt': ''},
-    address: {'title': '详细地址', 'prompt': '(10~20位字符)'},
-    introduce: {'title': '自我介绍', 'prompt': ''}
-  };
   userForm = new FormGroup({ // User表单
     name: new FormControl('', [
       Validators.required,
@@ -68,6 +59,15 @@ export class RegisterComponent implements OnInit {
     city: new FormControl(),
     area: new FormControl()
   });
+  placeholder = { // User模型字段说明
+    name: {'title': '姓名', 'prompt': '(2~4位汉子)'},
+    phone: {'title': '手机号码', 'prompt': '(11位数字)'},
+    email: {'title': '邮箱', 'prompt': '(you@example.com)'},
+    password: {'title': '密码', 'prompt': '(字母开头的6~10位字母、数字和下划线)'},
+    rePassword: {'title': '重复密码', 'prompt': ''},
+    address: {'title': '详细地址', 'prompt': '(10~20位字符)'},
+    introduce: {'title': '自我介绍', 'prompt': ''}
+  };
 
   constructor(
     private router: Router,

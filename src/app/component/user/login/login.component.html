@@ -1,126 +1,65 @@
-<div class="container" style="background-color: #4AA4B4;">
-  1111
-  <!--&lt;!&ndash;top&ndash;&gt;-->
-  <!--<div class="row text-center top">-->
-    <!--<div class="col-12">-->
-      <!--<h1>用户登录</h1>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash;body&ndash;&gt;-->
-  <!--<div class="row content">-->
-    <!--<div class="col-12">-->
-      <!--<form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">-->
-        <!--<div class="form-group">-->
-          <!--<div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'"-->
-               <!--*ngIf="msg">{{msg}}-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="form-group form-input-i">-->
-          <!--<i class="fa fa-envelope-o fa-lg"></i>-->
-          <!--<input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"-->
-                 <!--placeholder="{{formPlaceholder.email.title}}">-->
-        <!--</div>-->
-        <!--<div class="form-group form-input-i">-->
-          <!--<i class="fa fa-key fa-lg"></i>-->
-          <!--<input type="password" class="form-control" formControlName="password" name="password"-->
-                 <!--[(ngModel)]="user.password"-->
-                 <!--placeholder="{{formPlaceholder.password.title}}">-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-          <!--<button type="submit" class="btn btn-block btn-info" [disabled]="userForm.invalid==true||canSubmit==false">登录-->
-          <!--</button>-->
-        <!--</div>-->
-        <!--<hr>-->
-        <!--<div class="form-group">-->
-          <!--<div class="input-group">-->
-            <!--<span>其他登录&nbsp;&nbsp;</span>-->
-            <!--<div class="input-group-append">-->
-              <!--<a href="#"><i class="fa fa-qq fa-lg"></i></a>&nbsp;&nbsp;-->
-              <!--<a href="#"><i class="fa fa-weixin fa-lg"></i></a>&nbsp;&nbsp;-->
-              <!--<a href="#"><i class="fa fa-weibo fa-lg"></i></a>&nbsp;&nbsp;-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</form>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash;bottom&ndash;&gt;-->
-  <!--<div class="row text-center bottom">-->
-    <!--<div class="col-12">-->
-      <!--<a href="#" routerLink="/forgetPassword">-->
-        <!--<span>忘记密码</span><i class="fa fa-arrow-circle-o-right"></i>-->
-      <!--</a>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--<div class="row text-center bottom">-->
-    <!--<div class="col-12">-->
-      <!--<a href="#" routerLink="/register">-->
-        <!--<span>注册</span><i class="fa fa-arrow-circle-o-right"></i>-->
-      <!--</a>-->
-    <!--</div>-->
-  <!--</div>-->
+<div class="container text-center user">
+  <!--header-->
+  <div class="row header">
+    <div class="col">
+      <h1 class="title">用户登陆</h1>
+    </div>
+  </div>
+  <!--body-->
+  <div class="row body">
+    <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6" style="margin: 0 auto;"><!--自适应设置-->
+      <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">
+        <!--全局消息-->
+        <div class="form-group">
+          <div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'"
+               *ngIf="msg">{{msg}}
+          </div>
+        </div>
+        <!--邮箱-->
+        <div class="form-group user-field">
+          <i class="fa fa-envelope-o fa-lg"></i>
+          <input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"
+                 placeholder="{{placeholder.email.title}}">
+        </div>
+        <!--密码-->
+        <div class="form-group user-field">
+          <i class="fa fa-key fa-lg"></i>
+          <input type="password" class="form-control" formControlName="password" name="password"
+                 [(ngModel)]="user.password"
+                 placeholder="{{placeholder.password.title}}">
+        </div>
+        <!--登陆按钮-->
+        <div class="form-group">
+          <button type="submit" class="btn btn-block btn-info" [disabled]="userForm.invalid==true||canSubmit==false">登录
+          </button>
+        </div>
+        <hr>
+        <!--其他快捷登陆-->
+        <div class="form-group">
+          <div class="input-group">
+            <span>其他登录&nbsp;&nbsp;</span>
+            <div class="input-group-append">
+              <a href="#"><i class="fa fa-qq fa-lg"></i></a>&nbsp;&nbsp;
+              <a href="#"><i class="fa fa-weixin fa-lg"></i></a>&nbsp;&nbsp;
+              <a href="#"><i class="fa fa-weibo fa-lg"></i></a>&nbsp;&nbsp;
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!--bottom-->
+  <div class="row bottom">
+    <div class="col-12">
+      <a href="#" routerLink="/forgetPassword">
+        <span>忘记密码</span>&nbsp;<i class="fa fa-arrow-circle-o-right"></i>
+      </a>
+    </div>
+    <div class="col-12">
+      <a href="#" routerLink="/register">
+        <span>注册</span>&nbsp;<i class="fa fa-arrow-circle-o-right"></i>
+      </a>
+    </div>
+  </div>
 </div>
-
-
-<!--<div class="container user-layout">-->
-  <!--&lt;!&ndash;top&ndash;&gt;-->
-  <!--<div class="row text-center top">-->
-    <!--<div class="col-12">-->
-      <!--<h1>用户登录</h1>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash;body&ndash;&gt;-->
-  <!--<div class="row content">-->
-    <!--<div class="col-12">-->
-      <!--<form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">-->
-        <!--<div class="form-group">-->
-          <!--<div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'"-->
-               <!--*ngIf="msg">{{msg}}-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="form-group form-input-i">-->
-          <!--<i class="fa fa-envelope-o fa-lg"></i>-->
-          <!--<input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"-->
-                 <!--placeholder="{{formPlaceholder.email.title}}">-->
-        <!--</div>-->
-        <!--<div class="form-group form-input-i">-->
-          <!--<i class="fa fa-key fa-lg"></i>-->
-          <!--<input type="password" class="form-control" formControlName="password" name="password"-->
-                 <!--[(ngModel)]="user.password"-->
-                 <!--placeholder="{{formPlaceholder.password.title}}">-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-          <!--<button type="submit" class="btn btn-block btn-info" [disabled]="userForm.invalid==true||canSubmit==false">登录-->
-          <!--</button>-->
-        <!--</div>-->
-        <!--<hr>-->
-        <!--<div class="form-group">-->
-          <!--<div class="input-group">-->
-            <!--<span>其他登录&nbsp;&nbsp;</span>-->
-            <!--<div class="input-group-append">-->
-              <!--<a href="#"><i class="fa fa-qq fa-lg"></i></a>&nbsp;&nbsp;-->
-              <!--<a href="#"><i class="fa fa-weixin fa-lg"></i></a>&nbsp;&nbsp;-->
-              <!--<a href="#"><i class="fa fa-weibo fa-lg"></i></a>&nbsp;&nbsp;-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</form>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash;bottom&ndash;&gt;-->
-  <!--<div class="row text-center bottom">-->
-    <!--<div class="col-12">-->
-      <!--<a href="#" routerLink="/forgetPassword">-->
-        <!--<span>忘记密码</span><i class="fa fa-arrow-circle-o-right"></i>-->
-      <!--</a>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--<div class="row text-center bottom">-->
-    <!--<div class="col-12">-->
-      <!--<a href="#" routerLink="/register">-->
-        <!--<span>注册</span><i class="fa fa-arrow-circle-o-right"></i>-->
-      <!--</a>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
 

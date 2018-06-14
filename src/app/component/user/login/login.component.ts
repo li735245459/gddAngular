@@ -18,10 +18,6 @@ export class LoginComponent implements OnInit {
     email: 'lixing_java@163.com',
     password: 'li12345'
   };
-  formPlaceholder = { // User模型字段说明
-    email: {'title': '邮箱', 'prompt': 'you@example.com'},
-    password: {'title': '密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
-  };
   userForm = new FormGroup({ // User表单
     email: new FormControl('', [
       Validators.required,
@@ -30,6 +26,10 @@ export class LoginComponent implements OnInit {
       Validators.required,
       Validators.pattern('^[a-zA-Z]\\w{5,9}$')])
   });
+  placeholder = { // User模型字段说明
+    email: {'title': '邮箱', 'prompt': 'you@example.com'},
+    password: {'title': '密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
+  };
 
   constructor(
     private router: Router,
