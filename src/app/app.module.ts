@@ -21,12 +21,15 @@ import {IndexComponent} from './component/index/index.component';
 import {PetsComponent} from './component/index/pets/pets.component';
 import {HomeComponent} from './component/index/home/home.component';
 
+/**
+ * 全局路由配置
+ */
 const appRoutes: Routes = [
   {
     path: 'index', component: IndexComponent, children: [
+      {path: '', component: HomeComponent},
       {path: 'home', component: HomeComponent},
-      {path: 'pets', component: PetsComponent},
-      {path: '', component: HomeComponent}
+      {path: 'pets', component: PetsComponent}
     ]
   },
   {path: 'login', component: LoginComponent},
