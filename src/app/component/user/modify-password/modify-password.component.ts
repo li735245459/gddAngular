@@ -18,10 +18,6 @@ export class ModifyPasswordComponent implements OnInit {
   msg: string; // 全局提示信息
   id: string; // 修改密码唯凭证
   user: User = {}; // User模型
-  formPlaceholder = { // User模型字段说明
-    password: {'title': '新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
-    rePassword: {'title': '重复新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
-  };
   userForm = new FormGroup({ // User表单
     password: new FormControl('', [
       Validators.required,
@@ -30,6 +26,10 @@ export class ModifyPasswordComponent implements OnInit {
       Validators.required,
       Validators.pattern('^[a-zA-Z]\\w{5,9}$')])
   });
+  placeholder = { // User模型字段说明
+    password: {'title': '新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
+    rePassword: {'title': '重复新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
+  };
 
   constructor(
     private router: Router,

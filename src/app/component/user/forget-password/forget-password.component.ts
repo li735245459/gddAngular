@@ -22,10 +22,6 @@ export class ForgetPasswordComponent implements OnInit {
     email: 'lixing_java@163.com',
     code: ''
   };
-  formPlaceholder = { // User模型字段说明
-    email: {'title': '邮箱', 'prompt': 'you@example.com'},
-    code: {'title': '验证码', 'prompt': '8888'},
-  };
   userForm = new FormGroup({ // User表单
     email: new FormControl('', [
       Validators.required,
@@ -34,6 +30,10 @@ export class ForgetPasswordComponent implements OnInit {
       Validators.required,
       Validators.pattern('^[A-Za-z0-9]{4}$')])
   });
+  placeholder = { // User模型字段说明
+    email: {'title': '邮箱', 'prompt': 'you@example.com'},
+    code: {'title': '验证码', 'prompt': '8888'},
+  };
 
   constructor(
     private router: Router,
