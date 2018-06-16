@@ -83,4 +83,109 @@ user组件
 }
 
 
+/*index*/
+/*.category{*/
+  /*color: #000000;*/
+  /*margin-top: 4em;*/
+/*}*/
+
+/*.item{*/
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*align-items: center;*/
+  /*margin-top: 2em; !* 上外边距 *!*/
+/*}*/
+
+/*.item img{*/
+  /*width: 100%; !* 宽度自动填充响应式列 *!*/
+  /*height: auto;*/
+/*}*/
+
+/*.item .detail{*/
+  /*width: 100%; !* 宽度自动填充响应式列 *!*/
+  /*border-bottom: 1px solid #D8D8D8;*/
+  /*border-left: 1px solid #D8D8D8;*/
+  /*border-right: 1px solid #D8D8D8;*/
+  /*border-radius: 2px;*/
+  /*padding: 0em 1em;*/
+  /*margin-bottom: 1em; !* 下外边距 *!*/
+/*}*/
+
+/*.item .detail a.name { !* 标题设置上下外边距0.5em *!*/
+  /*color: #886741;*/
+  /*display: inline-block;*/
+  /*margin: 0.5em 0em;*/
+/*}*/
+
+/*.item .detail .introduce { !* 文本设置行高 *!*/
+  /*min-height: 8em; !* 设置文本容器最小高度,防止文本长度不一导致外部容器高度参差不齐 *!*/
+  /*font-size: 0.9em;*/
+  /*color: #717171;*/
+  /*line-height: 1.7em;*/
+  /*border-bottom: 1px solid #CBCBCB;*/
+/*}*/
+
+/*.item .detail a.like {*/
+  /*color: #717171;*/
+  /*display: inline-block;*/
+  /*margin: 1em 0em;*/
+/*}*/
+
+/*.item .detail a.like:hover {*/
+  /*color: #e5cd68;*/
+/*}.category{*/
+  /*color: #000000;*/
+  /*margin-top: 4em;*/
+/*}*/
+
+/*.item{*/
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*align-items: center;*/
+  /*margin-top: 2em; !* 上外边距 *!*/
+/*}*/
+
+/*.item img{*/
+  /*width: 100%; !* 宽度自动填充响应式列 *!*/
+  /*height: auto;*/
+/*}*/
+
+/*.item .detail{*/
+  /*width: 100%; !* 宽度自动填充响应式列 *!*/
+  /*border-bottom: 1px solid #D8D8D8;*/
+  /*border-left: 1px solid #D8D8D8;*/
+  /*border-right: 1px solid #D8D8D8;*/
+  /*border-radius: 2px;*/
+  /*padding: 0em 1em;*/
+  /*margin-bottom: 1em; !* 下外边距 *!*/
+/*}*/
+
+/*.item .detail a.name { !* 标题设置上下外边距0.5em *!*/
+  /*color: #886741;*/
+  /*display: inline-block;*/
+  /*margin: 0.5em 0em;*/
+/*}*/
+
+/*.item .detail .introduce { !* 文本设置行高 *!*/
+  /*min-height: 8em; !* 设置文本容器最小高度,防止文本长度不一导致外部容器高度参差不齐 *!*/
+  /*font-size: 0.9em;*/
+  /*color: #717171;*/
+  /*line-height: 1.7em;*/
+  /*border-bottom: 1px solid #CBCBCB;*/
+/*}*/
+
+/*.item .detail a.like {*/
+  /*color: #717171;*/
+  /*display: inline-block;*/
+  /*margin: 1em 0em;*/
+/*}*/
+
+/*.item .detail a.like:hover {*/
+  /*color: #e5cd68;*/
+/*}*/
+
+
+
+
+
 
