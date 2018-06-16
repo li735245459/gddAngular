@@ -1,13 +1,14 @@
 <!--轮播图片-->
 <ngb-carousel>
   <ng-template ngbSlide *ngFor="let item of banners;let i = index;">
-    <img src="{{item.img}}" alt="Random first slide" style="width:100%;height:30em;">
+    <img src="{{item.img}}" alt="Random first slide" style="width:100%;height:auto;">
     <div class="carousel-caption">
       <h3>{{item.name}}</h3>
       <p>{{item.introduce}}</p>
     </div>
   </ng-template>
 </ngb-carousel>
+
 <!--热门推荐-->
 <div class="row">
   <div class="col-12">
@@ -23,35 +24,16 @@
   </div>
 </div>
 
-<!--<div class="flex-row-layout-1">-->
-  <!--<div class="title"><h2>热门推荐</h2></div>-->
-  <!--<div class="item" *ngFor="let item of hotPets;let i = index;">-->
-    <!--<img src="{{item.img}}">-->
-    <!--<div class="detail">-->
-      <!--<h5><a class="name">{{item.name}}</a></h5>-->
-      <!--<p class="introduce">{{item.introduce}}</p>-->
-      <!--<a class="like" href="{{item.link}}">查看详情</a>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
-<!--时尚达人-->
-<!--<div class="flex-row-layout-1">-->
-  <!--<div class="title"><h2>时尚达人</h2></div>-->
-  <!--<div class="item" *ngFor="let item of hotTerms;let i = index;">-->
-    <!--<img src="{{item.img}}">-->
-    <!--<div class="detail">-->
-      <!--<h5><a class="name">{{item.name}}</a></h5>-->
-      <!--<p class="introduce" style="border:0;min-height:2em;">{{item.introduce}}</p>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
-<!--服务-->
-<!--<div class="flex-row-layout-1">-->
-  <!--<div class="title"><h2>热门服务</h2></div>-->
-  <!--<div class="item" *ngFor="let item of service;let i = index;">-->
-    <!--<img src="{{item.img}}" style="width:80px;height:80px;">-->
-    <!--<div class="detail" style="border: 0;">-->
-      <!--<h5><a class="name">{{item.name}}</a></h5>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
+<!--热门服务-->
+<div class="row">
+  <div class="col-12">
+    <div class="col category"><h2>热门服务</h2></div>
+  </div>
+  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 item" *ngFor="let item of service;let i = index;">
+    <img src="{{item.img}}" style="width:80px;height:80px;">
+    <div class="detail" style="border: 0;">
+      <h5><a class="name">{{item.name}}</a></h5>
+    </div>
+  </div>
+</div>
+
