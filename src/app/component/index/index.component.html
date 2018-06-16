@@ -1,11 +1,11 @@
 <!--header-->
 <div class="header">
   <div class="container">
-    <div class="header-main">
-      <div class="log">
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 loge">
         <h1><a href="javascript:void(0);">GDD 宠物馆</a></h1>
       </div>
-      <div class="top-nav">
+      <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 menu">
         <ul>
           <li>
             <a href="javascript:void(0);" routerLink="home" routerLinkActive="click"
@@ -25,23 +25,15 @@
 <!--body-->
 <div class="body">
   <div class="container">
-    <div class="body-main">
-      <router-outlet></router-outlet><!--路由出口-->
-    </div>
+    <router-outlet></router-outlet>
   </div>
 </div>
 <!--footer-->
-<div class="footer" id="footer">
+<div class="footer">
   <div class="container">
-    <div class="footer-main">
-      <div class="qrcode">
-        <img src="../assets/img/weixin.jpg"/>
-        <img src="../assets/img/weixin.jpg"/>
-      </div>
-      <div class="copy-right">
-        <span>Copyright &copy; 2018.Company name All rights reserved</span>
-      </div>
+    <div class="row">
+      <div class="col-12 qrcode"><img src="../assets/img/weixin.jpg"/><img src="../assets/img/weixin.jpg"/></div>
+      <div class="col-12 copy-right"><span>Copyright &copy; 2018.Company name All rights reserved</span></div>
     </div>
   </div>
 </div>
-
