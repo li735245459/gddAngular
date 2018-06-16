@@ -2,8 +2,7 @@
 /*@import "assets/font-awesome-4.7.0/css/font-awesome.min.css";*/
 
 body {
-  /*min-width: 1024px;*/
-  /*min-height: 768px;*/
+  text-align: center;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -20,7 +19,6 @@ a:hover {
 
 ul {
   list-style: none;
-  text-align: center;
   margin: 0;
   padding: 0;
 }
@@ -28,7 +26,6 @@ ul {
 li {
   list-style: none;
   display: inline-block;
-  text-align: center;
 }
 
 input.ng-dirty.ng-invalid {
