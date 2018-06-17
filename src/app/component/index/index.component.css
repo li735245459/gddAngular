@@ -1,22 +1,10 @@
 /*header*/
 .header {
-  background-color: #e7e7e7;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 99;
-  width: 100vw;
-  height: 5em;
+  background-color: #f1f1f1;
 }
 
 .click {
   border-bottom: 2px solid #886741;
-}
-
-/*body*/
-.body {
-  background-color: #ffffff;
-  margin-top: 5.1em;
 }
 
 /* footer */
