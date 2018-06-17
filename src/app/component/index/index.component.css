@@ -1,46 +1,12 @@
 /*header*/
 .header {
-  background-color: #e5cd68;
-}
-
-.loge h1 {
-  margin: 0.5em 0em;
-  text-align: left;
-}
-
-.loge a {
-  color: #ffffff;
-}
-
-.loge a:hover {
-  color: #ffffff;
-}
-
-.menu {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.menu img {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  right: 0;
+  background-color: #e7e7e7;
+  position: fixed;
+  left: 0;
   top: 0;
-  display: none;
-}
-
-.menu a {
-  color: #ffffff;
-  display: inline-block;
-  padding: 0.5em 1em;
-}
-
-.menu a:hover {
-  color: #886741;
+  z-index: 99;
+  width: 100vw;
+  height: 5em;
 }
 
 .click {
@@ -50,6 +16,7 @@
 /*body*/
 .body {
   background-color: #ffffff;
+  margin-top: 5.1em;
 }
 
 /* footer */
@@ -60,10 +27,11 @@
 .footer .qrcode img {
   width: 5em;
   height: 5em;
-  margin: 1em 0.5em;
+  margin: 1em 0em;
 }
 
 .footer .copy-right {
   padding: 0.5em 0em;
 }
+
 
