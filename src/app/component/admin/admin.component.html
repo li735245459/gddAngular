@@ -1,0 +1,27 @@
+<div class="f-column" style="height:100vh;">
+  <!--header-->
+  <div class="main-header f-row">
+    <div class="f-row f-full">
+      <div class="main-title f-animate f-row" [style.width.px]="width">
+        <img class="app-logo" src="../../../assets/img/logo2.ico">
+        <span *ngIf="!collapsed">{{title}}</span>
+      </div>
+      <div class="main-bar f-full">
+        <span class="main-toggle fa fa-bars" (click)="toggle()"></span>
+      </div>
+    </div>
+  </div>
+  <!--body-->
+  <div class="f-row f-full">
+    <!--左侧菜单栏-->
+    <div class="sidebar-body f-animate" [style.width.px]="width">
+      <div *ngIf="!collapsed" class="sidebar-user">菜单栏</div>
+      <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" (itemClick)="onItemClick($event)"></eui-sidemenu>
+    </div>
+    <!--主体展示部分-->
+    <div class="main-body f-full">
+      <!--<ng-content></ng-content>-->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

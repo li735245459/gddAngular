@@ -21,7 +21,8 @@ import {httpInterceptor} from './Interceptor/interpectors';
 import {IndexComponent} from './component/index/index.component';
 import {PetsComponent} from './component/index/pets/pets.component';
 import {HomeComponent} from './component/index/home/home.component';
-import {EasyuiComponent} from './component/easyui/easyui.component';
+import {AdminComponent} from './component/admin/admin.component';
+import {GoodsComponent} from './component/admin/goods/goods.component';
 
 /**
  * 全局路由配置
@@ -34,8 +35,13 @@ const appRoutes: Routes = [
       {path: 'pets', component: PetsComponent}
     ]
   },
+  {
+    path: 'admin', component: AdminComponent, children: [
+      {path: '', component: GoodsComponent},
+      {path: 'goods', component: HomeComponent}
+    ]
+  },
   {path: 'login', component: LoginComponent},
-  {path: 'easyui', component: EasyuiComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
   {path: 'modifyPassword/:id', component: ModifyPasswordComponent},
@@ -52,12 +58,13 @@ const appRoutes: Routes = [
     RegisterComponent,
     IndexComponent,
     PetsComponent,
+    GoodsComponent,
+    AdminComponent,
     HomeComponent,
     ForgetPasswordComponent,
     ModifyPasswordComponent,
     UserComponent,
-    ErrorComponent,
-    EasyuiComponent
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
