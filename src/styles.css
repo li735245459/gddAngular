@@ -1,16 +1,11 @@
 /*@import "assets/bootstrap-4.1.1/css/bootstrap.min.css";*/
 /*@import "assets/font-awesome-4.7.0/css/font-awesome.min.css";*/
 
+/*全局*/
 body {
   text-align: center;
-}
-
-h1, h2, h3, h4, h5, h6 {
   margin: 0;
-}
-
-p {
-  margin: 0;
+  padding: 0;
 }
 
 a:hover {
@@ -19,8 +14,6 @@ a:hover {
 
 ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
 li {
