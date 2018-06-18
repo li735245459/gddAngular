@@ -1,37 +1,33 @@
 <div class="f-column" style="height: 100vh;">
   <!--header-->
-  <div class="main-header f-row">
+  <div class="main-header f-row" style="height: 8vh;">
     <div class="f-row f-full">
       <div class="main-title f-animate f-row" [style.width.px]="width">
-        <img class="app-logo" src="../../../assets/img/logo2.ico">
+        <img class="app-logo" src="../../../assets/img/logo2.png">
         <span *ngIf="!collapsed">{{title}}</span>
       </div>
       <div class="main-bar f-full">
         <span class="main-toggle fa fa-bars" (click)="toggle()"></span>
-        <eui-menu #about [noline]="true">
-          <div style="padding:10px">
-            <img src="https://www.jeasyui.com/images/logo1.png" style="width:150px;height:50px">
-          </div>
-        </eui-menu>
       </div>
     </div>
   </div>
   <!--body-->
-  <div class="f-row f-full">
+  <div class="f-row f-full" style="height: 92vh;">
     <!--左侧菜单栏-->
-    <div class="sidebar-body f-animate" [style.width.px]="width">
+    <div class="sidebar-body f-animate" [style.width.px]="width" style="height: 92vh;overflow-y: auto;overflow-x: hidden;">
       <div *ngIf="!collapsed" class="sidebar-user row">
         <div class="col-5">
-          <img src="../../../assets/img/2.jpg" style="width:80px;height:80px;border:4px double rgba(0,0,0,0.2);border-radius:50%;">
+          <img src="../../../assets/img/2.jpg"
+               style="width:80px;height:80px;border:4px double rgba(0,0,0,0.2);border-radius:50%;">
         </div>
         <div class="col-7" style="display: flex;align-items: center;">
           <div style="padding: 0.5em 0;">当前用户:&nbsp;&nbsp;李星</div>
         </div>
       </div>
-      <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" (itemClick)="onItemClick($event)" style="width: 100%;"></eui-sidemenu>
+      <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" [multiple]="false" (itemClick)="onItemClick($event)"></eui-sidemenu>
     </div>
     <!--主体展示部分-->
-    <div class="main-body f-full">
+    <div class="main-body f-full" style="height: 92vh;overflow-y: auto;overflow-x: hidden;">
       <router-outlet></router-outlet>
     </div>
   </div>

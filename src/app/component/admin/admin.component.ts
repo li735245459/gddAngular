@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 })
 export class AdminComponent implements OnInit {
   title = 'GDD宠物馆';
-  width = 300;
+  width = 250;
   collapsed = false;
   selectedMenu = null;
   menus = [
@@ -23,6 +23,16 @@ export class AdminComponent implements OnInit {
         text: 'Wizard'
       }, {
         text: 'File Upload'
+      }]
+    }, {
+      text: 'Layout',
+      iconCls: 'fa fa-table',
+      children: [{
+        text: 'Panel'
+      }, {
+        text: 'Accordion'
+      }, {
+        text: 'Tabs'
       }]
     }, {
       text: 'Mail',
@@ -50,6 +60,126 @@ export class AdminComponent implements OnInit {
       }, {
         text: 'Tabs'
       }]
+    }, {
+      text: 'Mail',
+      iconCls: 'fa fa-at',
+      selected: true,
+      children: [{
+        text: 'Inbox'
+      }, {
+        text: 'Sent'
+      }, {
+        text: 'Trash',
+        children: [{
+          text: 'Item1'
+        }, {
+          text: 'Item2'
+        }]
+      }]
+    }, {
+      text: 'Layout',
+      iconCls: 'fa fa-table',
+      children: [{
+        text: 'Panel'
+      }, {
+        text: 'Accordion'
+      }, {
+        text: 'Tabs'
+      }]
+    }, {
+      text: 'Mail',
+      iconCls: 'fa fa-at',
+      selected: true,
+      children: [{
+        text: 'Inbox'
+      }, {
+        text: 'Sent'
+      }, {
+        text: 'Trash',
+        children: [{
+          text: 'Item1'
+        }, {
+          text: 'Item2'
+        }]
+      }]
+    }, {
+      text: 'Layout',
+      iconCls: 'fa fa-table',
+      children: [{
+        text: 'Panel'
+      }, {
+        text: 'Accordion'
+      }, {
+        text: 'Tabs'
+      }]
+    }, {
+      text: 'Mail',
+      iconCls: 'fa fa-at',
+      selected: true,
+      children: [{
+        text: 'Inbox'
+      }, {
+        text: 'Sent'
+      }, {
+        text: 'Trash',
+        children: [{
+          text: 'Item1'
+        }, {
+          text: 'Item2'
+        }]
+      }]
+    }, {
+      text: 'Layout',
+      iconCls: 'fa fa-table',
+      children: [{
+        text: 'Panel'
+      }, {
+        text: 'Accordion'
+      }, {
+        text: 'Tabs'
+      }]
+    }, {
+      text: 'Mail',
+      iconCls: 'fa fa-at',
+      selected: true,
+      children: [{
+        text: 'Inbox'
+      }, {
+        text: 'Sent'
+      }, {
+        text: 'Trash',
+        children: [{
+          text: 'Item1'
+        }, {
+          text: 'Item2'
+        }]
+      }]
+    }, {
+      text: 'Layout',
+      iconCls: 'fa fa-table',
+      children: [{
+        text: 'Panel'
+      }, {
+        text: 'Accordion'
+      }, {
+        text: 'Tabs'
+      }]
+    }, {
+      text: 'Mail',
+      iconCls: 'fa fa-at',
+      selected: true,
+      children: [{
+        text: 'Inbox'
+      }, {
+        text: 'Sent'
+      }, {
+        text: 'Trash',
+        children: [{
+          text: 'Item1'
+        }, {
+          text: 'Item2'
+        }]
+      }]
     }];
 
   constructor(private router: Router) {
@@ -60,7 +190,7 @@ export class AdminComponent implements OnInit {
 
   toggle() {
     this.collapsed = !this.collapsed;
-    this.width = this.collapsed ? 50 : 300;
+    this.width = this.collapsed ? 50 : 250;
   }
 
   onItemClick(item) {
