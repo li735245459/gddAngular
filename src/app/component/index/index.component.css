@@ -8,9 +8,15 @@
   border-bottom: 2px solid #886741;
 }
 
+/*body*/
+.body{
+  text-align: center;
+}
+
 /* footer */
 .footer {
   background-color: #5d5d5d;
+  text-align: center;
 }
 
 .footer .qrcode img {

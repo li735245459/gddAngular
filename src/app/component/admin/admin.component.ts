@@ -1,57 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
+  encapsulation: ViewEncapsulation.None,
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  title = 'GDD 宠物馆';
-
+  title = 'GDD宠物馆';
   width = 300;
   collapsed = false;
   selectedMenu = null;
-  menus = [{
-    text: 'Forms',
-    iconCls: 'fa fa-wpforms',
-    state: 'open',
-    children: [{
-      text: 'Form Element'
-    }, {
-      text: 'Wizard'
-    }, {
-      text: 'File Upload'
-    }]
-  }, {
-    text: 'Mail',
-    iconCls: 'fa fa-at',
-    selected: true,
-    children: [{
-      text: 'Inbox'
-    }, {
-      text: 'Sent'
-    }, {
-      text: 'Trash',
+  menus = [
+    {
+      text: 'Forms',
+      iconCls: 'fa fa-wpforms',
+      state: 'open',
       children: [{
-        text: 'Item1'
+        text: 'Form Element'
       }, {
-        text: 'Item2'
+        text: 'Wizard'
+      }, {
+        text: 'File Upload'
       }]
-    }]
-  }, {
-    text: 'Layout',
-    iconCls: 'fa fa-table',
-    children: [{
-      text: 'Panel'
     }, {
-      text: 'Accordion'
+      text: 'Mail',
+      iconCls: 'fa fa-at',
+      selected: true,
+      children: [{
+        text: 'Inbox'
+      }, {
+        text: 'Sent'
+      }, {
+        text: 'Trash',
+        children: [{
+          text: 'Item1'
+        }, {
+          text: 'Item2'
+        }]
+      }]
     }, {
-      text: 'Tabs'
-    }]
-  }];
+      text: 'Layout',
+      iconCls: 'fa fa-table',
+      children: [{
+        text: 'Panel'
+      }, {
+        text: 'Accordion'
+      }, {
+        text: 'Tabs'
+      }]
+    }];
 
-  onItemClick(item) {
-    this.selectedMenu = item;
+  constructor(private router: Router) {
+  }
+
+  ngOnInit() {
   }
 
   toggle() {
@@ -59,9 +63,7 @@ export class AdminComponent implements OnInit {
     this.width = this.collapsed ? 50 : 300;
   }
 
-  constructor() { }
-
-  ngOnInit() {
+  onItemClick(item) {
+    this.selectedMenu = item;
   }
-
 }

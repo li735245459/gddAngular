@@ -1,4 +1,4 @@
-<div class="f-column" style="height:100vh;">
+<div class="f-column" style="height: 100vh;">
   <!--header-->
   <div class="main-header f-row">
     <div class="f-row f-full">
@@ -8,6 +8,11 @@
       </div>
       <div class="main-bar f-full">
         <span class="main-toggle fa fa-bars" (click)="toggle()"></span>
+        <eui-menu #about [noline]="true">
+          <div style="padding:10px">
+            <img src="https://www.jeasyui.com/images/logo1.png" style="width:150px;height:50px">
+          </div>
+        </eui-menu>
       </div>
     </div>
   </div>
@@ -15,13 +20,21 @@
   <div class="f-row f-full">
     <!--左侧菜单栏-->
     <div class="sidebar-body f-animate" [style.width.px]="width">
-      <div *ngIf="!collapsed" class="sidebar-user">菜单栏</div>
-      <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" (itemClick)="onItemClick($event)"></eui-sidemenu>
+      <div *ngIf="!collapsed" class="sidebar-user row">
+        <div class="col-5">
+          <img src="../../../assets/img/2.jpg" style="width:80px;height:80px;border:4px double rgba(0,0,0,0.2);border-radius:50%;">
+        </div>
+        <div class="col-7" style="display: flex;align-items: center;">
+          <div style="padding: 0.5em 0;">当前用户:&nbsp;&nbsp;李星</div>
+        </div>
+      </div>
+      <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" (itemClick)="onItemClick($event)" style="width: 100%;"></eui-sidemenu>
     </div>
     <!--主体展示部分-->
     <div class="main-body f-full">
-      <!--<ng-content></ng-content>-->
       <router-outlet></router-outlet>
     </div>
   </div>
 </div>
+
+

@@ -1,4 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -38,7 +39,7 @@ const appRoutes: Routes = [
   {
     path: 'admin', component: AdminComponent, children: [
       {path: '', component: GoodsComponent},
-      {path: 'goods', component: HomeComponent}
+      {path: 'goods', component: GoodsComponent}
     ]
   },
   {path: 'login', component: LoginComponent},
@@ -68,6 +69,7 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     // 路由模块
     RouterModule.forRoot(appRoutes),
     // 表单模块
