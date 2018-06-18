@@ -42,22 +42,42 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
 	npm start
 	ng serve --proxy-config proxy.config.json
 
-4、创建全局路由模块:
-  参考app.routing.module.ts模块文件(引入到根模块中)
+4、创建全局路由模块: 参考app.module.ts模块文件
 
 5、配置内存 Web API 包模拟数据服务器:
   d: && cd D:\WorkSpace\git\gddAngular2 && cnpm install --save angular-in-memory-web-api@latest
   参考dataSource.ts文件(引入到根模块中)
 
-6、集成bootstrap,font-awesome:
-  d: && cd D:\WorkSpace\git\gddAngular2 && cnpm install --save @ng-bootstrap/ng-bootstrap(引入到根模块中)
-  styles.css导入依赖CSS文件:
-    @import "assets/bootstrap-3.3.7/css/bootstrap.min.css";
-    @import "assets/font-awesome-4.7.0/css/font-awesome.min.css";
-7、引入md5
+6、集成第三方模块,项目根目录下执行:
+  npm install jquery --save
+  npm install bootstrap --save
+  npm install font-awesome --save
+  npm install ng-easyui --save
+  npm install @ng-bootstrap/ng-bootstrap --save
+    编辑angular.json文件
+    "styles": [
+      "src/styles.css",
+      "node_modules/bootstrap/dist/css/bootstrap.min.css",
+      "node_modules/font-awesome/css/font-awesome.min.css/",
+      "node_modules/ng-easyui/themes/material/easyui.css",
+      "node_modules/ng-easyui/themes/angular.css",
+      "node_modules/ng-easyui/themes/icon.css"
+    ],
+    "scripts": [
+      "node_modules/jquery/dist/jquery.min.js",
+      "node_modules/bootstrap/dist/js/bootstrap.min.js"
+    ]
+    编辑app.module.ts文件
+    import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+    import {EasyUIModule} from 'ng-easyui/components/easyui/easyui.module';
+    imports: [
+      NgbModule.forRoot(),
+      EasyUIModule
+    ]
+  --
   npm install ts-md5 --save
-  import {Md5} from "ts-md5";
-  Md5.hashStr('12334')
+    import {Md5} from "ts-md5";
+    Md5.hashStr('12334')
 
 8、创建组件等相关内容:  --flat
   d: && cd D:\WorkSpace\git\gddAngular2
