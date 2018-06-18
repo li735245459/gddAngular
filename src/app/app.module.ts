@@ -2,6 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {EasyUIModule} from 'ng-easyui/components/easyui/easyui.module';
 import {HttpClientModule} from '@angular/common/http';
 import {Routes, RouterModule} from '@angular/router';
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
@@ -20,6 +21,7 @@ import {httpInterceptor} from './Interceptor/interpectors';
 import {IndexComponent} from './component/index/index.component';
 import {PetsComponent} from './component/index/pets/pets.component';
 import {HomeComponent} from './component/index/home/home.component';
+import {EasyuiComponent} from './component/easyui/easyui.component';
 
 /**
  * 全局路由配置
@@ -33,6 +35,7 @@ const appRoutes: Routes = [
     ]
   },
   {path: 'login', component: LoginComponent},
+  {path: 'easyui', component: EasyuiComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
   {path: 'modifyPassword/:id', component: ModifyPasswordComponent},
@@ -53,7 +56,8 @@ const appRoutes: Routes = [
     ForgetPasswordComponent,
     ModifyPasswordComponent,
     UserComponent,
-    ErrorComponent
+    ErrorComponent,
+    EasyuiComponent
   ],
   imports: [
     BrowserModule,
@@ -74,6 +78,8 @@ const appRoutes: Routes = [
     // ),
     // bootstrap模块
     NgbModule.forRoot(),
+    // easyui模块
+    EasyUIModule
   ],
   providers: [httpInterceptor],
   bootstrap: [AppComponent]
