@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
           sessionStorage.removeItem('jwt');
           sessionStorage.setItem('jwt', result.data.jwt); // 本地存储jwt,随浏览器窗口共存亡
           setTimeout(() => {
-            this.router.navigateByUrl('/home');
+            this.router.navigateByUrl('/admin');
           }, 1000);
         } else {
           /**

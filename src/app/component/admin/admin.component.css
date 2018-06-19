@@ -1,4 +1,4 @@
-@import "~ng-easyui/themes/material/easyui.css";
+@import "~ng-easyui/themes/bootstrap/easyui.css";
 @import "~ng-easyui/themes/angular.css";
 @import "~ng-easyui/themes/icon.css";
 
@@ -12,10 +12,6 @@
   width: 50px;
   background: #367fa9;
   font-size: 2em;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
 }
 
 .app-logo {
@@ -29,7 +25,7 @@
   background: #3c8dbc;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -57,6 +53,7 @@
 /*左侧菜单栏头菜单分类部分*/
 .sidemenu .accordion .panel-title{
   color: #b8c7ce;
+  margin-left: 5px;
 }
 .sidemenu .accordion .accordion-header{
   background: #222d32;
@@ -115,5 +112,5 @@
 
 /*主体展示部分*/
 .main-body {
-  background: #ecf0f5;
+  /*background: #ecf0f5;*/
 }

@@ -16,7 +16,7 @@ export class ModifyPasswordComponent implements OnInit {
   canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
   checkCode: number; // 0表示成功,1表示失败
   msg: string; // 全局提示信息
-  id: string; // 修改密码唯凭证
+  email: string; // 修改密码唯凭证
   user: User = {}; // User模型
   userForm = new FormGroup({ // User表单
     password: new FormControl('', [
@@ -38,16 +38,15 @@ export class ModifyPasswordComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.email = this.activatedRoute.snapshot.paramMap.get('email');
   }
 
   onSubmit(userForm): void {
-    console.log(userForm.value);
     if (userForm.valid) {
       this.canSubmit = false;
       this.checkCode = 0;
       this.msg = '表单校验成功';
-      userForm.value.id = this.id;
+      userForm.value.email = this.email; // 设置邮箱作为修改的唯一凭证
       if (this.user.password === this.user.rePassword) {
         userForm.value.password = Md5.hashStr(userForm.value.password);
         userForm.value.rePassword = userForm.value.password;

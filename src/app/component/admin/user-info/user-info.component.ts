@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  selector: 'app-user-info',
+  templateUrl: './user-info.component.html',
+  styleUrls: ['./user-info.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserInfoComponent implements OnInit {
   data = [
     {'code': 'FI-SW-01', 'name': 'Koi', 'unitcost': 10.00, 'status': 'P', 'listprice': 36.50, 'attr': 'Large', 'itemid': 'EST-1'},
     {

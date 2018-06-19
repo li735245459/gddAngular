@@ -14,171 +14,44 @@ export class AdminComponent implements OnInit {
   selectedMenu = null;
   menus = [
     {
-      text: 'Forms',
-      iconCls: 'fa fa-wpforms',
+      text: '用户管理',
+      iconCls: 'fa fa-user-o',
       state: 'open',
       children: [{
-        text: 'Form Element'
-      }, {
-        text: 'Wizard'
-      }, {
-        text: 'File Upload'
-      }]
-    }, {
-      text: 'Layout',
-      iconCls: 'fa fa-table',
-      children: [{
-        text: 'Panel'
-      }, {
-        text: 'Accordion'
-      }, {
-        text: 'Tabs'
-      }]
-    }, {
-      text: 'Mail',
-      iconCls: 'fa fa-at',
-      selected: true,
-      children: [{
-        text: 'Inbox'
-      }, {
-        text: 'Sent'
-      }, {
-        text: 'Trash',
+        text: '用户信息',
+        state: 'open',
         children: [{
-          text: 'Item1'
+          text: '基本信息',
+          selected: true,
+          link: 'user'
         }, {
-          text: 'Item2'
+          text: '头像',
+          link: 'cover'
         }]
       }]
     }, {
-      text: 'Layout',
-      iconCls: 'fa fa-table',
+      text: '图片管理',
+      iconCls: 'fa fa-file-picture-o',
       children: [{
-        text: 'Panel'
+        text: '图片分类'
       }, {
-        text: 'Accordion'
-      }, {
-        text: 'Tabs'
+        text: '图片信息'
       }]
     }, {
-      text: 'Mail',
-      iconCls: 'fa fa-at',
-      selected: true,
+      text: '商品管理',
+      iconCls: 'fa fa-shopping-bag',
       children: [{
-        text: 'Inbox'
+        text: '商品分类'
       }, {
-        text: 'Sent'
-      }, {
-        text: 'Trash',
-        children: [{
-          text: 'Item1'
-        }, {
-          text: 'Item2'
-        }]
+        text: '商品信息'
       }]
     }, {
-      text: 'Layout',
-      iconCls: 'fa fa-table',
+      text: '销售管理',
+      iconCls: 'fa fa-pie-chart',
       children: [{
-        text: 'Panel'
+        text: '销售记录'
       }, {
-        text: 'Accordion'
-      }, {
-        text: 'Tabs'
-      }]
-    }, {
-      text: 'Mail',
-      iconCls: 'fa fa-at',
-      selected: true,
-      children: [{
-        text: 'Inbox'
-      }, {
-        text: 'Sent'
-      }, {
-        text: 'Trash',
-        children: [{
-          text: 'Item1'
-        }, {
-          text: 'Item2'
-        }]
-      }]
-    }, {
-      text: 'Layout',
-      iconCls: 'fa fa-table',
-      children: [{
-        text: 'Panel'
-      }, {
-        text: 'Accordion'
-      }, {
-        text: 'Tabs'
-      }]
-    }, {
-      text: 'Mail',
-      iconCls: 'fa fa-at',
-      selected: true,
-      children: [{
-        text: 'Inbox'
-      }, {
-        text: 'Sent'
-      }, {
-        text: 'Trash',
-        children: [{
-          text: 'Item1'
-        }, {
-          text: 'Item2'
-        }]
-      }]
-    }, {
-      text: 'Layout',
-      iconCls: 'fa fa-table',
-      children: [{
-        text: 'Panel'
-      }, {
-        text: 'Accordion'
-      }, {
-        text: 'Tabs'
-      }]
-    }, {
-      text: 'Mail',
-      iconCls: 'fa fa-at',
-      selected: true,
-      children: [{
-        text: 'Inbox'
-      }, {
-        text: 'Sent'
-      }, {
-        text: 'Trash',
-        children: [{
-          text: 'Item1'
-        }, {
-          text: 'Item2'
-        }]
-      }]
-    }, {
-      text: 'Layout',
-      iconCls: 'fa fa-table',
-      children: [{
-        text: 'Panel'
-      }, {
-        text: 'Accordion'
-      }, {
-        text: 'Tabs'
-      }]
-    }, {
-      text: 'Mail',
-      iconCls: 'fa fa-at',
-      selected: true,
-      children: [{
-        text: 'Inbox'
-      }, {
-        text: 'Sent'
-      }, {
-        text: 'Trash',
-        children: [{
-          text: 'Item1'
-        }, {
-          text: 'Item2'
-        }]
+        text: '销售统计'
       }]
     }];
 
@@ -188,12 +61,22 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
   }
 
+  // 隐藏左侧菜单栏
   toggle() {
     this.collapsed = !this.collapsed;
     this.width = this.collapsed ? 50 : 250;
   }
 
+  // 点击左侧菜单栏
   onItemClick(item) {
     this.selectedMenu = item;
+    // console.log(item);
+    this.router.navigateByUrl(`admin/${item.link}`);
+  }
+
+  // 退出登陆
+  onLogout(): void {
+    sessionStorage.clear();
+    this.router.navigateByUrl('login');
   }
 }

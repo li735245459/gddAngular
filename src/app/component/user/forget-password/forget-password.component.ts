@@ -5,7 +5,6 @@ import {interval} from 'rxjs';
 
 import {User} from '../../../model/user';
 import {UserService} from '../../../service/user.service';
-import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-forget-password',
@@ -80,7 +79,7 @@ export class ForgetPasswordComponent implements OnInit {
           this.checkCode = 0;
           this.msg = '邮箱、验证码正确';
           setTimeout(() => {
-            this.router.navigateByUrl(`modifyPassword/${result.data.id}`);
+            this.router.navigateByUrl(`modifyPassword/${userForm.value.email}`);
           }, 500);
         } else {
           this.canSubmit = true;

@@ -24,6 +24,8 @@ import {PetsComponent} from './component/index/pets/pets.component';
 import {HomeComponent} from './component/index/home/home.component';
 import {AdminComponent} from './component/admin/admin.component';
 import {GoodsComponent} from './component/admin/goods/goods.component';
+import { CoverComponent } from './component/admin/cover/cover.component';
+import { UserInfoComponent } from './component/admin/user-info/user-info.component';
 
 /**
  * 全局路由配置
@@ -38,14 +40,16 @@ const appRoutes: Routes = [
   },
   {
     path: 'admin', component: AdminComponent, children: [
-      {path: '', component: GoodsComponent},
-      {path: 'goods', component: GoodsComponent}
-    ]
+      {path: '', component: CoverComponent},
+      {path: 'goods', component: GoodsComponent},
+      {path: 'user', component: UserInfoComponent},
+      {path: 'cover', component: CoverComponent},
+    ], canActivate: [GlobalRoutingGuard]
   },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgetPassword', component: ForgetPasswordComponent},
-  {path: 'modifyPassword/:id', component: ModifyPasswordComponent},
+  {path: 'modifyPassword/:email', component: ModifyPasswordComponent},
   {path: 'error', component: ErrorComponent, canActivate: [GlobalRoutingGuard]},
   {path: '', redirectTo: '/index', pathMatch: 'full'}, // URL为空时就会访问这里因此它通常作为起点.这个默认路由会重定向到/login并显示LoginComponent
   {path: '**', component: ErrorComponent}, // 当所请求的URL不匹配前面定义的路由表中的任何路径时路由器就会选择此路由
@@ -60,6 +64,8 @@ const appRoutes: Routes = [
     IndexComponent,
     PetsComponent,
     GoodsComponent,
+    CoverComponent,
+    UserInfoComponent,
     AdminComponent,
     HomeComponent,
     ForgetPasswordComponent,

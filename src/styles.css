@@ -22,46 +22,6 @@ input.ng-dirty.ng-valid {
   border: 2px solid #6bc502;
 }
 
-/**user组件*/
-.user .header .title {
-  color: #4AA4B4;
-  margin: 0.5em 0em;
-}
-
-.user .body form {
-  border-radius: 0.5em;
-  border: 1px solid #dedede;
-  padding: 2em 2em;
-}
-
-.user .body .user-field {
-  position: relative;
-}
-
-.user .body .user-field i {
-  color: gray;
-  position: absolute;
-  left: 0.5em;
-  top: 0.5em;
-}
-
-.user .body .user-field input {
-  padding-left: 2.3em;
-}
-
-.user .bottom a {
-  color: #58B4BB;
-  font-size: 1em;
-  font-weight: bold;
-  display: inline-block;
-  margin-top: 0.2em;
-}
-
-.user .bottom a:hover {
-  color: #138892;
-  text-decoration: none;
-}
-
 
 
 
