@@ -69,10 +69,18 @@ export class UserService {
   }
 
   /**
-   * 跳转到主页
+   * 跳转到门户网站首页
    * @returns {Observable<any>}
    */
   home(): Observable<any> {
     return this.http.get<any>(`/gdd/user/home`);
+  }
+
+  /**
+   * 分页查询用户信息
+   * @returns {Observable<any>}
+   */
+  queryByPage(): Observable<any> {
+    return this.http.get<any>(`/gdd/user/queryByPage`);
   }
 }

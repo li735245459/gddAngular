@@ -50,8 +50,8 @@ export class ModifyPasswordComponent implements OnInit {
       if (this.user.password === this.user.rePassword) {
         userForm.value.password = Md5.hashStr(userForm.value.password);
         userForm.value.rePassword = userForm.value.password;
-        this.userService.modifyPassword(userForm.value).subscribe(result => {
-          if (result.code === 0) {
+        this.userService.modifyPassword(userForm.value).subscribe(responseJson => {
+          if (responseJson.code === 0) {
             this.canSubmit = false;
             this.checkCode = 0;
             this.msg = '修改成功';
@@ -59,7 +59,7 @@ export class ModifyPasswordComponent implements OnInit {
           } else {
             this.canSubmit = true;
             this.checkCode = 1;
-            this.msg = result.msg;
+            this.msg = responseJson.msg;
           }
         });
       } else {

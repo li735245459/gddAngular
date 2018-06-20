@@ -51,16 +51,16 @@ export class LoginComponent implements OnInit {
       this.canSubmit = false;
       this.checkCode = 0;
       this.msg = '表单校验成功';
-      this.userService.login(userForm.value).subscribe((result) => {
+      this.userService.login(userForm.value).subscribe((responseJson) => {
         /**
          *  登陆成功
          */
-        if (result.code === 0) {
+        if (responseJson.code === 0) {
           this.canSubmit = false;
           this.checkCode = 0;
           this.msg = '登陆成功';
           sessionStorage.removeItem('jwt');
-          sessionStorage.setItem('jwt', result.data.jwt); // 本地存储jwt,随浏览器窗口共存亡
+          sessionStorage.setItem('jwt', responseJson.data.jwt); // 本地存储jwt,随浏览器窗口共存亡
           setTimeout(() => {
             this.router.navigateByUrl('/admin');
           }, 1000);
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
            */
           this.canSubmit = true;
           this.checkCode = 1;
-          this.msg = result.msg;
+          this.msg = responseJson.msg;
         }
       });
     } else {

@@ -53,13 +53,13 @@ export class ForgetPasswordComponent implements OnInit {
         secondsCounter.unsubscribe();
       }
     });
-    this.userService.sendEmail('1', receiver).subscribe(result => {
-      if (result.code === 0) {
+    this.userService.sendEmail('1', receiver).subscribe(responseJson => {
+      if (responseJson.code === 0) {
         this.checkCode = 0;
         this.msg = '验证码发送成功,注意查收';
       } else {
         this.checkCode = 1;
-        this.msg = result.msg;
+        this.msg = responseJson.msg;
       }
     });
   }
@@ -73,8 +73,8 @@ export class ForgetPasswordComponent implements OnInit {
       this.canSubmit = false;
       this.checkCode = 0;
       this.msg = '表单校验成功';
-      this.userService.checkEmailCode('1', userForm.value.email, userForm.value.code).subscribe(result => {
-        if (result.code === 0) {
+      this.userService.checkEmailCode('1', userForm.value.email, userForm.value.code).subscribe(responseJson => {
+        if (responseJson.code === 0) {
           this.canSubmit = false;
           this.checkCode = 0;
           this.msg = '邮箱、验证码正确';
@@ -84,7 +84,7 @@ export class ForgetPasswordComponent implements OnInit {
         } else {
           this.canSubmit = true;
           this.checkCode = 1;
-          this.msg = result.msg;
+          this.msg = responseJson.msg;
         }
       });
     } else {

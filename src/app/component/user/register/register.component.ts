@@ -143,15 +143,15 @@ export class RegisterComponent implements OnInit {
         this.checkCode = 0;
         this.msg = '表单校验成功';
         userForm.value.hobby = this.user.hobby;
-        this.userService.register(userForm.value).subscribe((result) => {
+        this.userService.register(userForm.value).subscribe((responseJson) => {
             /**
              * 注册成功
              */
-            if (result.code === 0) {
+            if (responseJson.code === 0) {
               this.checkCode = 0;
               this.msg = '注册成功';
               setTimeout(() => this.router.navigateByUrl('/login'), 1000);
-            } else if (result.code === 13) {
+            } else if (responseJson.code === 13) {
               this.canSubmit = true;
               this.checkCode = 1;
               this.msg = '邮箱已被注册';
@@ -164,7 +164,7 @@ export class RegisterComponent implements OnInit {
                */
               this.canSubmit = true;
               this.checkCode = 1;
-              this.msg = result.msg;
+              this.msg = responseJson.msg;
             }
           }
         );

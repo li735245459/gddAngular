@@ -1,10 +1,34 @@
-<div class="f-column">
-  <eui-datagrid [data]="data">
-    <eui-grid-column field="itemid" title="Item ID"></eui-grid-column>
-    <eui-grid-column field="name" title="Name"></eui-grid-column>
-    <eui-grid-column field="listprice" title="List Price" align="right"></eui-grid-column>
-    <eui-grid-column field="unitcost" title="Unit Cost" align="right"></eui-grid-column>
-    <eui-grid-column field="attr" title="Attribute" width="30%"></eui-grid-column>
-    <eui-grid-column field="status" title="Status" align="center"></eui-grid-column>
-  </eui-datagrid>
-</div>
+<eui-panel [bodyStyle]="{height:'200px',margin:'1px',padding:'5px'}" [collapsible]="true" [collapsed]="true">
+  <eui-panel-header>
+    <div class="f-row">
+      <div style="padding:2px">
+        <eui-linkbutton iconCls="icon-reload" [plain]="true">刷新</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-add" [plain]="true">添加</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-remove" [plain]="true">删除</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-save" [plain]="true">保存</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-redo" [plain]="true">取消</eui-linkbutton>
+      </div>
+    </div>
+  </eui-panel-header>
+  <div>Panel Content.</div>
+</eui-panel>
+<eui-datagrid [data]="data" [pagination]="true"  [total]="total" [pageOptions]="pageOptions">>
+  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false">
+    <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
+  </eui-grid-column>
+  <eui-grid-column field="name" title="姓名" frozen="false"></eui-grid-column>
+  <eui-grid-column field="sex" title="性别" width="80" align="center"></eui-grid-column>
+  <!--<eui-grid-column field="password" title="密码"></eui-grid-column>-->
+  <!--<eui-grid-column field="hobby" title="兴趣" width="100"></eui-grid-column>-->
+  <!--<eui-grid-column field="introduce" title="备注" width="100"></eui-grid-column>-->
+  <!--<eui-grid-column field="province" title="省" width="100"></eui-grid-column>-->
+  <!--<eui-grid-column field="city" title="市" width="100"></eui-grid-column>-->
+  <!--<eui-grid-column field="area" title="区" width="100"></eui-grid-column>-->
+  <!--<eui-grid-column field="address" title="街道" width="100"></eui-grid-column>-->
+  <eui-grid-column field="phone" title="手机号码" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="loginIp" title="登陆IP" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="email" title="邮箱"></eui-grid-column>
+  <eui-grid-column field="id" title="编号"></eui-grid-column>
+</eui-datagrid>

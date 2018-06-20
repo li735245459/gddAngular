@@ -4,7 +4,7 @@
     <div class="f-row f-full">
       <div class="main-title f-animate f-row f-content-center" [style.width.px]="width">
         <img class="app-logo" src="../../../assets/img/logo2.png">
-        <span *ngIf="!collapsed">{{title}}</span>
+        <span *ngIf="!collapsed"><strong>{{title}}</strong></span>
       </div>
       <div class="main-bar f-full">
         <span class="main-toggle fa fa-bars" (click)="toggle()"></span>
@@ -30,7 +30,7 @@
       <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" [multiple]="true" (itemClick)="onItemClick($event)"></eui-sidemenu>
      </div>
     <!--主体展示部分-->
-    <div class="main-body f-full" style="height:92vh;width:0px;overflow-y: auto;overflow-x: auto;">
+    <div class="main-body f-full" style="height:92vh;width:0px;overflow-y: auto;overflow-x: auto;padding: 1px;">
       <router-outlet></router-outlet>
     </div>
   </div>

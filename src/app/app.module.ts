@@ -40,7 +40,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'admin', component: AdminComponent, children: [
-      {path: '', component: CoverComponent},
+      {path: '', component: UserInfoComponent},
       {path: 'goods', component: GoodsComponent},
       {path: 'user', component: UserInfoComponent},
       {path: 'cover', component: CoverComponent},
