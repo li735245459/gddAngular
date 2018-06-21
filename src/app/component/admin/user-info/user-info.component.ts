@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-
+import {DataListComponent} from 'ng-easyui/components/datalist/datalist.component';
 import {UserService} from '../../../service/user.service';
+
 
 @Component({
   selector: 'app-user-info',
@@ -9,7 +10,7 @@ import {UserService} from '../../../service/user.service';
 })
 export class UserInfoComponent implements OnInit {
   msg = '查询成功';
-  selectionRows; // 选中的行
+  selectedRow; // 单击选中行,可以是多个
   data; // 数据
   total; // 所有数据大小
   pageSize = 20; // 分页大小
@@ -23,7 +24,7 @@ export class UserInfoComponent implements OnInit {
   loadMsg = '数据正在加载..';
 
   constructor(
-    private userService: UserService) {
+    private userService: UserService, private dataListComponent: DataListComponent) {
   }
 
   ngOnInit() {
@@ -85,15 +86,15 @@ export class UserInfoComponent implements OnInit {
    * 取消选择
    */
   onRedo(): void {
-    this.selectionRows = null;
+    this.selectedRow = null;
   }
 
   /**
    * 删除
    */
   onRemove(): void {
-    if (this.selectionRows) {
-      console.log(this.selectionRows.map(row => row.id).join(','));
+    if (this.selectedRow) {
+      console.log(this.selectedRow.map(row => row.id).join(','));
     } else {
       console.log('请选中需要删除的数据');
     }
@@ -120,4 +121,12 @@ export class UserInfoComponent implements OnInit {
     this.queryByPage();
   }
 
+  /**
+   * 右击row选中该行
+   * @param event
+   */
+  onRowContextMenu(event): void {
+    console.log(event.row);
+    this.dataListComponent.selectRow(event.row);
+  }
 }

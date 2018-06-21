@@ -1,4 +1,5 @@
-<eui-panel [bodyStyle]="{height:'200px',margin:'1px',padding:'5px'}" [collapsible]="true" [collapsed]="true">
+<!--表格操作栏-->
+<eui-panel [bodyStyle]="{padding:'4px'}" [collapsible]="true" [collapsed]="true">
   <eui-panel-header>
     <div class="f-row">
       <div style="padding:2px">
@@ -10,16 +11,26 @@
     </div>
   </eui-panel-header>
   <div>Panel Content.</div>
+  <div>Panel Content.</div>
+  <div>Panel Content.</div>
+  <div>Panel Content.</div>
 </eui-panel>
-<eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss" [euiContextMenu]="m1"
-              selectionMode="multiple" [(selection)]="selectionRows"
+<!--表格-->
+<eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss"
+              [euiContextMenu]="menu" (rowContextMenu)="onRowContextMenu($event)"
+              selectionMode="multiple" [(selection)]="selectedRow"
               (pageChange)="onPageChange($event)" [loading]="loading" [loadMsg]="loadMsg"
               [pagination]="true" [total]="total" [pageOptions]="pageOptions" [pageSize]="pageSize">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
-  <eui-grid-column field="name" title="姓名" frozen="false"></eui-grid-column>
-  <eui-grid-column field="sex" title="性别" width="80" align="center" [cellCss]="setSexCellCss"></eui-grid-column>
+  <eui-grid-column field="name" title="姓名" frozen="false" width="60"></eui-grid-column>
+  <eui-grid-column field="sex" title="性别" width="80" align="center" [cellCss]="setSexCellCss">
+    <ng-template euiCellTemplate let-row>
+        <div *ngIf="row.sex=='male'">男</div>
+        <div *ngIf="row.sex=='remale'">女</div>
+    </ng-template>
+  </eui-grid-column>
   <!--<eui-grid-column field="password" title="密码"></eui-grid-column>-->
   <!--<eui-grid-column field="hobby" title="兴趣" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="introduce" title="备注" width="100"></eui-grid-column>-->
@@ -31,23 +42,24 @@
   <eui-grid-column field="loginIp" title="登陆IP" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="email" title="邮箱"></eui-grid-column>
-  <eui-grid-column field="id" title="编号"></eui-grid-column>
+  <eui-grid-column field="email" title="邮箱" width="150"></eui-grid-column>
+  <eui-grid-column field="id" title="编号" width="280"></eui-grid-column>
   <ng-template euiPageTemplate let-pager>
     <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
     <eui-textbox iconCls="icon-search"></eui-textbox>
   </ng-template>
-  <eui-menu #m1>
-    <eui-menu-item text="New"></eui-menu-item>
-    <eui-menu-item text="Open">
-      <eui-submenu>
-        <eui-menu-item text="Word"></eui-menu-item>
-        <eui-menu-item text="Excel"></eui-menu-item>
-        <eui-menu-item text="PowerPoint"></eui-menu-item>
-      </eui-submenu>
-    </eui-menu-item>
-    <eui-menu-item text="Save" iconCls="icon-save"></eui-menu-item>
-    <eui-menu-item text="Print" iconCls="icon-print" [disabled]="true"></eui-menu-item>
-    <eui-menu-item text="Exit"></eui-menu-item>
-  </eui-menu>
 </eui-datagrid>
+<!--表格右键菜单-->
+<eui-menu #menu>
+  <eui-menu-item text="New"></eui-menu-item>
+  <eui-menu-item text="Open">
+    <eui-submenu>
+      <eui-menu-item text="Word"></eui-menu-item>
+      <eui-menu-item text="Excel"></eui-menu-item>
+      <eui-menu-item text="PowerPoint"></eui-menu-item>
+    </eui-submenu>
+  </eui-menu-item>
+  <eui-menu-item text="Save" iconCls="icon-save"></eui-menu-item>
+  <eui-menu-item text="Print" iconCls="icon-print" [disabled]="true"></eui-menu-item>
+  <eui-menu-item text="Exit"></eui-menu-item>
+</eui-menu>
