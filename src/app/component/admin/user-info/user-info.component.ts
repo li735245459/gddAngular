@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {DataGridModule} from 'ng-easyui/components/datagrid/datagrid.module';
 
 import {UserService} from '../../../service/user.service';
 
@@ -31,5 +32,7 @@ export class UserInfoComponent implements OnInit {
       }
     });
   }
+
+
 
 }

@@ -2,18 +2,20 @@
   <eui-panel-header>
     <div class="f-row">
       <div style="padding:2px">
-        <eui-linkbutton iconCls="icon-reload" [plain]="true">刷新</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-save" [plain]="true">全选</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-redo" [plain]="true">取消选择</eui-linkbutton>
         <eui-linkbutton iconCls="icon-add" [plain]="true">添加</eui-linkbutton>
         <eui-linkbutton iconCls="icon-remove" [plain]="true">删除</eui-linkbutton>
         <eui-linkbutton iconCls="icon-save" [plain]="true">保存</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-redo" [plain]="true">取消</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-cancel" [plain]="true">取消</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-reload" [plain]="true">刷新</eui-linkbutton>
       </div>
     </div>
   </eui-panel-header>
   <div>Panel Content.</div>
 </eui-panel>
-<eui-datagrid [data]="data" [pagination]="true"  [total]="total" [pageOptions]="pageOptions">>
-  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false">
+<eui-datagrid [data]="data" [total]="total" [pagination]="true" [pageOptions]="pageOptions" idField="id" selectionMode="multiple">
+  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
   <eui-grid-column field="name" title="姓名" frozen="false"></eui-grid-column>

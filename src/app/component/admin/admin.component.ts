@@ -19,15 +19,12 @@ export class AdminComponent implements OnInit {
       state: 'open',
       children: [{
         text: '用户信息',
-        state: 'open',
-        children: [{
-          text: '基本信息',
-          selected: true,
-          link: 'user'
-        }, {
-          text: '头像',
-          link: 'cover'
-        }]
+        link: 'user'
+        // children: [{
+        //   text: '基本信息',
+        //   selected: true,
+        //   link: 'user'
+        // }]
       }]
     }, {
       text: '图片管理',
