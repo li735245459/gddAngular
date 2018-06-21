@@ -4,9 +4,10 @@
     <div class="f-row">
       <div style="padding:2px">
         <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onAdd()">添加</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemove()">删除</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onRedo()">取消选择</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemoves()">删除</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
         <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onRemoveAll()">清空</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
       </div>
     </div>
   </eui-panel-header>
@@ -17,7 +18,6 @@
 </eui-panel>
 <!--表格-->
 <eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss"
-              [euiContextMenu]="menu" (rowContextMenu)="onRowContextMenu($event)"
               selectionMode="multiple" [(selection)]="selectedRow"
               (pageChange)="onPageChange($event)" [loading]="loading" [loadMsg]="loadMsg"
               [pagination]="true" [total]="total" [pageOptions]="pageOptions" [pageSize]="pageSize">
@@ -27,8 +27,8 @@
   <eui-grid-column field="name" title="姓名" frozen="false" width="60"></eui-grid-column>
   <eui-grid-column field="sex" title="性别" width="80" align="center" [cellCss]="setSexCellCss">
     <ng-template euiCellTemplate let-row>
-        <div *ngIf="row.sex=='male'">男</div>
-        <div *ngIf="row.sex=='remale'">女</div>
+      <div *ngIf="row.sex=='male'">男</div>
+      <div *ngIf="row.sex=='remale'">女</div>
     </ng-template>
   </eui-grid-column>
   <!--<eui-grid-column field="password" title="密码"></eui-grid-column>-->
@@ -42,24 +42,23 @@
   <eui-grid-column field="loginIp" title="登陆IP" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="email" title="邮箱" width="150"></eui-grid-column>
-  <eui-grid-column field="id" title="编号" width="280"></eui-grid-column>
+  <eui-grid-column field="email" title="邮箱" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="id" title="编号" align="center" width="260"></eui-grid-column>
+  <!--euiCellTemplate-->
+  <eui-grid-column title="操作" align="center" width="120">
+    <ng-template euiCellTemplate let-row let-rowIndex="rowIndex">
+      <eui-linkbutton iconCls="icon-edit" [plain]="true" (click)="onEditRow(rowIndex)">编辑</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemove(row)">删除</eui-linkbutton>
+    </ng-template>
+  </eui-grid-column>
+  <!--euiPageTemplate-->
   <ng-template euiPageTemplate let-pager>
-    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
     <eui-textbox iconCls="icon-search"></eui-textbox>
   </ng-template>
 </eui-datagrid>
-<!--表格右键菜单-->
-<eui-menu #menu>
-  <eui-menu-item text="New"></eui-menu-item>
-  <eui-menu-item text="Open">
-    <eui-submenu>
-      <eui-menu-item text="Word"></eui-menu-item>
-      <eui-menu-item text="Excel"></eui-menu-item>
-      <eui-menu-item text="PowerPoint"></eui-menu-item>
-    </eui-submenu>
-  </eui-menu-item>
-  <eui-menu-item text="Save" iconCls="icon-save"></eui-menu-item>
-  <eui-menu-item text="Print" iconCls="icon-print" [disabled]="true"></eui-menu-item>
-  <eui-menu-item text="Exit"></eui-menu-item>
-</eui-menu>
+<!--弹框-->
+<eui-dialog [title]="'编辑数据'" [panelStyle]="{width:'50%',height:'80%'}"
+            [closed]="editClosed" [modal]="true" (close)="onEditClose()">
+  <div>{{editingRow.id}}</div>
+</eui-dialog>
+

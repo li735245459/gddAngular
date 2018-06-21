@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {DataListComponent} from 'ng-easyui/components/datalist/datalist.component';
 import {UserService} from '../../../service/user.service';
-
+import {User} from '../../../model/user';
 
 @Component({
   selector: 'app-user-info',
@@ -10,21 +9,23 @@ import {UserService} from '../../../service/user.service';
 })
 export class UserInfoComponent implements OnInit {
   msg = '查询成功';
-  selectedRow; // 单击选中行,可以是多个
   data; // 数据
   total; // 所有数据大小
   pageSize = 20; // 分页大小
   pageNumber = 1; // 当前分页
   pageOptions = { // 分页导航设置
-    pageList: [10, 20, 40],
+    pageList: [20, 30, 40],
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
     layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info'] // 报错
   };
-  loading = true;
+  loading = true; // 添加表格加载状态
   loadMsg = '数据正在加载..';
+  selectedRow; // 单击选中行,可以是多个
+  editClosed = true; // 默认编辑数据弹框关闭
+  editingRow: User = {}; // 正在编辑的行
 
   constructor(
-    private userService: UserService, private dataListComponent: DataListComponent) {
+    private userService: UserService) {
   }
 
   ngOnInit() {
@@ -83,16 +84,31 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 取消选择
+   * 取消已选择的行
    */
-  onRedo(): void {
+  onUnSelect(): void {
     this.selectedRow = null;
   }
 
   /**
-   * 删除
+   * 添加
    */
-  onRemove(): void {
+  onAdd(): void {
+    this.editingRow = {};
+    this.editClosed = false;
+  }
+
+  /**
+   * 删除所有
+   */
+  onRemoveAll(): void {
+    console.log('删除所有数据');
+  }
+
+  /**
+   * 删除多行,包含一行
+   */
+  onRemoves(): void {
     if (this.selectedRow) {
       console.log(this.selectedRow.map(row => row.id).join(','));
     } else {
@@ -101,17 +117,21 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 清空所有
+   * 删除一行
+   * @param row
    */
-  onRemoveAll(): void {
-    console.log('删除所有数据');
+  onRemove(row): void {
+    this.selectedRow = [row];
+    this.onRemoves();
   }
 
   /**
-   * 添加
+   * 编辑
+   * @param row
    */
-  onAdd(): void {
-
+  onEditRow(rowIndex): void {
+    this.editingRow = this.data[rowIndex];
+    this.editClosed = false;
   }
 
   /**
@@ -122,11 +142,11 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 右击row选中该行
-   * @param event
+   * 关闭弹框
    */
-  onRowContextMenu(event): void {
-    console.log(event.row);
-    this.dataListComponent.selectRow(event.row);
+  onEditClose(): void {
+    this.editClosed = true;
+    this.editingRow = {};
   }
+
 }

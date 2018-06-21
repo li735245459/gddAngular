@@ -1,6 +1,6 @@
 export class User {
   public id?: string;
-  public create_time?: string;
+  public createTime?: string;
   public cover?: string;
   public name?: string;
   public phone?: string;
@@ -14,5 +14,6 @@ export class User {
   public city?: string;
   public area?: string;
   public address?: string;
-  public code?: string;
+  public loginTime?: string;
+  public loginIp?: string;
 }
