@@ -19,7 +19,6 @@ export class ForgetPasswordComponent implements OnInit {
   waitSeconds = 0;
   user: User = { // User模型
     email: 'lixing_java@163.com',
-    code: ''
   };
   userForm = new FormGroup({ // User表单
     email: new FormControl('', [

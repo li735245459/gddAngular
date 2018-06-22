@@ -8,21 +8,24 @@ import {User} from '../../../model/user';
   styleUrls: ['./user-info.component.css']
 })
 export class UserInfoComponent implements OnInit {
-  msg = '查询成功';
-  data; // 数据
-  total; // 所有数据大小
-  pageSize = 20; // 分页大小
-  pageNumber = 1; // 当前分页
-  pageOptions = { // 分页导航设置
+  msg = '查询成功'; // 全局提示消息
+  data; // 分页数据
+  total; // 所有数据条数
+  pageSize = 20; // 默认分页大小
+  pageNumber = 1; // 当前分页号
+  pageOptions = { // 分页导航条参数设置 'list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info'
     pageList: [20, 30, 40],
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
-    layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info'] // 报错
+    layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info', 'refresh']
   };
-  loading = true; // 添加表格加载状态
-  loadMsg = '数据正在加载..';
-  selectedRow; // 单击选中行,可以是多个
-  editClosed = true; // 默认编辑数据弹框关闭
+  loading = true; // 开启datagrid加载提示
+  loadMsg = '正在加载..';
+  selectedRow; // 选中的行(此处可多选,至少选中一行)
   editingRow: User = {}; // 正在编辑的行
+  editClosed = true; // 添加、编辑弹框关闭
+  deleteClosed = true; // 删除提示弹框关闭
+  editTitle; // 添加、编辑弹框标题
+  deleteTitle; // 删除弹框标题
 
   constructor(
     private userService: UserService) {
@@ -84,54 +87,45 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 取消已选择的行
+   * 双击行-打开编辑框
+   * @param event
    */
-  onUnSelect(): void {
-    this.selectedRow = null;
+  onRowDblClick(event): void {
+    this.editTitle = '编辑用户';
+    this.editingRow = event;
+    this.editClosed = false;
   }
 
   /**
-   * 添加
+   * 添加数据-打开编辑框
    */
   onAdd(): void {
+    this.editTitle = '添加用户';
     this.editingRow = {};
     this.editClosed = false;
   }
 
   /**
-   * 删除所有
+   * 清空数据
    */
-  onRemoveAll(): void {
-    console.log('删除所有数据');
+  onClean(): void {
+    this.deleteTitle = '清空数据';
+    this.deleteClosed = false;
+    this.msg = '确定要删除所有数据,删除后将无法恢复！';
   }
 
   /**
-   * 删除多行,包含一行
+   * 删除行数据至少一行)
    */
-  onRemoves(): void {
+  onDelete(): void {
+    this.deleteTitle = '删除数据';
+    this.deleteClosed = false;
     if (this.selectedRow) {
       console.log(this.selectedRow.map(row => row.id).join(','));
+      this.msg = `确定删除: ${this.selectedRow.map(row => row.name).join(',')},删除后将无法恢复！`;
     } else {
-      console.log('请选中需要删除的数据');
+      this.msg = '请选中需要删除的数据';
     }
-  }
-
-  /**
-   * 删除一行
-   * @param row
-   */
-  onRemove(row): void {
-    this.selectedRow = [row];
-    this.onRemoves();
-  }
-
-  /**
-   * 编辑
-   * @param row
-   */
-  onEditRow(rowIndex): void {
-    this.editingRow = this.data[rowIndex];
-    this.editClosed = false;
   }
 
   /**
@@ -142,11 +136,26 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 关闭弹框
+   * 取消已选择的行
+   */
+  onUnSelect(): void {
+    this.selectedRow = null;
+  }
+
+  /**
+   * 关闭添加、编辑弹框回调
    */
   onEditClose(): void {
-    this.editClosed = true;
     this.editingRow = {};
+    this.editClosed = true;
+  }
+
+  /**
+   * 关闭删除弹框回调
+   */
+  onDeleteClose(): void {
+    this.onUnSelect();
+    this.deleteClosed = true;
   }
 
 }

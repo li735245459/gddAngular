@@ -4,9 +4,11 @@
     <div class="f-row">
       <div style="padding:2px">
         <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onAdd()">添加</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemoves()">删除</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onDelete()">删除</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onClean()">清空</eui-linkbutton>
         <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onRemoveAll()">清空</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-import" [plain]="true" (click)="onReLoad()">导入</eui-linkbutton>
+        <eui-linkbutton iconCls="icon-outport" [plain]="true" (click)="onReLoad()">导出</eui-linkbutton>
         <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
       </div>
     </div>
@@ -17,7 +19,7 @@
   <div>Panel Content.</div>
 </eui-panel>
 <!--表格-->
-<eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss"
+<eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss" (rowDblClick)="onRowDblClick($event)"
               selectionMode="multiple" [(selection)]="selectedRow"
               (pageChange)="onPageChange($event)" [loading]="loading" [loadMsg]="loadMsg"
               [pagination]="true" [total]="total" [pageOptions]="pageOptions" [pageSize]="pageSize">
@@ -45,20 +47,41 @@
   <eui-grid-column field="email" title="邮箱" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="id" title="编号" align="center" width="260"></eui-grid-column>
   <!--euiCellTemplate-->
-  <eui-grid-column title="操作" align="center" width="120">
-    <ng-template euiCellTemplate let-row let-rowIndex="rowIndex">
-      <eui-linkbutton iconCls="icon-edit" [plain]="true" (click)="onEditRow(rowIndex)">编辑</eui-linkbutton>
-      <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemove(row)">删除</eui-linkbutton>
-    </ng-template>
-  </eui-grid-column>
+  <!--<eui-grid-column title="操作" align="center" width="120">-->
+    <!--<ng-template euiCellTemplate let-row let-rowIndex="rowIndex">-->
+      <!--<eui-linkbutton iconCls="icon-edit" [plain]="true" (click)="onEditRow(rowIndex)">编辑</eui-linkbutton>-->
+      <!--<eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemove(row)">删除</eui-linkbutton>-->
+    <!--</ng-template>-->
+  <!--</eui-grid-column>-->
   <!--euiPageTemplate-->
-  <ng-template euiPageTemplate let-pager>
-    <eui-textbox iconCls="icon-search"></eui-textbox>
-  </ng-template>
-</eui-datagrid>
-<!--弹框-->
-<eui-dialog [title]="'编辑数据'" [panelStyle]="{width:'50%',height:'80%'}"
-            [closed]="editClosed" [modal]="true" (close)="onEditClose()">
+  <!--<ng-template euiPageTemplate let-pager>-->
+    <!--<eui-textbox iconCls="icon-search"></eui-textbox>-->
+  <!--</ng-template>-->
+<!--</eui-datagrid>-->
+<!--添加、编辑弹框-->
+<eui-dialog [title]="editTitle" [panelStyle]="{width:'50%',height:'80%'}"
+                         [closed]="editClosed" [modal]="true" (close)="onEditClose()">
   <div>{{editingRow.id}}</div>
 </eui-dialog>
+<!--删除提示弹框-->
+<eui-dialog [title]="deleteTitle" [panelStyle]="{width:'50%',height:'80%'}"
+            [closed]="deleteClosed" [modal]="true" (close)="onDeleteClose()">
+  <div>{{editingRow.id}}</div>
+  <div>{{msg}}</div>
+</eui-dialog>
 
+<eui-dialog #d1
+            panelCls="mydlg"
+            headerCls="mydlg-header"
+            footerCls="mydlg-footer"
+            [modal]="true"
+            borderType="none">
+  <eui-panel-header>Please Confirm</eui-panel-header>
+  <p style="text-align:center;margin:50px 0;font-size:16px">Are you sure you want to continue?</p>
+  <eui-panel-footer>
+    <eui-button-group style="width:100%;height:50px">
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="mybtn">Ok</eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="mybtn">Cancel</eui-linkbutton>
+    </eui-button-group>
+  </eui-panel-footer>
+</eui-dialog>
