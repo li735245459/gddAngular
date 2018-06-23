@@ -2,7 +2,7 @@
 <eui-panel [collapsible]="true" [collapsed]="false"
            [headerStyle]="{padding: '2px 0px'}"
            [bodyStyle]="{padding:'10px 0px'}"
-           [footerStyle]="{padding:'10px 0px', marginBottom:'1px', marginTop:'1px'}">
+           [footerStyle]="{padding:'5px 0px', marginBottom:'1px', marginTop:'1px'}">
   <eui-panel-header>
     <div class="f-row text-center">
       <div class="f-full"><h3>用户信息</h3></div>
@@ -37,9 +37,9 @@
     <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onAdd()">添加</eui-linkbutton>
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onDelete()">删除</eui-linkbutton>
     <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onClean()">清空数据</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-import" [plain]="true" (click)="onReLoad()">导入</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-outport" [plain]="true" (click)="onReLoad()">导出</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onReLoad()">导入</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-undo" [plain]="true" (click)="onReLoad()">导出</eui-linkbutton>
     <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空查询条件</eui-linkbutton>
     <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
     <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
@@ -47,9 +47,9 @@
 </eui-panel>
 
 <!--表格-->
-<eui-datagrid idField="id" [data]="data" [total]="total" [rowCss]="setRowCss" (rowDblClick)="onRowDblClick($event)"
-              selectionMode="multiple" [(selection)]="selectedRow" [loading]="loading" [loadMsg]="loadMsg"
-              (pageChange)="onPageChange($event)" [pagination]="true" [pageOptions]="pageOptions">
+<eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg"
+              [pagination]="true" [pageOptions]="pageOptions" [pageNumber]="pageNumber" [pageSize]="pageSize" [total]="total"
+              (rowDblClick)="onRowDblClick($event)" (pageChange)="onPageChange($event)" selectionMode="multiple" [(selection)]="selectedRow">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>

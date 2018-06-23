@@ -30,17 +30,21 @@ export class AdminComponent implements OnInit {
       text: '图片管理',
       iconCls: 'fa fa-file-picture-o',
       children: [{
-        text: '图片分类'
+        text: '图片分类',
+        link: 'cover',
       }, {
-        text: '图片信息'
+        text: '图片信息',
+        link: 'cover',
       }]
     }, {
       text: '商品管理',
       iconCls: 'fa fa-shopping-bag',
       children: [{
-        text: '商品分类'
+        text: '商品分类',
+        link: 'cover',
       }, {
-        text: '商品信息'
+        text: '商品信息',
+        link: 'cover',
       }]
     }, {
       text: '销售管理',
@@ -49,6 +53,13 @@ export class AdminComponent implements OnInit {
         text: '销售记录'
       }, {
         text: '销售统计'
+      }]
+    }, {
+      text: '日志管理',
+      iconCls: 'fa fa-print',
+      children: [{
+        text: '日志信息',
+        link: 'log',
       }]
     }];
 

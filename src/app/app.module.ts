@@ -1,16 +1,12 @@
 import {BrowserModule} from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {EasyUIModule} from 'ng-easyui/components/easyui/easyui.module';
 import {HttpClientModule} from '@angular/common/http';
 import {Routes, RouterModule} from '@angular/router';
-import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
-
-import {InMemoryDb} from './data/dataSource';
 import {AppComponent} from './app.component';
-import {LogComponent} from './component/log/log.component';
 import {LoginComponent} from './component/user/login/login.component';
 import {RegisterComponent} from './component/user/register/register.component';
 import {ForgetPasswordComponent} from './component/user/forget-password/forget-password.component';
@@ -24,8 +20,9 @@ import {PetsComponent} from './component/index/pets/pets.component';
 import {HomeComponent} from './component/index/home/home.component';
 import {AdminComponent} from './component/admin/admin.component';
 import {GoodsComponent} from './component/admin/goods/goods.component';
-import { CoverComponent } from './component/admin/cover/cover.component';
-import { UserInfoComponent } from './component/admin/user-info/user-info.component';
+import {CoverComponent} from './component/admin/cover/cover.component';
+import {UserInfoComponent} from './component/admin/user-info/user-info.component';
+import {LogComponent} from './component/admin/log/log.component';
 
 /**
  * 全局路由配置
@@ -44,6 +41,7 @@ const appRoutes: Routes = [
       {path: 'goods', component: GoodsComponent},
       {path: 'user', component: UserInfoComponent},
       {path: 'cover', component: CoverComponent},
+      {path: 'log', component: LogComponent},
     ], canActivate: [GlobalRoutingGuard]
   },
   {path: 'login', component: LoginComponent},
@@ -58,7 +56,6 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    LogComponent,
     LoginComponent,
     RegisterComponent,
     IndexComponent,
@@ -71,7 +68,8 @@ const appRoutes: Routes = [
     ForgetPasswordComponent,
     ModifyPasswordComponent,
     UserComponent,
-    ErrorComponent
+    ErrorComponent,
+    LogComponent
   ],
   imports: [
     BrowserModule,
@@ -87,10 +85,6 @@ const appRoutes: Routes = [
     ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     // HttpClient模块
     HttpClientModule,
-    // 模拟内存数据,生产环境需要关闭
-    // HttpClientInMemoryWebApiModule.forRoot(
-    //   InMemoryDb, { dataEncapsulation: false }
-    // ),
     // bootstrap模块
     NgbModule.forRoot(),
     // easyui模块
