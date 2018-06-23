@@ -9,37 +9,45 @@ import {User} from '../../../model/user';
 })
 export class UserInfoComponent implements OnInit {
   msg = '查询成功'; // 全局提示消息
+  //
   data; // 分页数据
   total; // 所有数据条数
   pageSize = 20; // 默认分页大小
   pageNumber = 1; // 当前分页号
-  pageOptions = { // 分页导航条参数设置 'list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info'
+  pageOptions = { // 分页导航条参数设置
     pageList: [20, 30, 40],
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
     layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info', 'refresh']
   };
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
+  //
   selectedRow; // 选中的行(此处可多选,至少选中一行)
   editingRow: User = {}; // 正在编辑的行
   editClosed = true; // 添加、编辑弹框关闭
   deleteClosed = true; // 删除提示弹框关闭
   editTitle; // 添加、编辑弹框标题
   deleteTitle; // 删除弹框标题
+  //
+  user: User = {
+    sex: 'male'
+  };
+
 
   constructor(
     private userService: UserService) {
   }
 
   ngOnInit() {
-    this.queryByPage();
+    this.page();
   }
 
   /**
    * 分页查询
    */
-  queryByPage() {
-    this.userService.queryByPage().subscribe(responseJson => {
+  page() {
+    // 参数以对象的方式传入
+    this.userService.queryByPage(this.pageNumber, this.pageNumber).subscribe(responseJson => {
       if (responseJson.code === 0) {
         this.msg = '查询成功';
         this.data = responseJson.data;
@@ -52,13 +60,13 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 分页插件回调事件
+   * 分页插件回调
    * @param event
    */
   onPageChange(event) {
     this.pageNumber = event.pageNumber;
     this.pageSize = event.pageSize;
-    this.queryByPage();
+    this.page();
   }
 
   /**
@@ -115,7 +123,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 删除行数据至少一行)
+   * 删除行数据(至少一行)
    */
   onDelete(): void {
     this.deleteTitle = '删除数据';
@@ -132,7 +140,7 @@ export class UserInfoComponent implements OnInit {
    * 刷新数据
    */
   onReLoad(): void {
-    this.queryByPage();
+    this.page();
   }
 
   /**
@@ -157,5 +165,6 @@ export class UserInfoComponent implements OnInit {
     this.onUnSelect();
     this.deleteClosed = true;
   }
+
 
 }

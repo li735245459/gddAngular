@@ -10,7 +10,7 @@ import {User} from '../model/user';
 })
 export class UserService {
   constructor(
-    private http: HttpClient) {
+  private http: HttpClient) {
   }
 
   /**
@@ -80,7 +80,8 @@ export class UserService {
    * 分页查询用户信息
    * @returns {Observable<any>}
    */
-  queryByPage(): Observable<any> {
-    return this.http.get<any>(`/gdd/user/queryByPage`);
+  queryByPage(pageNumber: number, pageSize: number): Observable<any> {
+    // 改用post请求,参数太多导致请求url太长
+    return this.http.get<any>(`/gdd/user/page`);
   }
 }

@@ -1,28 +1,56 @@
 <!--表格操作栏-->
-<eui-panel [bodyStyle]="{padding:'4px'}" [collapsible]="true" [collapsed]="true">
+<eui-panel [collapsible]="true" [collapsed]="false"
+           [headerStyle]="{padding: '2px 0px'}"
+           [bodyStyle]="{padding:'0px 0px'}"
+           [footerStyle]="{padding:'10px 0px', marginBottom:'1px', marginTop:'1px'}">
   <eui-panel-header>
-    <div class="f-row">
-      <div style="padding:2px">
-        <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onAdd()">添加</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onDelete()">删除</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onClean()">清空</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-import" [plain]="true" (click)="onReLoad()">导入</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-outport" [plain]="true" (click)="onReLoad()">导出</eui-linkbutton>
-        <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
-      </div>
+    <div class="f-row text-center">
+      <div class="f-full"><h3>用户信息</h3></div>
     </div>
   </eui-panel-header>
-  <div>Panel Content.</div>
-  <div>Panel Content.</div>
-  <div>Panel Content.</div>
-  <div>Panel Content.</div>
+  <div class="container-fluid panel-body-form">
+    <div class="row">
+      <div class="col form-inline">
+        <label for="usr">姓名:&nbsp;</label>
+        <input type="text" class="form-control" id="usr">
+      </div>
+      <div class="col form-inline">
+        <label for="phone">号码:&nbsp;</label>
+        <input type="text" class="form-control" id="phone">
+      </div>
+      <div class="col form-inline">
+        <label for="email">邮箱:&nbsp;</label>
+        <input type="text" class="form-control" id="email">
+      </div>
+      <div class="col form-inline">
+        <span>性别:&nbsp;</span>
+        <select class="form-control" name="city" [(ngModel)]="user.sex">
+          <option value="{{item.id}}" *ngFor="let item of [{id:'male',name:'男'},{id:'female',name:'女'}];">
+            {{item.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">登陆时间</div>
+    </div>
+  </div>
+  <eui-panel-footer>
+    <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onAdd()">添加</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onDelete()">删除</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onClean()">清空</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-import" [plain]="true" (click)="onReLoad()">导入</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-outport" [plain]="true" (click)="onReLoad()">导出</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onReLoad()">查询</eui-linkbutton>
+  </eui-panel-footer>
 </eui-panel>
+
 <!--表格-->
-<eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss" (rowDblClick)="onRowDblClick($event)"
-              selectionMode="multiple" [(selection)]="selectedRow"
-              (pageChange)="onPageChange($event)" [loading]="loading" [loadMsg]="loadMsg"
-              [pagination]="true" [total]="total" [pageOptions]="pageOptions" [pageSize]="pageSize">
+<eui-datagrid idField="id" [data]="data" [total]="total" [rowCss]="setRowCss" (rowDblClick)="onRowDblClick($event)"
+              selectionMode="multiple" [(selection)]="selectedRow" [loading]="loading" [loadMsg]="loadMsg"
+              (pageChange)="onPageChange($event)" [pagination]="true" [pageOptions]="pageOptions">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
@@ -48,19 +76,20 @@
   <eui-grid-column field="id" title="编号" align="center" width="260"></eui-grid-column>
   <!--euiCellTemplate-->
   <!--<eui-grid-column title="操作" align="center" width="120">-->
-    <!--<ng-template euiCellTemplate let-row let-rowIndex="rowIndex">-->
-      <!--<eui-linkbutton iconCls="icon-edit" [plain]="true" (click)="onEditRow(rowIndex)">编辑</eui-linkbutton>-->
-      <!--<eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemove(row)">删除</eui-linkbutton>-->
-    <!--</ng-template>-->
+  <!--<ng-template euiCellTemplate let-row let-rowIndex="rowIndex">-->
+  <!--<eui-linkbutton iconCls="icon-edit" [plain]="true" (click)="onEditRow(rowIndex)">编辑</eui-linkbutton>-->
+  <!--<eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onRemove(row)">删除</eui-linkbutton>-->
+  <!--</ng-template>-->
   <!--</eui-grid-column>-->
   <!--euiPageTemplate-->
   <!--<ng-template euiPageTemplate let-pager>-->
-    <!--<eui-textbox iconCls="icon-search"></eui-textbox>-->
+  <!--<eui-textbox iconCls="icon-search"></eui-textbox>-->
   <!--</ng-template>-->
-<!--</eui-datagrid>-->
+</eui-datagrid>
+
 <!--添加、编辑弹框-->
 <eui-dialog [title]="editTitle" [panelStyle]="{width:'50%',height:'80%'}"
-                         [closed]="editClosed" [modal]="true" (close)="onEditClose()">
+            [closed]="editClosed" [modal]="true" (close)="onEditClose()">
   <div>{{editingRow.id}}</div>
 </eui-dialog>
 <!--删除提示弹框-->
@@ -70,18 +99,18 @@
   <div>{{msg}}</div>
 </eui-dialog>
 
-<eui-dialog #d1
-            panelCls="mydlg"
-            headerCls="mydlg-header"
-            footerCls="mydlg-footer"
-            [modal]="true"
-            borderType="none">
-  <eui-panel-header>Please Confirm</eui-panel-header>
-  <p style="text-align:center;margin:50px 0;font-size:16px">Are you sure you want to continue?</p>
-  <eui-panel-footer>
-    <eui-button-group style="width:100%;height:50px">
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="mybtn">Ok</eui-linkbutton>
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="mybtn">Cancel</eui-linkbutton>
-    </eui-button-group>
-  </eui-panel-footer>
-</eui-dialog>
+<!--<eui-dialog #d1-->
+<!--panelCls="mydlg"-->
+<!--headerCls="mydlg-header"-->
+<!--footerCls="mydlg-footer"-->
+<!--[modal]="true"-->
+<!--borderType="none">-->
+<!--<eui-panel-header>Please Confirm</eui-panel-header>-->
+<!--<p style="text-align:center;margin:50px 0;font-size:16px">Are you sure you want to continue?</p>-->
+<!--<eui-panel-footer>-->
+<!--<eui-button-group style="width:100%;height:50px">-->
+<!--<eui-linkbutton class="f-full" [plain]="true" btnCls="mybtn">Ok</eui-linkbutton>-->
+<!--<eui-linkbutton class="f-full" [plain]="true" btnCls="mybtn">Cancel</eui-linkbutton>-->
+<!--</eui-button-group>-->
+<!--</eui-panel-footer>-->
+<!--</eui-dialog>-->
