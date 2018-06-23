@@ -1,7 +1,7 @@
 <!--表格操作栏-->
 <eui-panel [collapsible]="true" [collapsed]="false"
            [headerStyle]="{padding: '2px 0px'}"
-           [bodyStyle]="{padding:'0px 0px'}"
+           [bodyStyle]="{padding:'10px 0px'}"
            [footerStyle]="{padding:'10px 0px', marginBottom:'1px', marginTop:'1px'}">
   <eui-panel-header>
     <div class="f-row text-center">
@@ -11,39 +11,38 @@
   <div class="container-fluid panel-body-form">
     <div class="row">
       <div class="col form-inline">
-        <label for="usr">姓名:&nbsp;</label>
-        <input type="text" class="form-control" id="usr">
+        <label for="name">姓名：</label>
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="user.name">
       </div>
       <div class="col form-inline">
-        <label for="phone">号码:&nbsp;</label>
-        <input type="text" class="form-control" id="phone">
+        <label for="phone">号码：</label>
+        <input type="text" class="form-control" id="phone" name="phone" [(ngModel)]="user.phone">
       </div>
       <div class="col form-inline">
-        <label for="email">邮箱:&nbsp;</label>
-        <input type="text" class="form-control" id="email">
+        <label for="email">邮箱：</label>
+        <input type="text" class="form-control" id="email" name="email" [(ngModel)]="user.email">
       </div>
       <div class="col form-inline">
-        <span>性别:&nbsp;</span>
-        <select class="form-control" name="city" [(ngModel)]="user.sex">
-          <option value="{{item.id}}" *ngFor="let item of [{id:'male',name:'男'},{id:'female',name:'女'}];">
+        <label for="sex">性别：</label>
+        <select class="form-control" id="sex" name="sex" [(ngModel)]="user.sex">
+          <option value="">所有</option>
+          <option value="{{item.value}}" *ngFor="let item of [{value:'male',name:'男'},{value:'female',name:'女'}];" [selected]="user.sex==item.value">
             {{item.name}}
           </option>
         </select>
       </div>
     </div>
-    <div class="row">
-      <div class="col">登陆时间</div>
-    </div>
   </div>
   <eui-panel-footer>
     <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onAdd()">添加</eui-linkbutton>
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onDelete()">删除</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onClean()">清空</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onClean()">清空数据</eui-linkbutton>
     <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
     <eui-linkbutton iconCls="icon-import" [plain]="true" (click)="onReLoad()">导入</eui-linkbutton>
     <eui-linkbutton iconCls="icon-outport" [plain]="true" (click)="onReLoad()">导出</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空查询条件</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
     <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onReLoad()">查询</eui-linkbutton>
   </eui-panel-footer>
 </eui-panel>
 
@@ -58,7 +57,7 @@
   <eui-grid-column field="sex" title="性别" width="80" align="center" [cellCss]="setSexCellCss">
     <ng-template euiCellTemplate let-row>
       <div *ngIf="row.sex=='male'">男</div>
-      <div *ngIf="row.sex=='remale'">女</div>
+      <div *ngIf="row.sex=='female'">女</div>
     </ng-template>
   </eui-grid-column>
   <!--<eui-grid-column field="password" title="密码"></eui-grid-column>-->

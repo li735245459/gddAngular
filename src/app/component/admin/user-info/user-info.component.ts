@@ -28,11 +28,10 @@ export class UserInfoComponent implements OnInit {
   deleteClosed = true; // 删除提示弹框关闭
   editTitle; // 添加、编辑弹框标题
   deleteTitle; // 删除弹框标题
-  //
+  // 分页查询条件对象
   user: User = {
-    sex: 'male'
+    sex: ''
   };
-
 
   constructor(
     private userService: UserService) {
@@ -43,11 +42,16 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 分页查询
+   * 分页查询方法
    */
   page() {
-    // 参数以对象的方式传入
-    this.userService.queryByPage(this.pageNumber, this.pageNumber).subscribe(responseJson => {
+    console.log('分页条件');
+    console.log(this.user);
+    console.log(this.pageNumber);
+    console.log(this.pageSize);
+    // this.user.pageNumber = this.pageNumber;
+    // this.user.pageSize = this.pageSize;
+    this.userService.page(this.user, this.pageNumber, this.pageSize).subscribe(responseJson => {
       if (responseJson.code === 0) {
         this.msg = '查询成功';
         this.data = responseJson.data;
@@ -60,12 +64,19 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 分页插件回调
+   * 分页插件触发分页查询
    * @param event
    */
   onPageChange(event) {
     this.pageNumber = event.pageNumber;
     this.pageSize = event.pageSize;
+    this.page();
+  }
+
+  /**
+   * 查询按钮触发分页查询
+   */
+  onSearch(): void {
     this.page();
   }
 
@@ -123,6 +134,13 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
+   * 清空分页查询条件
+   */
+  onCleanSearch(): void {
+    this.user = {};
+  }
+
+  /**
    * 删除行数据(至少一行)
    */
   onDelete(): void {
@@ -140,6 +158,7 @@ export class UserInfoComponent implements OnInit {
    * 刷新数据
    */
   onReLoad(): void {
+    this.user = {};
     this.page();
   }
 
@@ -165,6 +184,5 @@ export class UserInfoComponent implements OnInit {
     this.onUnSelect();
     this.deleteClosed = true;
   }
-
 
 }

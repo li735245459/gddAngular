@@ -16,4 +16,6 @@ export class User {
   public address?: string;
   public loginTime?: string;
   public loginIp?: string;
+  public pageNumber?: number;
+  public pageSize?: number;
 }

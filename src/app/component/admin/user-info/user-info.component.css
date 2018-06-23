@@ -1,7 +1,6 @@
-.panel-body-form .row{
-  padding-top: 10px;
-}
 
 .panel-body-form .row .col{
   margin: 5px 0px;
+  text-align: left;
 }
+
