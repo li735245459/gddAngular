@@ -1,3 +1,48 @@
-<p>
-  log works!
-</p>
+<!--表格操作栏-->
+<eui-panel [collapsible]="false" [collapsed]="true"
+           [panelStyle]=""
+           [headerStyle]="{padding: '2px 0px'}"
+           [bodyStyle]="{padding:'10px 0px'}"
+           [footerStyle]="{padding:'5px 0px', marginBottom:'1px', marginTop:'1px'}">
+  <eui-panel-header>
+    <div class="f-row text-center">
+      <div class="f-full"><h3>{{title}}</h3></div>
+    </div>
+  </eui-panel-header>
+  <eui-panel-footer>
+    <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('delete')">删除</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('clean')">清空数据</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">清空数据</eui-linkbutton>
+  </eui-panel-footer>
+</eui-panel>
+
+<!--表格-->
+<eui-datagrid idField="id" [data]="data" [loading]="loading" [loadMsg]="loadMsg"
+              [pagination]="true" [pageOptions]="pageOptions" [pageNumber]="pageNumber" [pageSize]="pageSize"
+              [total]="total" (pageChange)="onPageChange($event)" selectionMode="multiple"
+              [(selection)]="selectedRow">
+  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
+    <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
+  </eui-grid-column>
+  <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="reqUrl" title="URL" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="reqMethod" title="类型" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="reqArgs" title="参数" [sortable]="true" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="controllerMethod" title="方法" [sortable]="true" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="msg" title="异常" [sortable]="true" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="id" title="编号" align="center" width="260"></eui-grid-column>
+</eui-datagrid>
+
+<!--删除提示弹框-->
+<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onDeleteCancel()" borderType="none"
+            panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
+  <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
+  <div>{{msg}}</div>
+  <eui-panel-footer>
+    <eui-button-group style="width:100%;height:50px">
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState" (click)="onDeleteSure()">确定</eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState" (click)="onDeleteCancel()">取消</eui-linkbutton>
+    </eui-button-group>
+  </eui-panel-footer>
+</eui-dialog>
+

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Router} from '@angular/router';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +10,24 @@ export class LogService {
   date = new Date();
   msg: string;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
   }
 
+  /**
+   * 打印日志信息到控制台
+   * @param {string} message
+   */
   print(message: string) {
     const nowDateTime = this.date.toLocaleString();
     console.log(`【${nowDateTime}】-【${message}】`);
   }
 
+  /**
+   * http请求错误处理
+   * @param {string} operation
+   * @param {T} result
+   * @returns {(error: any) => Observable<T>}
+   */
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       // console.error(`status:${error.status}`);
@@ -44,6 +55,27 @@ export class LogService {
       this.router.navigateByUrl(`error`);
       return of(result as T);
     };
+  }
+
+
+  /**
+   * 分页查询
+   * @param log
+   * @param pageNumber
+   * @param pageSize
+   */
+  page(log, pageNumber, pageSize): Observable<any> {
+    return this.http.post<any>(`/gdd/log/page/${pageNumber}/${pageSize}`, log);
+  }
+
+  /**
+   * 删除
+   * id=all表示删除所有
+   * id="id"或"id,id"表示批量删除
+   * @param id
+   */
+  delete(id): Observable<any> {
+    return this.http.post<any>(`/gdd/log/delete`, id);
   }
 
 }

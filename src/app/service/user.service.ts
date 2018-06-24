@@ -83,4 +83,14 @@ export class UserService {
   page(user, pageNumber, pageSize): Observable<any> {
     return this.http.post<any>(`/gdd/user/page/${pageNumber}/${pageSize}`, user);
   }
+
+  /**
+   * 删除
+   * id=all表示删除所有
+   * id="id"或"id,id"表示批量删除
+   * @param id
+   */
+  delete(id): Observable<any> {
+    return this.http.post<any>(`/gdd/user/delete`, id);
+  }
 }

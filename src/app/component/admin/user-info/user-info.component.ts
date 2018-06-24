@@ -1,16 +1,20 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../../../service/user.service';
 import {User} from '../../../model/user';
-
-import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 
 @Component({
   selector: 'app-user-info',
   templateUrl: './user-info.component.html',
-  styleUrls: ['./user-info.component.css']
+  styleUrls: ['./user-info.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class UserInfoComponent implements OnInit, AfterViewInit {
+  title = '用户信息';
   msg = '查询成功'; // 全局提示消息
+  deleteDlgState = true; // false删除弹框打开,true删除弹框关闭(默认)
+  deleteDlgTitle; // 删除弹框标题
+  deleteDlgBtnState = false; // 全局删除弹框状态,false表示可用(默认),true表示禁用
+  deleteState = false; // 全局删除状态,false表示删除选择数据(默认),true表示删除所有数据
   //
   data = []; // 分页数据
   total = 0; // 所有数据条数
@@ -27,16 +31,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   selectedRow; // 选中的行(此处可多选,至少选中一行)
   editingRow: User = {}; // 正在编辑的行
   editClosed = true; // 添加、编辑弹框关闭
-  deleteClosed = true; // 删除提示弹框关闭
   editTitle; // 添加、编辑弹框标题
-  deleteTitle; // 删除弹框标题
   // 分页查询条件对象
   user: User = {
     sex: ''
   };
 
   constructor(
-    private userService: UserService, private messagerService: MessagerService) {
+    private userService: UserService) {
   }
 
   /**
@@ -47,6 +49,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+
   }
 
   /**
@@ -117,6 +120,90 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * 打开删除弹框
+   */
+  onOpenDeleteDlg(param): void {
+    if (param === 'delete') {
+      this.deleteState = false; // 删除所选
+      this.deleteDlgTitle = '删除数据';
+      if (this.selectedRow) {
+        this.msg = '确定要删除所选数据,删除后将无法恢复!';
+      } else {
+        this.deleteDlgBtnState = true; // 禁用删除弹框(确认、取消)按钮
+        this.msg = '请先选中需要删除的数据';
+      }
+    } else {
+      this.deleteState = true; // 删除所有
+      this.deleteDlgTitle = '清空数据';
+      this.msg = '确定要删除所有数据,删除后将无法恢复！';
+    }
+    this.deleteDlgState = false; // 打开删除弹框
+  }
+
+  /**
+   * 确认删除
+   */
+  onDeleteSure(): void {
+    this.deleteDlgBtnState = true; // 禁用删除弹框按钮
+    let id = '';
+    if (this.deleteState) { // 删除所有
+      id = 'all';
+    } else { // 删除所选
+      if (this.selectedRow) {
+        id = this.selectedRow.map(row => row.id).join(',');
+      } else {
+        id = '';
+        this.deleteDlgState = true; // 关闭删除弹框
+      }
+    }
+    if (id) {
+      this.userService.delete(id).subscribe(responseObj => {
+        if (responseObj.code === 0) {
+          this.deleteDlgBtnState = true;
+          this.msg = '删除成功！';
+          setTimeout(() => {
+            this.page(); // 分页
+            this.deleteDlgState = true; // 关闭删除弹框
+          }, 2000);
+        } else {
+          this.msg = '删除失败！';
+        }
+      });
+    }
+  }
+
+  /**
+   * 取消删除
+   */
+  onDeleteCancel(): void {
+    this.onUnSelect(); // 取消所有选中数据
+    this.deleteDlgBtnState = false; // 激活删除弹框(确认、取消)按钮
+    this.deleteDlgState = true; // 关闭删除弹框
+  }
+
+  /**
+   * 取消已选择数据
+   */
+  onUnSelect(): void {
+    this.selectedRow = null;
+  }
+
+  /**
+   * 刷新数据
+   */
+  onReLoad(): void {
+    this.user = {};
+    this.page();
+  }
+
+  /**
+   * 清空分页查询条件
+   */
+  onCleanSearch(): void {
+    this.user = {};
+  }
+
+  /**
    * 双击行-打开编辑框
    * @param event
    */
@@ -136,64 +223,10 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 清空数据
-   */
-  onClean(): void {
-    this.deleteTitle = '清空数据';
-    this.deleteClosed = false;
-    this.msg = '确定要删除所有数据,删除后将无法恢复！';
-  }
-
-  /**
-   * 清空分页查询条件
-   */
-  onCleanSearch(): void {
-    this.user = {};
-  }
-
-  /**
-   * 删除行数据(至少一行)
-   */
-  onDelete(): void {
-    this.deleteTitle = '删除数据';
-    this.deleteClosed = false;
-    if (this.selectedRow) {
-      console.log(this.selectedRow.map(row => row.id).join(','));
-      this.msg = `确定删除: ${this.selectedRow.map(row => row.name).join(',')},删除后将无法恢复！`;
-    } else {
-      this.msg = '请选中需要删除的数据';
-    }
-  }
-
-  /**
-   * 刷新数据
-   */
-  onReLoad(): void {
-    this.user = {};
-    this.page();
-  }
-
-  /**
-   * 取消已选择的行
-   */
-  onUnSelect(): void {
-    this.selectedRow = null;
-  }
-
-  /**
    * 关闭添加、编辑弹框回调
    */
   onEditClose(): void {
     this.editingRow = {};
     this.editClosed = true;
   }
-
-  /**
-   * 关闭删除弹框回调
-   */
-  onDeleteClose(): void {
-    this.onUnSelect();
-    this.deleteClosed = true;
-  }
-
 }
