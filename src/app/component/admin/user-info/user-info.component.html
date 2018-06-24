@@ -1,5 +1,7 @@
-<!--表格操作栏-->
-<eui-panel [collapsible]="true" [collapsed]="false"
+<!--
+表格操作栏
+-->
+<eui-panel [collapsible]="true" [collapsed]="true"
            [panelStyle]=""
            [headerStyle]="{padding: '2px 0px'}"
            [bodyStyle]="{padding:'10px 0px'}"
@@ -9,26 +11,26 @@
       <div class="f-full"><h3>{{title}}</h3></div>
     </div>
   </eui-panel-header>
-  <div class="container-fluid panel-body-form">
+  <div class="container-fluid">
     <div class="row">
       <div class="col form-inline">
         <label for="name">姓名：</label>
-        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="user.name">
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="userForPage.name">
       </div>
       <div class="col form-inline">
         <label for="phone">号码：</label>
-        <input type="text" class="form-control" id="phone" name="phone" [(ngModel)]="user.phone">
+        <input type="text" class="form-control" id="phone" name="phone" [(ngModel)]="userForPage.phone">
       </div>
       <div class="col form-inline">
         <label for="email">邮箱：</label>
-        <input type="text" class="form-control" id="email" name="email" [(ngModel)]="user.email">
+        <input type="text" class="form-control" id="email" name="email" [(ngModel)]="userForPage.email">
       </div>
       <div class="col form-inline">
         <label for="sex">性别：</label>
-        <select class="form-control" id="sex" name="sex" [(ngModel)]="user.sex">
+        <select class="form-control" id="sex" name="sex" [(ngModel)]="userForPage.sex">
           <option value="">所有</option>
           <option value="{{item.value}}" *ngFor="let item of [{value:'male',name:'男'},{value:'female',name:'女'}];"
-                  [selected]="user.sex==item.value">
+                  [selected]="userForPage.sex==item.value">
             {{item.name}}
           </option>
         </select>
@@ -48,12 +50,13 @@
   </eui-panel-footer>
 </eui-panel>
 
-<!--表格-->
+<!--
+表格
+-->
 <eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg"
               [pagination]="true" [pageOptions]="pageOptions" [pageNumber]="pageNumber" [pageSize]="pageSize"
-              [total]="total"
-              (rowDblClick)="onRowDblClick($event)" (pageChange)="onPageChange($event)" selectionMode="multiple"
-              [(selection)]="selectedRow">
+              [total]="total" [(selection)]="selectedRow" selectionMode="multiple"
+              (rowDblClick)="onRowDblClick($event)" (pageChange)="onPageChange($event)">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
@@ -72,11 +75,11 @@
   <!--<eui-grid-column field="area" title="区" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="address" title="街道" width="100"></eui-grid-column>-->
   <eui-grid-column field="phone" title="手机号码" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="loginIp" title="登陆IP" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="email" title="邮箱" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="email" title="邮箱" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="id" title="编号" align="center" width="260"></eui-grid-column>
+  <!--<eui-grid-column field="loginIp" title="登陆IP" align="center" width="150"></eui-grid-column>-->
+  <!--<eui-grid-column field="id" title="编号" align="center" width="400"></eui-grid-column>-->
   <!--euiCellTemplate-->
   <!--<eui-grid-column title="操作" align="center" width="120">-->
   <!--<ng-template euiCellTemplate let-row let-rowIndex="rowIndex">-->
@@ -90,21 +93,164 @@
   <!--</ng-template>-->
 </eui-datagrid>
 
-<!--添加、编辑弹框-->
-<eui-dialog [title]="editTitle" [panelStyle]="{width:'50%',height:'80%'}"
-            [closed]="editClosed" [modal]="true" (close)="onEditClose()">
-  <div>{{editingRow.id}}</div>
-</eui-dialog>
-<!--删除提示弹框-->
+<!--
+删除提示弹框
+-->
 <eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onDeleteCancel()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
   <div>{{msg}}</div>
   <eui-panel-footer>
     <eui-button-group style="width:100%;height:50px">
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState" (click)="onDeleteSure()">确定</eui-linkbutton>
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState" (click)="onDeleteCancel()">取消</eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteSure()">确定
+      </eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteCancel()">取消
+      </eui-linkbutton>
     </eui-button-group>
   </eui-panel-footer>
 </eui-dialog>
 
+<!--
+添加、编辑弹框
+-->
+<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onEditCancel()"
+            [panelStyle]="{width:'50%',textAlign:'center'}" [headerStyle]="{}" [bodyStyle]="{padding:'5px 2px'}" [footerStyle]="{}">
+  <eui-panel-header>{{editDlgTitle}}</eui-panel-header>
+  <div class="container-fluid">
+    <form novalidate [formGroup]="userForForm" (ngSubmit)="onSubmit(userForForm.value)">
+      <div style="margin-bottom:20px">
+        <label [for]="name" align="top">Name:</label>
+        <eui-textbox #name formControlName="name" [invalid]="userForForm.get('name').invalid"></eui-textbox>
+        <div class="error" *ngIf="userForForm.get('name').hasError('required')">This field is required.</div>
+      </div>
+      <div style="margin-bottom:20px">
+        <label [for]="email" align="top">Email:</label>
+        <eui-textbox #email formControlName="email" [invalid]="userForForm.get('email').invalid"></eui-textbox>
+        <div class="error" *ngIf="userForForm.get('email').hasError('pattern')">Please enter a valid email address.</div>
+      </div>
+      <div style="margin-bottom:20px">
+        <label [for]="hero" align="top">Select a hero:</label>
+        <eui-combobox #hero formControlName="hero" [data]="[ {value: 11, text: 'Mr. Nice'}]"></eui-combobox>
+      </div>
+      <div style="margin-bottom:20px">
+        <eui-checkbox #accept formControlName="accept"></eui-checkbox>
+        <label [for]="accept">Accept Me</label>
+      </div>
+      <!--<div style="margin-bottom:20px">-->
+        <!--<eui-linkbutton [disabled]="userForForm.invalid" (click)="onSubmit(userForForm.value)">Submit</eui-linkbutton>-->
+      <!--</div>-->
+    </form>
+    <!--<form action="#" role="form" method="post" novalidate [formGroup]="userForForm" (ngSubmit)="onSubmit(userForForm)">-->
+      <!--&lt;!&ndash;姓名&ndash;&gt;-->
+      <!--<div class="form-group user-field">-->
+        <!--<i class="fa fa-user fa-lg"></i>-->
+        <!--<input type="text" class="form-control" formControlName="name" name="name" [(ngModel)]="user.name" placeholder="姓名">-->
+      <!--</div>-->
+      <!--&lt;!&ndash;手机号码&ndash;&gt;-->
+      <!--<div class="form-group user-field">-->
+        <!--<i class="fa fa-phone fa-lg"></i>-->
+        <!--<input type="text" class="form-control" formControlName="phone" name="phone" [(ngModel)]="user.phone" placeholder="号码">-->
+      <!--</div>-->
+      <!--&lt;!&ndash;邮箱&ndash;&gt;-->
+      <!--<div class="form-group user-field">-->
+        <!--<i class="fa fa-envelope-o fa-lg"></i>-->
+        <!--<input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email" placeholder="邮箱">-->
+      <!--</div>-->
+      <!--&lt;!&ndash;性别&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="form-group row">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col">&ndash;&gt;-->
+          <!--&lt;!&ndash;<label class="radio-inline">性别:</label>&ndash;&gt;-->
+          <!--&lt;!&ndash;&nbsp;&ndash;&gt;-->
+          <!--&lt;!&ndash;<label class="radio-inline">&ndash;&gt;-->
+            <!--&lt;!&ndash;<input type="radio" formControlName="sex" name="sex" value="male" [checked]="user.sex=='male'"&ndash;&gt;-->
+                   <!--&lt;!&ndash;[(ngModel)]="user.sex">&nbsp;男&ndash;&gt;-->
+          <!--&lt;!&ndash;</label>&ndash;&gt;-->
+          <!--&lt;!&ndash;&nbsp;&ndash;&gt;-->
+          <!--&lt;!&ndash;<label class="radio-inline">&ndash;&gt;-->
+            <!--&lt;!&ndash;<input type="radio" formControlName="sex" name="sex" value="female" [checked]="user.sex=='female'"&ndash;&gt;-->
+                   <!--&lt;!&ndash;[(ngModel)]="user.sex">&nbsp;女&ndash;&gt;-->
+          <!--&lt;!&ndash;</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;爱好&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="form-check form-check-inline">&ndash;&gt;-->
+          <!--&lt;!&ndash;<label class="form-check-label">&ndash;&gt;-->
+            <!--&lt;!&ndash;爱好:&ndash;&gt;-->
+          <!--&lt;!&ndash;</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="form-check form-check-inline">&ndash;&gt;-->
+          <!--&lt;!&ndash;<label class="form-check-label">&ndash;&gt;-->
+            <!--&lt;!&ndash;<input type="checkbox" class="form-check-input" name="hobby1" value=1&ndash;&gt;-->
+                   <!--&lt;!&ndash;(change)="onChangeHobby($event.target.value)">篮球&ndash;&gt;-->
+          <!--&lt;!&ndash;</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="form-check form-check-inline">&ndash;&gt;-->
+          <!--&lt;!&ndash;<label class="form-check-label">&ndash;&gt;-->
+            <!--&lt;!&ndash;<input type="checkbox" class="form-check-input" name="hobby2" value=2&ndash;&gt;-->
+                   <!--&lt;!&ndash;(change)="onChangeHobby($event.target.value)">足球&ndash;&gt;-->
+          <!--&lt;!&ndash;</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="form-check form-check-inline">&ndash;&gt;-->
+          <!--&lt;!&ndash;<label class="form-check-label">&ndash;&gt;-->
+            <!--&lt;!&ndash;<input type="checkbox" class="form-check-input" name="hobby3" value=3&ndash;&gt;-->
+                   <!--&lt;!&ndash;(change)="onChangeHobby($event.target.value)">排球&ndash;&gt;-->
+          <!--&lt;!&ndash;</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;地址&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="form-group row">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-2" *ngIf="provinceList">&ndash;&gt;-->
+          <!--&lt;!&ndash;<select class="form-control" formControlName="province" name="province" [(ngModel)]="user.province"&ndash;&gt;-->
+                  <!--&lt;!&ndash;(change)="onChangeProvince($event.target)">&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="0">请选择省</option>&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="{{item.id}}" *ngFor="let item of provinceList;">{{item.name}}</option>&ndash;&gt;-->
+          <!--&lt;!&ndash;</select>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-2" *ngIf="cityList">&ndash;&gt;-->
+          <!--&lt;!&ndash;<select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city"&ndash;&gt;-->
+                  <!--&lt;!&ndash;(change)="onChangeCity($event.target)">&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="0">请选择市</option>&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="{{item.id}}" *ngFor="let item of cityList;">{{item.name}}</option>&ndash;&gt;-->
+          <!--&lt;!&ndash;</select>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-2" *ngIf="areaList">&ndash;&gt;-->
+          <!--&lt;!&ndash;<select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area"&ndash;&gt;-->
+                  <!--&lt;!&ndash;(change)="onChangeArea($event.target)">&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="0">请选择区</option>&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="{{item.id}}" *ngFor="let item of areaList;">{{item.name}}</option>&ndash;&gt;-->
+          <!--&lt;!&ndash;</select>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-6">&ndash;&gt;-->
+          <!--&lt;!&ndash;<div class="user-field">&ndash;&gt;-->
+            <!--&lt;!&ndash;<i class="fa fa-home fa-lg"></i>&ndash;&gt;-->
+            <!--&lt;!&ndash;<input type="text" class="form-control" formControlName="address" name="address"&ndash;&gt;-->
+                   <!--&lt;!&ndash;[(ngModel)]="user.address"&ndash;&gt;-->
+                   <!--&lt;!&ndash;placeholder="{{placeholder.address.title}}{{placeholder.address.prompt}}">&ndash;&gt;-->
+          <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;&lt;!&ndash;自我介绍&ndash;&gt;&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+        <!--&lt;!&ndash;<textarea class="form-control" rows="3" formControlName="introduce" name="introduce"&ndash;&gt;-->
+                  <!--&lt;!&ndash;[(ngModel)]="user.introduce"&ndash;&gt;-->
+                  <!--&lt;!&ndash;placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;&lt;!&ndash;登陆按钮&ndash;&gt;&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+        <!--&lt;!&ndash;<button type="submit" class="btn btn-block btn-info"&ndash;&gt;-->
+                <!--&lt;!&ndash;[disabled]="userForForm.invalid==true||canSubmit==false||user.hobby.length==0||user.province==''||user.city==''||user.area==''">&ndash;&gt;-->
+          <!--&lt;!&ndash;提交&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</form>-->
+  </div>
+  <eui-panel-footer>
+    <div class="dialog-button">
+      <eui-linkbutton style="width:80px" (click)="onSubmit(userForForm.value)" [disabled]="userForForm.invalid">保存{{userForForm.valid}}</eui-linkbutton>
+      <eui-linkbutton style="width:80px" (click)="onEditCancel()">取消</eui-linkbutton>
+    </div>
+  </eui-panel-footer>
+</eui-dialog>

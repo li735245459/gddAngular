@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LogService} from '../../../service/log.service';
 import {Log} from '../../../model/log';
+import {User} from '../../../model/user';
 
 @Component({
   selector: 'app-log',
@@ -8,13 +9,10 @@ import {Log} from '../../../model/log';
   styleUrls: ['./log.component.css']
 })
 export class LogComponent implements OnInit {
+  log: Log = {}; // 分页查询条件对象
+  msg = '查询成功'; // 提示消息
+  // 表格
   title = '异常信息';
-  msg = '查询成功'; // 全局提示消息
-  deleteDlgState = true; // false删除弹框打开,true删除弹框关闭(默认)
-  deleteDlgTitle; // 删除弹框标题
-  deleteDlgBtnState = false; // 全局删除弹框状态,false表示可用(默认),true表示禁用
-  deleteState = false; // 全局删除状态,false表示删除选择数据(默认),true表示删除所有数据
-  //
   data = []; // 分页数据
   total = 0; // 所有数据条数
   pageNumber = 1; // 当前分页号
@@ -26,10 +24,16 @@ export class LogComponent implements OnInit {
   };
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
-  //
+  // 添加、编辑弹框
   selectedRow; // 选中的行(此处可多选,至少选中一行)
-  // 分页查询条件对象
-  log: Log = {};
+  editingRow: User = {}; // 正在编辑的行
+  editDlgState = true; // 添加、编辑弹框关闭
+  editDlgTitle; // 添加、编辑弹框标题
+  // 删除弹框
+  deleteDlgState = true; // false弹框打开,true弹框关闭(默认)
+  deleteDlgTitle; // 弹框标题
+  deleteDlgBtnState = false; // 弹框按钮状态,false表示可用(默认),true表示禁用
+  deleteState = false; // false表示删除选择数据(默认),true表示删除所有数据
 
   constructor(
     private logService: LogService) {
@@ -142,6 +146,24 @@ export class LogComponent implements OnInit {
    */
   onUnSelect(): void {
     this.selectedRow = null;
+  }
+
+  /**
+   * 双击行-打开编辑框
+   * @param event
+   */
+  onRowDblClick(event): void {
+    this.editDlgTitle = '编辑用户';
+    this.editingRow = event;
+    this.editDlgState = false;
+  }
+
+  /**
+   * 关闭添加、编辑弹框回调
+   */
+  onEditClose(): void {
+    this.editingRow = {};
+    this.editDlgState = true;
   }
 
   /**

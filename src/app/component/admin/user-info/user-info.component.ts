@@ -1,6 +1,7 @@
-import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../../../service/user.service';
 import {User} from '../../../model/user';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-user-info',
@@ -8,14 +9,10 @@ import {User} from '../../../model/user';
   styleUrls: ['./user-info.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class UserInfoComponent implements OnInit, AfterViewInit {
+export class UserInfoComponent implements OnInit {
+  msg = '查询成功'; // 提示消息
+  // 表格
   title = '用户信息';
-  msg = '查询成功'; // 全局提示消息
-  deleteDlgState = true; // false删除弹框打开,true删除弹框关闭(默认)
-  deleteDlgTitle; // 删除弹框标题
-  deleteDlgBtnState = false; // 全局删除弹框状态,false表示可用(默认),true表示禁用
-  deleteState = false; // 全局删除状态,false表示删除选择数据(默认),true表示删除所有数据
-  //
   data = []; // 分页数据
   total = 0; // 所有数据条数
   pageNumber = 1; // 当前分页号
@@ -27,18 +24,62 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   };
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
-  //
-  selectedRow; // 选中的行(此处可多选,至少选中一行)
-  editingRow: User = {}; // 正在编辑的行
-  editClosed = true; // 添加、编辑弹框关闭
-  editTitle; // 添加、编辑弹框标题
-  // 分页查询条件对象
-  user: User = {
+  // 存储分页查询条件
+  userForPage: User = {
     sex: ''
   };
+  // 添加、编辑弹框
+  selectedRow; // 选中的行(此处可多选,至少选中一行)
+  editingRow: User = {}; // 正在编辑的行
+  editDlgState = true; // 添加、编辑弹框关闭
+  editDlgTitle; // 添加、编辑弹框标题
+  userForForm: FormGroup;
+  // 删除弹框
+  deleteDlgState = true; // false弹框打开,true弹框关闭(默认)
+  deleteDlgTitle; // 弹框标题
+  deleteDlgBtnState = false; // 弹框按钮状态,false表示可用(默认),true表示禁用
+  deleteState = false; // false表示删除选择数据(默认),true表示删除所有数据
+  // // User表单
+  // userForm = new FormGroup({
+  //   name: new FormControl('', [
+  //     Validators.required,
+  //     Validators.pattern('^[\u4e00-\u9fa5]{2,5}$')]),
+  //   phone: new FormControl('', [
+  //     Validators.required,
+  //     Validators.pattern('^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9])\\d{8}$')]),
+  //   email: new FormControl('', [
+  //     Validators.required,
+  //     Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]),
+  //   password: new FormControl('', [
+  //     Validators.required,
+  //     Validators.pattern('^[a-zA-Z]\\w{5,9}$')]),
+  //   rePassword: new FormControl('', [
+  //     Validators.required,
+  //     Validators.pattern('^[a-zA-Z]\\w{5,9}$')]),
+  //   address: new FormControl('', [
+  //     Validators.required,
+  //     Validators.pattern('^.{10,20}$')]),
+  //   introduce: new FormControl('', [Validators.pattern('^.{0,}$')]),
+  //   sex: new FormControl(),
+  //   hobby: new FormControl(),
+  //   province: new FormControl(),
+  //   city: new FormControl(),
+  //   area: new FormControl()
+  // });
 
   constructor(
-    private userService: UserService) {
+    private userService: UserService,
+    private fb: FormBuilder) {
+/**
+ * 创建表单对象用之前写法写（封装一个创建userForForm对的方法,参数为editingRow）
+ * @type {FormGroup}
+ */
+    this.userForForm = fb.group({
+      'name': [null, Validators.required],
+      'email': ['test@jeasyui.com', Validators.pattern('^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$')],
+      'hero': null,
+      'accept': false
+    });
   }
 
   /**
@@ -46,10 +87,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    */
   ngOnInit() {
     this.page();
-  }
-
-  ngAfterViewInit() {
-
   }
 
   /**
@@ -78,45 +115,20 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    */
   page() {
     console.log('------------page()');
-    console.log(this.user);
+    console.log(this.userForPage);
     console.log(this.pageNumber);
     console.log(this.pageSize);
-    this.userService.page(this.user, this.pageNumber, this.pageSize).subscribe(responseJson => {
+    this.userService.page(this.userForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
       if (responseJson.code === 0) {
         this.msg = '查询成功';
-        this.data = responseJson.data;
-        // this.data = responseJson.data.list;
-        // this.total = responseJson.data.total;
+        // this.data = responseJson.data;
+        this.data = responseJson.data.list;
+        this.total = responseJson.data.total;
         this.loading = false;
       } else {
         this.msg = '查询失败';
       }
     });
-  }
-
-  /**
-   * row 样式定义
-   * @param row
-   */
-  setRowCss(row) {
-    if (row.email === 'lisi13_java@163.com') {
-      return {background: '#b8eecf', fontSize: '14px', fontStyle: 'italic'};
-    }
-    return null;
-  }
-
-  /**
-   * sex cell 样式定义
-   * @param row
-   * @param value
-   * @returns {{color: string}}
-   */
-  setSexCellCss(row, value) {
-    if (value === 'male') {
-      return {color: 'blue'};
-    } else {
-      return {color: 'red'};
-    }
   }
 
   /**
@@ -127,7 +139,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       this.deleteState = false; // 删除所选
       this.deleteDlgTitle = '删除数据';
       if (this.selectedRow) {
-        this.msg = '确定要删除所选数据,删除后将无法恢复!';
+        this.msg = '确定要删除所选数据!';
       } else {
         this.deleteDlgBtnState = true; // 禁用删除弹框(确认、取消)按钮
         this.msg = '请先选中需要删除的数据';
@@ -135,7 +147,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
     } else {
       this.deleteState = true; // 删除所有
       this.deleteDlgTitle = '清空数据';
-      this.msg = '确定要删除所有数据,删除后将无法恢复！';
+      this.msg = '确定要删除所有数据!';
     }
     this.deleteDlgState = false; // 打开删除弹框
   }
@@ -189,10 +201,53 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * 双击行打开编辑框
+   * @param event
+   */
+  onRowDblClick(event): void {
+    console.log(event);
+    this.editDlgTitle = '编辑用户';
+    this.editingRow = event;
+    this.editDlgState = false;
+  }
+
+  /**
+   * 添加数据-打开添加框
+   */
+  onAdd(): void {
+    this.editDlgTitle = '添加用户';
+    this.editingRow = {};
+    this.editDlgState = false;
+  }
+
+  /**
+   * 保存添加、编辑
+   */
+  onEditSure(): void {
+
+  }
+
+  /**
+   * 提交表单
+   * @param userForm
+   */
+  onSubmit(userForm): void {
+    console.log(userForm);
+  }
+
+  /**
+   * 取消添加、编辑
+   */
+  onEditCancel(): void {
+    this.editingRow = {};
+    this.editDlgState = true;
+  }
+
+  /**
    * 刷新数据
    */
   onReLoad(): void {
-    this.user = {};
+    this.userForPage = {};
     this.page();
   }
 
@@ -200,33 +255,32 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 清空分页查询条件
    */
   onCleanSearch(): void {
-    this.user = {};
+    this.userForPage = {};
   }
 
   /**
-   * 双击行-打开编辑框
-   * @param event
+   * row 样式定义
+   * @param row
    */
-  onRowDblClick(event): void {
-    this.editTitle = '编辑用户';
-    this.editingRow = event;
-    this.editClosed = false;
+  setRowCss(row) {
+    if (row.email === 'lisi13_java@163.com') {
+      return {background: '#b8eecf', fontSize: '14px', fontStyle: 'italic'};
+    }
+    return null;
   }
 
   /**
-   * 添加数据-打开编辑框
+   * sex cell 样式定义
+   * @param row
+   * @param value
+   * @returns {{color: string}}
    */
-  onAdd(): void {
-    this.editTitle = '添加用户';
-    this.editingRow = {};
-    this.editClosed = false;
+  setSexCellCss(row, value) {
+    if (value === 'male') {
+      return {color: 'blue'};
+    } else {
+      return {color: 'red'};
+    }
   }
 
-  /**
-   * 关闭添加、编辑弹框回调
-   */
-  onEditClose(): void {
-    this.editingRow = {};
-    this.editClosed = true;
-  }
 }
