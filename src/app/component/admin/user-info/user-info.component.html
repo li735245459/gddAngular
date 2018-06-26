@@ -38,7 +38,7 @@
     </div>
   </div>
   <eui-panel-footer>
-    <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onAdd()">添加</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onOpenEditDlg('add')">添加</eui-linkbutton>
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('delete')">删除</eui-linkbutton>
     <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('clean')">清空数据</eui-linkbutton>
     <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
@@ -56,7 +56,7 @@
 <eui-datagrid idField="id" [data]="data" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg"
               [pagination]="true" [pageOptions]="pageOptions" [pageNumber]="pageNumber" [pageSize]="pageSize"
               [total]="total" [(selection)]="selectedRow" selectionMode="multiple"
-              (rowDblClick)="onRowDblClick($event)" (pageChange)="onPageChange($event)">
+              (rowDblClick)="onOpenEditDlg($event)" (pageChange)="onPageChange($event)">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
@@ -223,12 +223,21 @@
     </form>
   </div>
   <!--</div>-->
-  <!--[disabled]="itemForForm.invalid==true||formSubmitState==false||hobbys.length==0||levelOneValue=='0'||levelTwoValue=='0'"-->
+  <!---->
+  <!--||hobbys.length==0||levelOneValue=='0'||levelTwoValue=='0'-->
   <eui-panel-footer>
-      <button type="button" class="btn" (click)="onSubmitForm(itemForForm)">保存</button>&nbsp;&nbsp;
+      <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
+              [disabled]="itemForForm.invalid==true||formSubmitState==false">保存</button>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="onEditCancel()">取消</button>
     <div>{{itemForForm.invalid}}</div>
-    <div>{{itemForForm.value.name}}--</div>
-    <div>{{itemForForm.value.province}}--{{itemForForm.controls['province'].invalid}}</div>
+    <div>name:{{itemForForm.controls['name'].invalid}}</div>
+    <div>phone{{itemForForm.controls['phone'].invalid}}</div>
+    <div>email{{itemForForm.controls['email'].invalid}}</div>
+    <div>sex{{itemForForm.controls['sex'].invalid}}</div>
+    <div>hobby{{itemForForm.controls['hobby'].invalid}}</div>
+    <div>province{{itemForForm.controls['province'].invalid}}</div>
+    <div>city{{itemForForm.controls['city'].invalid}}</div>
+    <div>area{{itemForForm.controls['area'].invalid}}</div>
+    <div>introduce{{itemForForm.controls['introduce'].invalid}}</div>
   </eui-panel-footer>
 </eui-dialog>
