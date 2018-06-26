@@ -8,29 +8,30 @@
   <!--body-->
   <div class="row body">
     <div class="col-sm-12 col-md-12 col-lg-8 col-xl-6" style="margin: 0 auto;"><!--自适应设置-->
-      <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">
+      <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
         <!--全局消息-->
         <div class="form-group">
-          <div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'"
+          <div class="alert" [ngClass]="formValidStyle==0?'alert-success':'alert-danger'"
                *ngIf="msg">{{msg}}
           </div>
         </div>
         <!--邮箱-->
+        <!--[(ngModel)]="user.email"-->
         <div class="form-group user-field">
           <i class="fa fa-envelope-o fa-lg"></i>
-          <input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"
+          <input type="text" class="form-control" formControlName="email" name="email"
                  placeholder="{{placeholder.email.title}}">
         </div>
         <!--密码-->
+        <!--[(ngModel)]="user.password"-->
         <div class="form-group user-field">
           <i class="fa fa-key fa-lg"></i>
           <input type="password" class="form-control" formControlName="password" name="password"
-                 [(ngModel)]="user.password"
                  placeholder="{{placeholder.password.title}}">
         </div>
         <!--登陆按钮-->
         <div class="form-group">
-          <button type="submit" class="btn btn-block btn-info" [disabled]="userForm.invalid==true||canSubmit==false">登录
+          <button type="submit" class="btn btn-block btn-info" [disabled]="itemForForm.invalid==true||formSubmitState==false">登录
           </button>
         </div>
         <hr>

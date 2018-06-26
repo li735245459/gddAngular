@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {User} from '../../../model/user';
 import {UserService} from '../../../service/user.service';
-import {china} from '../../../data/dataSource';
+import {china} from '../../../data/china';
 
 @Component({
   selector: 'app-register',
