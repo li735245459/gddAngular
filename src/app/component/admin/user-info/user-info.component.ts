@@ -259,7 +259,6 @@ export class UserInfoComponent implements OnInit {
       editingRow = new User(); // 空的User对象
       this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree有用户选择生成
       editingRow.province = '0'; // 设置一级下拉列表默认值为'0'
-      editingRow.sex = 'male'; // 设置默认sex属性值为male
     }
     /**
      * 创建表单对象
@@ -282,7 +281,7 @@ export class UserInfoComponent implements OnInit {
         Validators.pattern('^.{10,20}$')
       ]],
       'introduce': [editingRow.introduce, Validators.pattern('^.{0,50}$')],
-      'sex': [editingRow.sex],
+      'sex': [editingRow.sex, Validators.pattern('^["male"|"female"].*$')],
       'hobby': [this.editState ? editingRow.hobby.split(',') : []],
       'province': [editingRow.province, Validators.pattern('^[^"0"].*$')]
     });
@@ -309,7 +308,7 @@ export class UserInfoComponent implements OnInit {
       this.itemForForm.patchValue({'area': editingRow.area});
       this.itemForForm.addControl('area', new FormControl(editingRow.area, Validators.pattern('^[^"0"].*$')));
     }
-    // console.log(this.itemForForm.value);
+    console.log(this.itemForForm.value);
     // console.log('createItemForForm-------end');
   }
 
@@ -317,9 +316,31 @@ export class UserInfoComponent implements OnInit {
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    console.log('onSubmitForm---------');
-    console.log(itemForForm.valid);
-    console.log(itemForForm.value);
+    if (itemForForm.valid) {
+      this.formSubmitState = false; // 禁用表单提交按钮
+      this.formValidStyle = 0; // 表单校验成功样式
+      this.msg = '表单校验成功';
+      itemForForm.value.id = this.editingRow.id;
+      this.userService.modify(itemForForm.value).subscribe(responseJson => {
+        if (responseJson.code === 0) {
+          this.formSubmitState = false; // 禁用表单提交按钮
+          this.formValidStyle = 0; // 表单校验成功样式
+          this.msg = '用户信息修改成功';
+          setTimeout(() => {
+            this.page();
+            this.editDlgState = true; // 关闭编辑窗口
+          }, 1000);
+        } else {
+          this.formSubmitState = true; // 激活表单提交按钮
+          this.formValidStyle = 1; // 表单校验失败样式
+          this.msg = responseJson.msg;
+        }
+      });
+    } else {
+      this.formSubmitState = true; // 激活表单提交按钮
+      this.formValidStyle = 1; // 表单校验失败
+      this.msg = '表单校验失败';
+    }
   }
 
   /**
@@ -333,11 +354,11 @@ export class UserInfoComponent implements OnInit {
    * 关闭添加、编辑弹框
    */
   onCloseEditDlg(): void {
-    // this.editingRow = undefined;
-    // this.levelOne = undefined;
-    // this.levelTwo = undefined;
-    // this.levelThree = undefined;
-    // this.itemForForm.reset(); // 重置表单
+    this.editingRow = undefined;
+    this.levelOne = undefined;
+    this.levelTwo = undefined;
+    this.levelThree = undefined;
+    this.itemForForm.reset(); // 重置表单
     this.editDlgState = true; // 关闭弹框
   }
 
@@ -366,16 +387,32 @@ export class UserInfoComponent implements OnInit {
   onChangeLevelOne(selectedOption): void {
     // console.log('onChangeLevelOne--------start');
     this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前选中下拉列表值
-    // province属性值为'0'
-    if (selectedOption.value === '0') {
-      this.itemForForm.patchValue({'city': null}); // 设置属性值为null避开校验规则
-      this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
-      this.levelTwo = undefined; // 屏蔽二级下拉列表
-    } else {
+    if (selectedOption.value !== '0' && this.levelOne[selectedOption.selectedIndex - 1].child) {
       this.itemForForm.patchValue({'city': '0'}); // 设置属性值为'0'
       this.itemForForm.addControl('city', new FormControl('0', Validators.pattern('^[^"0"].*$'))); // 添加表单对象的city属性对象
       this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 初始化levelTwo
+    } else {
+      this.itemForForm.patchValue({'city': null}); // 设置属性值为null避开校验规则
+      this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
+      this.levelTwo = undefined; // 屏蔽二级下拉列表
     }
+
+    // if (selectedOption.value === '0') {
+    //   this.itemForForm.patchValue({'city': null}); // 设置属性值为null避开校验规则
+    //   this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
+    //   this.levelTwo = undefined; // 屏蔽二级下拉列表
+    // } else {
+    //   this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 初始化levelTwo
+    //   if (this.levelTwo) {
+    //     this.itemForForm.patchValue({'city': '0'}); // 设置属性值为'0'
+    //     this.itemForForm.addControl('city', new FormControl('0', Validators.pattern('^[^"0"].*$'))); // 添加表单对象的city属性对象
+    //   } else {
+    //     this.itemForForm.patchValue({'city': null}); // 设置属性值为null避开校验规则
+    //     this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
+    //     this.levelTwo = undefined; // 屏蔽二级下拉列表
+    //   }
+    // }
+
     this.itemForForm.patchValue({'area': null}); // 设置属性值为null避开校验规则
     this.itemForForm.removeControl('area'); // 移除表单对象的area属性对象
     this.levelThree = undefined; // 屏蔽三级下拉列表
@@ -392,16 +429,32 @@ export class UserInfoComponent implements OnInit {
   onChangeLevelTwo(selectedOption): void {
     // console.log('onChangeLevelTwo--------start');
     this.itemForForm.patchValue({'city': selectedOption.value});
-    // city属性值为'0'
-    if (selectedOption.value === '0') {
-      this.itemForForm.patchValue({'area': null});
-      this.itemForForm.removeControl('area');
-      this.levelThree = undefined;
-    } else {
+    if (selectedOption.value !== '0' && this.levelTwo[selectedOption.selectedIndex - 1].child) {
       this.itemForForm.patchValue({'area': '0'});
       this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
       this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
+    } else {
+      this.itemForForm.patchValue({'area': null});
+      this.itemForForm.removeControl('area');
+      this.levelThree = undefined;
     }
+
+    // if (selectedOption.value === '0') {
+    //   this.itemForForm.patchValue({'area': null});
+    //   this.itemForForm.removeControl('area');
+    //   this.levelThree = undefined;
+    // } else {
+    //   this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
+    //   if (this.levelThree) {
+    //     this.itemForForm.patchValue({'area': '0'});
+    //     this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
+    //   } else {
+    //     this.itemForForm.patchValue({'area': null});
+    //     this.itemForForm.removeControl('area');
+    //     this.levelThree = undefined;
+    //   }
+    // }
+
     // console.log(this.itemForForm.controls['city'].value);
     // console.log('onChangeLevelTwo--------end');
   }

@@ -18,7 +18,7 @@ export class UserService {
    * @param {User} user
    * @returns {Observable<User>}
    */
-  register(userFormValue: any): Observable<any> {
+  register(userFormValue): Observable<any> {
     userFormValue.hobby = userFormValue.hobby.join(','); // 将hobby数组转化成字符串
     // console.log(`加密前:${userFormValue.password}`);
     userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString(); // 对密码进行加密
@@ -32,7 +32,7 @@ export class UserService {
    * @param userFormValue
    * @returns {Observable<any>}
    */
-  login(userFormValue: any): Observable<any> {
+  login(userFormValue): Observable<any> {
     // 对密码进行加密
     // console.log(`加密前:${userFormValue.password}`);
     userFormValue.password = Md5.hashStr(userFormValue.password).toString();
@@ -44,7 +44,7 @@ export class UserService {
    * 发送验证码到邮箱,验证码类型1表示忘记密码模块
    * @returns {Observable<any>}
    */
-  sendEmail(type: String, receiver: String): Observable<any> {
+  sendEmail(type, receiver): Observable<any> {
     return this.http.get<any>(`/gdd/email/send/${type}/${receiver}`);
   }
 
@@ -64,7 +64,7 @@ export class UserService {
    * @param userFormValue
    * @returns {Observable<any>}
    */
-  modifyPassword(userFormValue: any): Observable<any> {
+  modifyPassword(userFormValue): Observable<any> {
     return this.http.post<any>(`/gdd/user/modifyPassword`, userFormValue);
   }
 
@@ -92,5 +92,14 @@ export class UserService {
    */
   delete(id): Observable<any> {
     return this.http.post<any>(`/gdd/user/delete`, id);
+  }
+
+  /**
+   * 修改
+   * @param userFormValue
+   */
+  modify(userFormValue): Observable<any> {
+    userFormValue.hobby = userFormValue.hobby.split(',');
+    return this.http.post<any>(`/gdd/user/modify`, userFormValue);
   }
 }

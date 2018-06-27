@@ -121,7 +121,7 @@
             [footerStyle]="{padding: '10px 0px'}">
   <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
   <div class="container user">
-    <!--<div class="col-sm-12 col-md-12 col-lg-8 col-xl-6" style="margin: 0 auto;">&lt;!&ndash;自适应设置&ndash;&gt;-->
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
     <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
       <!--全局消息-->
       <div class="form-group">
@@ -208,23 +208,12 @@
       </div>
     </form>
   </div>
-  <!--</div>-->
-  <!---->
-  <!--||hobbys.length==0||levelOneValue=='0'||levelTwoValue=='0'-->
+  </div>
+  <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="itemForForm.invalid==true||formSubmitState==false">保存
+            [disabled]="itemForForm.invalid==true||formSubmitState==false||itemForForm.controls['hobby'].value==''">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
-    <div>{{itemForForm.invalid}}</div>
-    <!--<div>name:{{itemForForm.controls['name'].invalid}}</div>-->
-    <!--<div>phone{{itemForForm.controls['phone'].invalid}}</div>-->
-    <!--<div>email{{itemForForm.controls['email'].invalid}}</div>-->
-    <!--<div>sex{{itemForForm.controls['sex'].invalid}}</div>-->
-    <!--<div>hobby{{itemForForm.controls['hobby'].invalid}}</div>-->
-    <!--<div>userData{{itemForForm.controls['userData'].invalid}}</div>-->
-    <!--<div>city{{itemForForm.controls['city'].invalid}}</div>-->
-    <!--<div>area{{itemForForm.controls['area'].invalid}}</div>-->
-    <!--<div>introduce{{itemForForm.controls['introduce'].invalid}}</div>-->
   </eui-panel-footer>
 </eui-dialog>
