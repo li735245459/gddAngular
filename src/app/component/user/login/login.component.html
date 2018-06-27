@@ -31,7 +31,7 @@
         </div>
         <!--登陆按钮-->
         <div class="form-group">
-          <button type="submit" class="btn btn-block btn-info" [disabled]="itemForForm.invalid==true||formSubmitState==false">登录
+          <button type="submit" class="btn btn-block btn-info" [disabled]="formSubmitState||itemForForm.invalid">登录
           </button>
         </div>
         <hr>

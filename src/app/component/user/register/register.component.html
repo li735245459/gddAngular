@@ -98,25 +98,25 @@
         </div>
         <!--地址-->
         <div class="form-group row">
-          <div class="col-2" *ngIf="provinceList">
+          <div class="col-2" *ngIf="levelOne">
             <select class="form-control" formControlName="userData" name="province" [(ngModel)]="user.userData"
                     (change)="onChangeProvince($event.target)">
               <option value="0">请选择省</option>
-              <option value="{{item.id}}" *ngFor="let item of provinceList;">{{item.name}}</option>
+              <option value="{{item.id}}" *ngFor="let item of levelOne;">{{item.name}}</option>
             </select>
           </div>
-          <div class="col-2" *ngIf="cityList">
+          <div class="col-2" *ngIf="levelTwo">
             <select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city"
                     (change)="onChangeCity($event.target)">
               <option value="0">请选择市</option>
-              <option value="{{item.id}}" *ngFor="let item of cityList;">{{item.name}}</option>
+              <option value="{{item.id}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
             </select>
           </div>
-          <div class="col-2" *ngIf="areaList">
+          <div class="col-2" *ngIf="levelThree">
             <select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area"
                     (change)="onChangeArea($event.target)">
               <option value="0">请选择区</option>
-              <option value="{{item.id}}" *ngFor="let item of areaList;">{{item.name}}</option>
+              <option value="{{item.id}}" *ngFor="let item of levelThree;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-6">

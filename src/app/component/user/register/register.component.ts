@@ -12,12 +12,12 @@ import {province} from '../../../data/UserData';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  canSubmit = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
-  checkCode: number; // 0表示校验成功, 1表示校验失败
   msg: string; // 全局提示信息
-  provinceList: any; // 省级数据
-  cityList: any; // 级联市级数据
-  areaList: any; // 级联区级数据
+  formSubmitState = false; // true禁止表单提交,默认false
+  formValidStyle; // 0表单校验成功样式, 1表单校验失败样式
+  levelOne: any; // 省级数据
+  levelTwo: any; // 级联市级数据
+  levelThree: any; // 级联区级数据
   user: User = { // User模型
     id: '',
     name: '李星',
@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.provinceList = province; // 初始化: 加载省级数据
+    this.levelOne = province; // 初始化: 加载省级数据
   }
 
   /**
@@ -101,9 +101,9 @@ export class RegisterComponent implements OnInit {
   onChangeProvince(selectedOption): void {
     this.user.province = selectedOption.value; // 设置省级数据
     this.user.city = '0';
-    this.cityList = '';
-    this.areaList = '';
-    this.cityList = this.provinceList[selectedOption.selectedIndex - 1].cityList; // 级联市级数据
+    this.levelTwo = '';
+    this.levelThree = '';
+    this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].levelTwo; // 级联市级数据
   }
 
   /**
@@ -113,8 +113,8 @@ export class RegisterComponent implements OnInit {
   onChangeCity(selectedOption): void {
     this.user.city = selectedOption.value; // 设置市级数据
     this.user.area = '0';
-    this.areaList = '';
-    this.areaList = this.cityList[selectedOption.selectedIndex - 1].areaList; // 级联区级数据
+    this.levelThree = '';
+    this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].levelThree; // 级联区级数据
   }
 
   /**
@@ -134,13 +134,13 @@ export class RegisterComponent implements OnInit {
      * 注册表单校验成功
      */
     if (userForm.valid && this.user.province !== '0' && this.user.city !== '0' &&
-      ((this.areaList === '' && this.user.area === '0') || (this.areaList !== '' && this.user.area !== '0'))) {
+      ((this.levelThree === '' && this.user.area === '0') || (this.levelThree !== '' && this.user.area !== '0'))) {
       if (userForm.value.password === userForm.value.rePassword) {
         /**
          * 密码一致
          */
-        this.canSubmit = false;
-        this.checkCode = 0;
+        this.formSubmitState = false;
+        this.formValidStyle = 0;
         this.msg = '表单校验成功';
         userForm.value.hobby = this.user.hobby;
         this.userService.register(userForm.value).subscribe((responseJson) => {
@@ -148,12 +148,12 @@ export class RegisterComponent implements OnInit {
              * 注册成功
              */
             if (responseJson.code === 0) {
-              this.checkCode = 0;
+              this.formValidStyle = 0;
               this.msg = '注册成功';
               setTimeout(() => this.router.navigateByUrl('/login'), 1000);
             } else if (responseJson.code === 13) {
-              this.canSubmit = true;
-              this.checkCode = 1;
+              this.formSubmitState = true;
+              this.formValidStyle = 1;
               this.msg = '邮箱已被注册';
               if (typeof this.user.hobby === 'string') {
                 this.user.hobby = this.user.hobby.split(','); // 将hobby字符串转化成hobby数组
@@ -162,8 +162,8 @@ export class RegisterComponent implements OnInit {
               /**
                * 注册失败
                */
-              this.canSubmit = true;
-              this.checkCode = 1;
+              this.formSubmitState = true;
+              this.formValidStyle = 1;
               this.msg = responseJson.msg;
             }
           }
@@ -172,14 +172,14 @@ export class RegisterComponent implements OnInit {
         /**
          * 密码不一致
          */
-        this.checkCode = 1;
+        this.formValidStyle = 1;
         this.msg = '密码不一致';
       }
     } else {
       /**
        * 注册表单校验失败
        */
-      this.checkCode = 1;
+      this.formValidStyle = 1;
       this.msg = '表单校验失败';
     }
   }
