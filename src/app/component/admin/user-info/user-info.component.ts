@@ -55,7 +55,7 @@ export class UserInfoComponent implements OnInit {
     introduce: {'title': '自我介绍', 'prompt': ''}
   };
   // hobby数据(本地json对象)
-  hobby: any;
+  hobby = hobby;
   // 省、市、区数据(本地json对象)
   levelOne: any; // 一级数据,默认为undefine
   levelTwo: any; // 二级数据,默认为undefine
@@ -202,6 +202,7 @@ export class UserInfoComponent implements OnInit {
       this.editDlgTitle = '添加用户信息';
       this.editingRow = undefined;
     } else {
+      this.onUnSelect();
       this.editState = true;
       this.editDlgTitle = '编辑用户信息';
       this.editingRow = param;
@@ -214,10 +215,10 @@ export class UserInfoComponent implements OnInit {
    * 创建表单对象
    */
   createItemForForm(editingRow): void {
-    console.log('createItemForForm-------start');
+    // console.log('createItemForForm-------start');
     this.msg = '';
     if (this.editState) {
-      console.log('当前操作类型: 编辑用户信息');
+      // console.log('当前操作类型: 编辑用户信息');
       /**
        * 解析级联数据用户初始化回显下拉列表
        */
@@ -282,38 +283,34 @@ export class UserInfoComponent implements OnInit {
       ]],
       'introduce': [editingRow.introduce, Validators.pattern('^.{0,50}$')],
       'sex': [editingRow.sex],
-      'hobby': [this.editState ? editingRow.hobby.split(',') : [], Validators.required],
-      'province': [editingRow.province, Validators.pattern('^[^"0"].*$')],
-      // 'city': [editingRow.city, Validators.pattern('^[^"0"].*$')],
-      // 'area': [editingRow.area, Validators.pattern('^[^"0"].*$')]
+      'hobby': [this.editState ? editingRow.hobby.split(',') : []],
+      'province': [editingRow.province, Validators.pattern('^[^"0"].*$')]
     });
-    /**
-     * 设置hobby复选框选中状态
-     */
-    // this.hobby1 = (editingRow && editingRow.hobby.includes('1') === true) ? true : false;
-    // this.hobby2 = (editingRow && editingRow.hobby.includes('2') === true) ? true : false;
-    // this.hobby3 = (editingRow && editingRow.hobby.includes('3') === true) ? true : false;
-    // console.log(this.hobby1);
-    // console.log(this.hobby2);
-    // console.log(this.hobby3);
-    this.hobby = hobby;
     /**
      * 动态加载表单对象的hobby属性对象,添加状态无需回显,编辑状态需要回显
      */
-
+    for (let i = 0; i < this.hobby.length; i++) {
+      const hobbyId = this.hobby[i].id;
+      const hobbyName = `hobby${hobbyId}`;
+      if (this.editState && editingRow.hobby.includes(hobbyId)) {
+        this.itemForForm.addControl(hobbyName, new FormControl(hobbyId));
+      } else {
+        this.itemForForm.addControl(hobbyName, new FormControl(null));
+      }
+    }
     /**
      * 编辑状态下,动态添加表单对象的city、area属性对象
      */
     if (this.editState && editingRow.city && this.levelTwo) {
-      this.itemForForm.addControl('city', new FormControl(editingRow.city, Validators.pattern('^[^"0"].*$')));
       this.itemForForm.patchValue({'city': editingRow.city});
+      this.itemForForm.addControl('city', new FormControl(editingRow.city, Validators.pattern('^[^"0"].*$')));
     }
     if (this.editState && editingRow.area && this.levelThree) {
-      this.itemForForm.addControl('area', new FormControl(editingRow.area, Validators.pattern('^[^"0"].*$')));
       this.itemForForm.patchValue({'area': editingRow.area});
+      this.itemForForm.addControl('area', new FormControl(editingRow.area, Validators.pattern('^[^"0"].*$')));
     }
-    console.log(this.itemForForm.value);
-    console.log('createItemForForm-------end');
+    // console.log(this.itemForForm.value);
+    // console.log('createItemForForm-------end');
   }
 
   /**
@@ -348,16 +345,16 @@ export class UserInfoComponent implements OnInit {
    * 复选框点击事件
    * @param event
    */
-  onChangeHobby(hobby) {
-    console.log('onChangeHobby-----start');
-    const index = this.itemForForm.value.hobby.indexOf(hobby);
+  onChangeHobby(checkbox) {
+    // console.log('onChangeHobby-----start');
+    const index = this.itemForForm.value.hobby.indexOf(checkbox.value);
     if (index === -1) {
-      this.itemForForm.value.hobby.push(hobby);
+      this.itemForForm.value.hobby.push(checkbox.value);
     } else {
       this.itemForForm.value.hobby.splice(index, 1);
     }
-    console.log(this.itemForForm.value.hobby);
-    console.log('onChangeHobby-----end');
+    // console.log(this.itemForForm.value.hobby);
+    // console.log('onChangeHobby-----end');
   }
 
   /**
@@ -367,7 +364,7 @@ export class UserInfoComponent implements OnInit {
    * @param selectedOption
    */
   onChangeLevelOne(selectedOption): void {
-    console.log('onChangeLevelOne--------start');
+    // console.log('onChangeLevelOne--------start');
     this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前选中下拉列表值
     // province属性值为'0'
     if (selectedOption.value === '0') {
@@ -382,8 +379,8 @@ export class UserInfoComponent implements OnInit {
     this.itemForForm.patchValue({'area': null}); // 设置属性值为null避开校验规则
     this.itemForForm.removeControl('area'); // 移除表单对象的area属性对象
     this.levelThree = undefined; // 屏蔽三级下拉列表
-    console.log(this.itemForForm.controls['province'].value);
-    console.log('onChangeLevelOne--------end');
+    // console.log(this.itemForForm.controls['province'].value);
+    // console.log('onChangeLevelOne--------end');
   }
 
   /**
@@ -393,7 +390,7 @@ export class UserInfoComponent implements OnInit {
    * @param selectedOption
    */
   onChangeLevelTwo(selectedOption): void {
-    console.log('onChangeLevelTwo--------start');
+    // console.log('onChangeLevelTwo--------start');
     this.itemForForm.patchValue({'city': selectedOption.value});
     // city属性值为'0'
     if (selectedOption.value === '0') {
@@ -405,8 +402,8 @@ export class UserInfoComponent implements OnInit {
       this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
       this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
     }
-    console.log(this.itemForForm.controls['city'].value);
-    console.log('onChangeLevelTwo--------end');
+    // console.log(this.itemForForm.controls['city'].value);
+    // console.log('onChangeLevelTwo--------end');
   }
 
   /**
@@ -414,10 +411,10 @@ export class UserInfoComponent implements OnInit {
    * @param selectedOption
    */
   onChangeLevelThree(selectedOption): void {
-    console.log('onChangeLevelThree--------start');
+    // console.log('onChangeLevelThree--------start');
     this.itemForForm.patchValue({'area': selectedOption.value});
-    console.log(this.itemForForm.controls['area'].value);
-    console.log('onChangeLevelThree--------ebd');
+    // console.log(this.itemForForm.controls['area'].value);
+    // console.log('onChangeLevelThree--------ebd');
   }
 
   /**
