@@ -1,4 +1,14 @@
 /**
+ *  hobby属性
+ */
+export const hobby = [
+  {'id': '1', 'name': '篮球'},
+  {'id': '2', 'name': '足球'},
+  {'id': '3', 'name': '排球'},
+  {'id': '4', 'name': '皮球'},
+];
+
+/**
  *  省、市、区级数据
  */
 export const province = [

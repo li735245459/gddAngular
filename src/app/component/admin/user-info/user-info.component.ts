@@ -3,7 +3,7 @@ import {UserService} from '../../../service/user.service';
 import {User} from '../../../model/user';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {province} from '../../../data/province';
+import {province, hobby} from '../../../data/UserData';
 
 @Component({
   selector: 'app-user-info',
@@ -54,12 +54,9 @@ export class UserInfoComponent implements OnInit {
     address: {'title': '详细地址', 'prompt': '(10~20位字符)'},
     introduce: {'title': '自我介绍', 'prompt': ''}
   };
-  // hobby复选框
-  // hobbys: any;
-  hobby1 = false;
-  hobby2 = false;
-  hobby3 = false;
-  // 省、市、区数据级联
+  // hobby数据(本地json对象)
+  hobby: any;
+  // 省、市、区数据(本地json对象)
   levelOne: any; // 一级数据,默认为undefine
   levelTwo: any; // 二级数据,默认为undefine
   levelThree: any; // 二级数据,默认为undefine
@@ -176,6 +173,13 @@ export class UserInfoComponent implements OnInit {
    * 取消删除
    */
   onDeleteCancel(): void {
+    this.deleteDlgState = true; // 触发onCloseDeleteDlg事件关闭弹框
+  }
+
+  /**
+   * 关闭删除弹框
+   */
+  onCloseDeleteDlg(): void {
     this.onUnSelect(); // 取消所有选中数据
     this.deleteDlgBtnState = false; // 激活删除弹框(确认、取消)按钮
     this.deleteDlgState = true; // 关闭删除弹框
@@ -212,26 +216,8 @@ export class UserInfoComponent implements OnInit {
   createItemForForm(editingRow): void {
     console.log('createItemForForm-------start');
     this.msg = '';
-    if (editingRow) {
+    if (this.editState) {
       console.log('当前操作类型: 编辑用户信息');
-      /**
-       * 设置hobby复选框选中状态
-       */
-      // if (editingRow.hobby.includes('1')) {
-      //   this.hobby1 = true;
-      // } else {
-      //   this.hobby1 = false;
-      // }
-      // if (editingRow.hobby.includes('2')) {
-      //   this.hobby2 = true;
-      // } else {
-      //   this.hobby2 = false;
-      // }
-      // if (editingRow.hobby.includes('3')) {
-      //   this.hobby3 = true;
-      // } else {
-      //   this.hobby3 = false;
-      // }
       /**
        * 解析级联数据用户初始化回显下拉列表
        */
@@ -273,7 +259,6 @@ export class UserInfoComponent implements OnInit {
       this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree有用户选择生成
       editingRow.province = '0'; // 设置一级下拉列表默认值为'0'
       editingRow.sex = 'male'; // 设置默认sex属性值为male
-      editingRow.hobby = ''; // 设置默认hobby属性值为空字符串
     }
     /**
      * 创建表单对象
@@ -297,11 +282,25 @@ export class UserInfoComponent implements OnInit {
       ]],
       'introduce': [editingRow.introduce, Validators.pattern('^.{0,50}$')],
       'sex': [editingRow.sex],
-      'hobby': [editingRow.hobby.split(','), Validators.required],
+      'hobby': [this.editState ? editingRow.hobby.split(',') : [], Validators.required],
       'province': [editingRow.province, Validators.pattern('^[^"0"].*$')],
       // 'city': [editingRow.city, Validators.pattern('^[^"0"].*$')],
       // 'area': [editingRow.area, Validators.pattern('^[^"0"].*$')]
     });
+    /**
+     * 设置hobby复选框选中状态
+     */
+    // this.hobby1 = (editingRow && editingRow.hobby.includes('1') === true) ? true : false;
+    // this.hobby2 = (editingRow && editingRow.hobby.includes('2') === true) ? true : false;
+    // this.hobby3 = (editingRow && editingRow.hobby.includes('3') === true) ? true : false;
+    // console.log(this.hobby1);
+    // console.log(this.hobby2);
+    // console.log(this.hobby3);
+    this.hobby = hobby;
+    /**
+     * 动态加载表单对象的hobby属性对象,添加状态无需回显,编辑状态需要回显
+     */
+
     /**
      * 编辑状态下,动态添加表单对象的city、area属性对象
      */
@@ -337,11 +336,11 @@ export class UserInfoComponent implements OnInit {
    * 关闭添加、编辑弹框
    */
   onCloseEditDlg(): void {
-    this.editingRow = undefined;
-    this.levelOne = undefined;
-    this.levelTwo = undefined;
-    this.levelThree = undefined;
-    this.itemForForm.reset(); // 重置表单
+    // this.editingRow = undefined;
+    // this.levelOne = undefined;
+    // this.levelTwo = undefined;
+    // this.levelThree = undefined;
+    // this.itemForForm.reset(); // 重置表单
     this.editDlgState = true; // 关闭弹框
   }
 

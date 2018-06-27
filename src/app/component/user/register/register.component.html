@@ -99,7 +99,7 @@
         <!--地址-->
         <div class="form-group row">
           <div class="col-2" *ngIf="provinceList">
-            <select class="form-control" formControlName="province" name="province" [(ngModel)]="user.province"
+            <select class="form-control" formControlName="userData" name="province" [(ngModel)]="user.userData"
                     (change)="onChangeProvince($event.target)">
               <option value="0">请选择省</option>
               <option value="{{item.id}}" *ngFor="let item of provinceList;">{{item.name}}</option>
@@ -137,7 +137,7 @@
         <!--登陆按钮-->
         <div class="form-group">
           <button type="submit" class="btn btn-block btn-info"
-                  [disabled]="userForm.invalid==true||canSubmit==false||user.hobby.length==0||user.province==''||user.city==''||user.area==''">
+                  [disabled]="userForm.invalid==true||canSubmit==false||user.hobby.length==0||user.userData==''||user.city==''||user.area==''">
             提交
           </button>
         </div>

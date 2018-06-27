@@ -70,7 +70,7 @@
   <!--<eui-grid-column field="password" title="密码"></eui-grid-column>-->
   <!--<eui-grid-column field="hobby" title="兴趣" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="introduce" title="备注" width="100"></eui-grid-column>-->
-  <eui-grid-column field="province" title="省" width="100"></eui-grid-column>
+  <!--<eui-grid-column field="province" title="省" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="city" title="市" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="area" title="区" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="address" title="街道" width="100"></eui-grid-column>-->
@@ -96,7 +96,7 @@
 <!--
 删除提示弹框
 -->
-<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onDeleteCancel()" borderType="none"
+<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDeleteDlg()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
   <div>{{msg}}</div>
@@ -116,7 +116,8 @@
 添加、编辑弹框
 -->
 <eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseEditDlg()"
-            [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}" [bodyStyle]="{padding:'5px 2px'}"
+            [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
+            [bodyStyle]="{padding:'5px 2px'}"
             [footerStyle]="{padding: '10px 0px'}">
   <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
   <div class="container user">
@@ -165,29 +166,35 @@
         <div class="form-check form-check-inline">
           <label class="form-check-label">爱好:</label>
         </div>
-        <div class="form-check form-check-inline">
+        <div class="form-check form-check-inline" *ngFor="let item of hobby;let i = index;">
           <label class="form-check-label">
-            <input type="checkbox" class="form-check-input"  value='1' [checked]="hobby1"
-                   (change)="onChangeHobby($event.target.value)">篮球
+            <input type="checkbox" class="form-check-input" formControlName="hobby{{i+1}}" value="{{item.id}}"
+                   (change)="onChangeHobby($event.target.value)">{{item.name}}
           </label>
         </div>
-        <div class="form-check form-check-inline">
-          <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" value='2' [checked]="hobby2"
-                   (change)="onChangeHobby($event.target.value)">足球
-          </label>
-        </div>
-        <div class="form-check form-check-inline">
-          <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" value='3' [checked]="hobby3"
-                   (change)="onChangeHobby($event.target.value)">排球
-          </label>
-        </div>
+        <!--<div class="form-check form-check-inline">-->
+        <!--<label class="form-check-label">-->
+        <!--<input type="checkbox" class="form-check-input"  value='1' [checked]="hobby1==true"-->
+        <!--(change)="onChangeHobby($event.target.value)">篮球-->
+        <!--</label>-->
+        <!--</div>-->
+        <!--<div class="form-check form-check-inline">-->
+        <!--<label class="form-check-label">-->
+        <!--<input type="checkbox" class="form-check-input" value='2' [checked]="hobby2==true"-->
+        <!--(change)="onChangeHobby($event.target.value)">足球-->
+        <!--</label>-->
+        <!--</div>-->
+        <!--<div class="form-check form-check-inline">-->
+        <!--<label class="form-check-label">-->
+        <!--<input type="checkbox" class="form-check-input" value='3' [checked]="hobby3==true"-->
+        <!--(change)="onChangeHobby($event.target.value)">排球-->
+        <!--</label>-->
+        <!--</div>-->
       </div>
       <!--地址-->
       <div class="form-group row">
         <div class="col-2" *ngIf="levelOne">
-          <select class="form-control" formControlName="province"
+          <select class="form-control" formControlName="userData"
                   (change)="onChangeLevelOne($event.target)">
             <option value="0">请选择省</option>
             <option value="{{item.id}}" *ngFor="let item of levelOne;">{{item.name}}</option>
@@ -226,18 +233,19 @@
   <!---->
   <!--||hobbys.length==0||levelOneValue=='0'||levelTwoValue=='0'-->
   <eui-panel-footer>
-      <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-              [disabled]="itemForForm.invalid==true||formSubmitState==false">保存</button>&nbsp;&nbsp;
-      <button type="button" class="btn" (click)="onEditCancel()">取消</button>
+    <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
+            [disabled]="itemForForm.invalid==true||formSubmitState==false">保存
+    </button>&nbsp;&nbsp;
+    <button type="button" class="btn" (click)="onEditCancel()">取消</button>
     <div>{{itemForForm.invalid}}</div>
-    <div>name:{{itemForForm.controls['name'].invalid}}</div>
-    <div>phone{{itemForForm.controls['phone'].invalid}}</div>
-    <div>email{{itemForForm.controls['email'].invalid}}</div>
-    <div>sex{{itemForForm.controls['sex'].invalid}}</div>
-    <div>hobby{{itemForForm.controls['hobby'].invalid}}</div>
-    <div>province{{itemForForm.controls['province'].invalid}}</div>
-    <div>city{{itemForForm.controls['city'].invalid}}</div>
-    <div>area{{itemForForm.controls['area'].invalid}}</div>
-    <div>introduce{{itemForForm.controls['introduce'].invalid}}</div>
+    <!--<div>name:{{itemForForm.controls['name'].invalid}}</div>-->
+    <!--<div>phone{{itemForForm.controls['phone'].invalid}}</div>-->
+    <!--<div>email{{itemForForm.controls['email'].invalid}}</div>-->
+    <!--<div>sex{{itemForForm.controls['sex'].invalid}}</div>-->
+    <!--<div>hobby{{itemForForm.controls['hobby'].invalid}}</div>-->
+    <!--<div>userData{{itemForForm.controls['userData'].invalid}}</div>-->
+    <!--<div>city{{itemForForm.controls['city'].invalid}}</div>-->
+    <!--<div>area{{itemForForm.controls['area'].invalid}}</div>-->
+    <!--<div>introduce{{itemForForm.controls['introduce'].invalid}}</div>-->
   </eui-panel-footer>
 </eui-dialog>
