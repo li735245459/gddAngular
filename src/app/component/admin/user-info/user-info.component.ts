@@ -3,7 +3,7 @@ import {UserService} from '../../../service/user.service';
 import {User} from '../../../model/user';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {china} from '../../../data/china';
+import {province} from '../../../data/province';
 
 @Component({
   selector: 'app-user-info',
@@ -194,12 +194,10 @@ export class UserInfoComponent implements OnInit {
    */
   onOpenEditDlg(param): void {
     if (param === 'add') {
-      console.log('点击添加按钮进行添加操作');
       this.editState = false;
       this.editDlgTitle = '添加用户信息';
       this.editingRow = undefined;
     } else {
-      console.log('双击行进行编辑操作');
       this.editState = true;
       this.editDlgTitle = '编辑用户信息';
       this.editingRow = param;
@@ -219,31 +217,34 @@ export class UserInfoComponent implements OnInit {
       /**
        * 设置hobby复选框选中状态
        */
-      if (editingRow.hobby.includes('1')) {
-        this.hobby1 = true;
-      } else {
-        this.hobby1 = false;
-      }
-      if (editingRow.hobby.includes('2')) {
-        this.hobby2 = true;
-      } else {
-        this.hobby2 = false;
-      }
-      if (editingRow.hobby.includes('3')) {
-        this.hobby3 = true;
-      } else {
-        this.hobby3 = false;
-      }
+      // if (editingRow.hobby.includes('1')) {
+      //   this.hobby1 = true;
+      // } else {
+      //   this.hobby1 = false;
+      // }
+      // if (editingRow.hobby.includes('2')) {
+      //   this.hobby2 = true;
+      // } else {
+      //   this.hobby2 = false;
+      // }
+      // if (editingRow.hobby.includes('3')) {
+      //   this.hobby3 = true;
+      // } else {
+      //   this.hobby3 = false;
+      // }
       /**
-       * 解析级联数据
+       * 解析级联数据用户初始化回显下拉列表
        */
-      if (editingRow.province) { // 判断levelOne是否存在
-        this.levelOne = china; // 初始化levelOne
-        if (editingRow.city) { // 判断levelTwo是否存在
+      // 判断province是否存在
+      if (editingRow.province) {
+        this.levelOne = province; // 初始化levelOne
+        // 判断city是否存在
+        if (editingRow.city) {
           for (let i = 0; i < this.levelOne.length; i++) {
             if (this.levelOne[i].id === editingRow.province) {
               this.levelTwo = this.levelOne[i].child; // 初始化levelTwo
-              if (editingRow.area) { // 判断levelThree是否存在
+              // 判断area是否存在
+              if (editingRow.area) {
                 for (let j = 0; j < this.levelTwo.length; j++) {
                   if (this.levelTwo[j].id === editingRow.city) {
                     this.levelThree = this.levelTwo[j].child; // 初始化levelThree
@@ -268,20 +269,17 @@ export class UserInfoComponent implements OnInit {
       }
     } else {
       console.log('当前操作类型: 添加用户信息,需要初始化一些默认值');
-      editingRow = new User();
-      this.levelOne = china; // 只初始化levelOne,levelTwo和levelThree有用户选择生成
-      editingRow.province = '0'; // 设置一级下拉列表默认选中值为'0'
+      editingRow = new User(); // 空的User对象
+      this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree有用户选择生成
+      editingRow.province = '0'; // 设置一级下拉列表默认值为'0'
       editingRow.sex = 'male'; // 设置默认sex属性值为male
-      editingRow.hobby = '';
+      editingRow.hobby = ''; // 设置默认hobby属性值为空字符串
     }
     /**
      * 创建表单对象
      * 1、hobby属性值初始化为字符串,创建表单对象时转化成数组,通过change回调函数动态改变该数组内容,提交表单时再转化成字符串
-     * 2、添加数据时:点击下拉列表,是否触发其级联下拉列表取决于当前选中的下拉列表的child属性值是否为空
-     *   编辑数据时:点击下拉列表,是否触发其级联下拉列表取决于
-     *    当前数据中当前下拉列表数据的级联下拉列表数据是否为空和当前选中的下拉列表的child属性值是否为空
-     *   级联下拉列表校验规则,值不能为"0"否则校验不通过(默认下拉列表值为"0")
-     *    遇到可选的下拉列表时可设置其值为空以避开校验
+     * 2、级联下拉列表校验规则,值不能为"0"否则校验不通过(默认下拉列表值为"0"),可设置其值为空以避开校验
+     *    添加、编辑状态下表单对象的province属性对象必须存
      */
     this.itemForForm = this.formBuilder.group({
       'name': [editingRow.name, [
@@ -301,9 +299,20 @@ export class UserInfoComponent implements OnInit {
       'sex': [editingRow.sex],
       'hobby': [editingRow.hobby.split(','), Validators.required],
       'province': [editingRow.province, Validators.pattern('^[^"0"].*$')],
-      'city': [editingRow.city, Validators.pattern('^[^"0"].*$')],
-      'area': [editingRow.area, Validators.pattern('^[^"0"].*$')]
+      // 'city': [editingRow.city, Validators.pattern('^[^"0"].*$')],
+      // 'area': [editingRow.area, Validators.pattern('^[^"0"].*$')]
     });
+    /**
+     * 编辑状态下,动态添加表单对象的city、area属性对象
+     */
+    if (this.editState && editingRow.city && this.levelTwo) {
+      this.itemForForm.addControl('city', new FormControl(editingRow.city, Validators.pattern('^[^"0"].*$')));
+      this.itemForForm.patchValue({'city': editingRow.city});
+    }
+    if (this.editState && editingRow.area && this.levelThree) {
+      this.itemForForm.addControl('area', new FormControl(editingRow.area, Validators.pattern('^[^"0"].*$')));
+      this.itemForForm.patchValue({'area': editingRow.area});
+    }
     console.log(this.itemForForm.value);
     console.log('createItemForForm-------end');
   }
@@ -354,35 +363,25 @@ export class UserInfoComponent implements OnInit {
 
   /**
    * 一级下拉列表change事件
+   *  值为'0',置空所有级联下拉列表数据以及表单相关属性对象
+   *  值不为'0',设置二级联下拉列表数据以及表单相关属性对象
    * @param selectedOption
    */
   onChangeLevelOne(selectedOption): void {
     console.log('onChangeLevelOne--------start');
-    this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前下拉列表值
-    if (selectedOption.value === '0') { // 当前一级下拉列表选中值为'0'时
+    this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前选中下拉列表值
+    // province属性值为'0'
+    if (selectedOption.value === '0') {
+      this.itemForForm.patchValue({'city': null}); // 设置属性值为null避开校验规则
+      this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
       this.levelTwo = undefined; // 屏蔽二级下拉列表
-    } else { // 当前一级下拉列表选中值不为'0'时
-      if (this.editState) { // true表示编辑数据
-        if (this.levelTwo) {
-          this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 获取二级下拉列表数据
-          this.itemForForm.patchValue({'city': '0'}); // 设置表单对象city属性值为'0'
-        } else {
-          this.levelTwo = undefined; // 屏蔽二级下拉列表
-          this.itemForForm.patchValue({'city': null}); // 设置表单对象city属性值为null避开校验规则
-        }
-      } else { // false表示添加数据
-        for (let i = 0; i < this.levelOne.length; i++) {
-          if (this.levelOne[i].id === selectedOption.value) {
-            this.levelTwo = this.levelOne[i].child;
-            this.itemForForm.patchValue({'city': '0'}); // 设置表单对象city属性值为'0'
-            break;
-          } else {
-            this.levelTwo = undefined;
-            this.itemForForm.patchValue({'city': null}); // 设置表单对象city属性值为null避开校验规则
-          }
-        }
-      }
+    } else {
+      this.itemForForm.patchValue({'city': '0'}); // 设置属性值为'0'
+      this.itemForForm.addControl('city', new FormControl('0', Validators.pattern('^[^"0"].*$'))); // 添加表单对象的city属性对象
+      this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 初始化levelTwo
     }
+    this.itemForForm.patchValue({'area': null}); // 设置属性值为null避开校验规则
+    this.itemForForm.removeControl('area'); // 移除表单对象的area属性对象
     this.levelThree = undefined; // 屏蔽三级下拉列表
     console.log(this.itemForForm.controls['province'].value);
     console.log('onChangeLevelOne--------end');
@@ -390,35 +389,22 @@ export class UserInfoComponent implements OnInit {
 
   /**
    * 二级下拉列表change事件
+   *  值为'0',置空所有级联下拉列表数据以及表单相关属性对象
+   *  值不为'0',设置三级下拉列表数据以及表单相关属性对象
    * @param selectedOption
    */
   onChangeLevelTwo(selectedOption): void {
     console.log('onChangeLevelTwo--------start');
-    this.itemForForm.patchValue({'city': selectedOption.value}); // 设置表单对象city属性值为当前下拉列表值
-    if (selectedOption.value === '0') { // 当前二级下拉列表选中值为'0'时
-      this.levelThree = undefined; // 屏蔽三级下拉列表
-    } else { // 当前二级下拉列表选中值不为'0'时
-      // editState = false; // false表示添加数据(默认),true表示编辑数据
-      if (this.editState) { // true表示编辑数据
-        if (this.levelThree) {
-          this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child; // 获取三级下拉列表数据
-          this.itemForForm.patchValue({'area': '0'}); // 设置表单对象area属性值为'0'
-        } else {
-          this.levelThree = undefined; // 屏蔽三级下拉列表
-          this.itemForForm.patchValue({'area': null}); // 设置表单对象area属性值为null避开校验规则
-        }
-      } else { // false表示添加数据
-        for (let i = 0; i < this.levelTwo.length; i++) {
-          if (this.levelTwo[i].id === selectedOption.value) {
-            this.levelThree = this.levelTwo[i].child;
-            this.itemForForm.patchValue({'area': '0'}); // 设置表单对象area属性值为'0'
-            break;
-          } else {
-            this.levelThree = undefined;
-            this.itemForForm.patchValue({'area': null}); // 设置表单对象area属性值为null避开校验规则
-          }
-        }
-      }
+    this.itemForForm.patchValue({'city': selectedOption.value});
+    // city属性值为'0'
+    if (selectedOption.value === '0') {
+      this.itemForForm.patchValue({'area': null});
+      this.itemForForm.removeControl('area');
+      this.levelThree = undefined;
+    } else {
+      this.itemForForm.patchValue({'area': '0'});
+      this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
+      this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
     }
     console.log(this.itemForForm.controls['city'].value);
     console.log('onChangeLevelTwo--------end');
@@ -430,7 +416,7 @@ export class UserInfoComponent implements OnInit {
    */
   onChangeLevelThree(selectedOption): void {
     console.log('onChangeLevelThree--------start');
-    this.itemForForm.patchValue({'area': selectedOption.value}); // 设置表单对象area属性值为当前下拉列表值
+    this.itemForForm.patchValue({'area': selectedOption.value});
     console.log(this.itemForForm.controls['area'].value);
     console.log('onChangeLevelThree--------ebd');
   }

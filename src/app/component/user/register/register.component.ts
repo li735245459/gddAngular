@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {User} from '../../../model/user';
 import {UserService} from '../../../service/user.service';
-import {china} from '../../../data/china';
+import {province} from '../../../data/province';
 
 @Component({
   selector: 'app-register',
@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.provinceList = china; // 初始化: 加载省级数据
+    this.provinceList = province; // 初始化: 加载省级数据
   }
 
   /**

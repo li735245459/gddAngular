@@ -1,4 +1,7 @@
-export const china = [
+/**
+ *  省、市、区级数据
+ */
+export const province = [
   {
     'id': '100',
     'name': '北京市',
