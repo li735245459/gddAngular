@@ -33,7 +33,7 @@ export class UserInfoComponent implements OnInit {
   // 添加、编辑弹框
   editDlgTitle; // 添加、编辑弹框标题
   editState = false; // false表示添加数据(默认),true表示编辑数据
-  editingRow: User; // 正在编辑数据,默认为undefine
+  editRow: User; // 当前需要编辑的数据,默认为undefine
   editDlgState = true; // false弹框打开,true弹框关闭(默认)
   // 删除弹框
   selectedRow; // 当前选中的行(可多选,[{},{}])
@@ -43,7 +43,7 @@ export class UserInfoComponent implements OnInit {
   deleteDlgState = true; // false弹框打开,true弹框关闭(默认)
   // 表单
   itemForForm: FormGroup; // 表单对象
-  formSubmitState = true; // true表示激活表单提交按钮,false表示禁用表单提交按钮
+  formSubmitState = false; // true禁止表单提交,默认false
   formValidStyle: number; // 0表单校验成功样式, 1表单校验失败样式
   placeholder = { // 表单字段说明
     name: {'title': '姓名', 'prompt': '(2~4位汉子)'},
@@ -64,7 +64,7 @@ export class UserInfoComponent implements OnInit {
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder) {
-    this.createItemForForm(this.editingRow); // 初始化创建空的表单对象(必须)
+    this.createItemForForm(this.editRow); // 初始化创建空的表单对象(必须)
   }
 
   /**
@@ -198,23 +198,23 @@ export class UserInfoComponent implements OnInit {
    */
   onOpenEditDlg(param): void {
     if (param === 'add') {
-      this.editState = false;
       this.editDlgTitle = '添加用户信息';
-      this.editingRow = undefined;
+      this.editRow = undefined;
+      this.editState = false;
     } else {
-      this.onUnSelect();
-      this.editState = true;
       this.editDlgTitle = '编辑用户信息';
-      this.editingRow = param;
+      this.onUnSelect();
+      this.editRow = param;
+      this.editState = true;
     }
-    this.createItemForForm(this.editingRow); // 重新创建表单对象
+    this.createItemForForm(this.editRow); // 创建新的表单对象
     this.editDlgState = false; // 打开添加弹框
   }
 
   /**
    * 创建表单对象
    */
-  createItemForForm(editingRow): void {
+  createItemForForm(editRow): void {
     // console.log('createItemForForm-------start');
     this.msg = '';
     if (this.editState) {
@@ -223,17 +223,17 @@ export class UserInfoComponent implements OnInit {
        * 解析级联数据用户初始化回显下拉列表
        */
       // 判断province是否存在
-      if (editingRow.province) {
+      if (editRow.province) {
         this.levelOne = province; // 初始化levelOne
         // 判断city是否存在
-        if (editingRow.city) {
+        if (editRow.city) {
           for (let i = 0; i < this.levelOne.length; i++) {
-            if (this.levelOne[i].id === editingRow.province) {
+            if (this.levelOne[i].id === editRow.province) {
               this.levelTwo = this.levelOne[i].child; // 初始化levelTwo
               // 判断area是否存在
-              if (editingRow.area) {
+              if (editRow.area) {
                 for (let j = 0; j < this.levelTwo.length; j++) {
-                  if (this.levelTwo[j].id === editingRow.city) {
+                  if (this.levelTwo[j].id === editRow.city) {
                     this.levelThree = this.levelTwo[j].child; // 初始化levelThree
                     break;
                   } else {
@@ -256,9 +256,9 @@ export class UserInfoComponent implements OnInit {
       }
     } else {
       console.log('当前操作类型: 添加用户信息,需要初始化一些默认值');
-      editingRow = new User(); // 空的User对象
+      editRow = new User(); // 空的User对象
       this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree有用户选择生成
-      editingRow.province = '0'; // 设置一级下拉列表默认值为'0'
+      editRow.province = '0'; // 设置一级下拉列表默认值为'0'
     }
     /**
      * 创建表单对象
@@ -267,23 +267,23 @@ export class UserInfoComponent implements OnInit {
      *    添加、编辑状态下表单对象的province属性对象必须存
      */
     this.itemForForm = this.formBuilder.group({
-      'name': [editingRow.name, [
+      'name': [editRow.name, [
         Validators.required,
         Validators.pattern('^[\u4e00-\u9fa5]{2,5}$')]],
-      'email': [editingRow.email, [
+      'email': [editRow.email, [
         Validators.required,
         Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]],
-      'phone': [editingRow.phone, [
+      'phone': [editRow.phone, [
         Validators.required,
         Validators.pattern('^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9])\\d{8}$')]],
-      'address': [editingRow.address, [
+      'address': [editRow.address, [
         Validators.required,
         Validators.pattern('^.{10,20}$')
       ]],
-      'introduce': [editingRow.introduce, Validators.pattern('^.{0,50}$')],
-      'sex': [editingRow.sex, Validators.pattern('^["male"|"female"].*$')],
-      'hobby': [this.editState ? editingRow.hobby.split(',') : []],
-      'province': [editingRow.province, Validators.pattern('^[^"0"].*$')]
+      'introduce': [editRow.introduce, Validators.pattern('^.{0,50}$')],
+      'sex': [editRow.sex, Validators.pattern('^["male"|"female"].*$')],
+      'hobby': [this.editState ? editRow.hobby.split(',') : []],
+      'province': [editRow.province, Validators.pattern('^[^"0"].*$')]
     });
     /**
      * 动态加载表单对象的hobby属性对象,添加状态无需回显,编辑状态需要回显
@@ -291,7 +291,7 @@ export class UserInfoComponent implements OnInit {
     for (let i = 0; i < this.hobby.length; i++) {
       const hobbyId = this.hobby[i].id;
       const hobbyName = `hobby${hobbyId}`;
-      if (this.editState && editingRow.hobby.includes(hobbyId)) {
+      if (this.editState && editRow.hobby.includes(hobbyId)) {
         this.itemForForm.addControl(hobbyName, new FormControl(hobbyId));
       } else {
         this.itemForForm.addControl(hobbyName, new FormControl(null));
@@ -300,13 +300,13 @@ export class UserInfoComponent implements OnInit {
     /**
      * 编辑状态下,动态添加表单对象的city、area属性对象
      */
-    if (this.editState && editingRow.city && this.levelTwo) {
-      this.itemForForm.patchValue({'city': editingRow.city});
-      this.itemForForm.addControl('city', new FormControl(editingRow.city, Validators.pattern('^[^"0"].*$')));
+    if (this.editState && editRow.city && this.levelTwo) {
+      this.itemForForm.patchValue({'city': editRow.city});
+      this.itemForForm.addControl('city', new FormControl(editRow.city, Validators.pattern('^[^"0"].*$')));
     }
-    if (this.editState && editingRow.area && this.levelThree) {
-      this.itemForForm.patchValue({'area': editingRow.area});
-      this.itemForForm.addControl('area', new FormControl(editingRow.area, Validators.pattern('^[^"0"].*$')));
+    if (this.editState && editRow.area && this.levelThree) {
+      this.itemForForm.patchValue({'area': editRow.area});
+      this.itemForForm.addControl('area', new FormControl(editRow.area, Validators.pattern('^[^"0"].*$')));
     }
     console.log(this.itemForForm.value);
     // console.log('createItemForForm-------end');
@@ -316,31 +316,29 @@ export class UserInfoComponent implements OnInit {
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    if (itemForForm.valid) {
-      this.formSubmitState = false; // 禁用表单提交按钮
-      this.formValidStyle = 0; // 表单校验成功样式
-      this.msg = '表单校验成功';
-      itemForForm.value.id = this.editingRow.id;
-      this.userService.modify(itemForForm.value).subscribe(responseJson => {
-        if (responseJson.code === 0) {
-          this.formSubmitState = false; // 禁用表单提交按钮
-          this.formValidStyle = 0; // 表单校验成功样式
-          this.msg = '用户信息修改成功';
-          setTimeout(() => {
-            this.page();
-            this.editDlgState = true; // 关闭编辑窗口
-          }, 1000);
-        } else {
-          this.formSubmitState = true; // 激活表单提交按钮
-          this.formValidStyle = 1; // 表单校验失败样式
-          this.msg = responseJson.msg;
-        }
-      });
-    } else {
-      this.formSubmitState = true; // 激活表单提交按钮
-      this.formValidStyle = 1; // 表单校验失败
-      this.msg = '表单校验失败';
-    }
+    this.formSubmitState = true; // 禁用表单提交
+    this.formValidStyle = 0; // 设置全局消息样式为成功
+    this.msg = '表单校验成功';
+    itemForForm.value.id = this.editRow.id;
+    this.userService.modify(itemForForm.value).subscribe(responseJson => {
+      if (responseJson.code === 0) {
+        this.formSubmitState = true; // 禁用表单提交
+        this.formValidStyle = 0; // 设置全局消息样式为成功
+        this.msg = '用户信息修改成功';
+        setTimeout(() => {
+          /**
+           * 1)重新分页
+           * 2)使用itemForForm.value填充editRow
+           */
+          this.page();
+          this.editDlgState = true; // 关闭编辑窗口设置全局消息样式为成功
+        }, 1000);
+      } else {
+        this.formSubmitState = false; // 激活表单提交
+        this.formValidStyle = 1; // 设置全局消息样式为失败
+        this.msg = responseJson.msg;
+      }
+    });
   }
 
   /**
@@ -354,11 +352,11 @@ export class UserInfoComponent implements OnInit {
    * 关闭添加、编辑弹框
    */
   onCloseEditDlg(): void {
-    this.editingRow = undefined;
+    this.editRow = undefined;
     this.levelOne = undefined;
     this.levelTwo = undefined;
     this.levelThree = undefined;
-    this.itemForForm.reset(); // 重置表单
+    this.formSubmitState = false; // 激活表单提交
     this.editDlgState = true; // 关闭弹框
   }
 
@@ -374,7 +372,8 @@ export class UserInfoComponent implements OnInit {
     } else {
       this.itemForForm.value.hobby.splice(index, 1);
     }
-    // console.log(this.itemForForm.value.hobby);
+    console.log(this.itemForForm.value.hobby);
+    // console.log(this.itemForForm.controls['hobby'].value);
     // console.log('onChangeHobby-----end');
   }
 
@@ -396,23 +395,6 @@ export class UserInfoComponent implements OnInit {
       this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
       this.levelTwo = undefined; // 屏蔽二级下拉列表
     }
-
-    // if (selectedOption.value === '0') {
-    //   this.itemForForm.patchValue({'city': null}); // 设置属性值为null避开校验规则
-    //   this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
-    //   this.levelTwo = undefined; // 屏蔽二级下拉列表
-    // } else {
-    //   this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 初始化levelTwo
-    //   if (this.levelTwo) {
-    //     this.itemForForm.patchValue({'city': '0'}); // 设置属性值为'0'
-    //     this.itemForForm.addControl('city', new FormControl('0', Validators.pattern('^[^"0"].*$'))); // 添加表单对象的city属性对象
-    //   } else {
-    //     this.itemForForm.patchValue({'city': null}); // 设置属性值为null避开校验规则
-    //     this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
-    //     this.levelTwo = undefined; // 屏蔽二级下拉列表
-    //   }
-    // }
-
     this.itemForForm.patchValue({'area': null}); // 设置属性值为null避开校验规则
     this.itemForForm.removeControl('area'); // 移除表单对象的area属性对象
     this.levelThree = undefined; // 屏蔽三级下拉列表
@@ -438,25 +420,6 @@ export class UserInfoComponent implements OnInit {
       this.itemForForm.removeControl('area');
       this.levelThree = undefined;
     }
-
-    // if (selectedOption.value === '0') {
-    //   this.itemForForm.patchValue({'area': null});
-    //   this.itemForForm.removeControl('area');
-    //   this.levelThree = undefined;
-    // } else {
-    //   this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
-    //   if (this.levelThree) {
-    //     this.itemForForm.patchValue({'area': '0'});
-    //     this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
-    //   } else {
-    //     this.itemForForm.patchValue({'area': null});
-    //     this.itemForForm.removeControl('area');
-    //     this.levelThree = undefined;
-    //   }
-    // }
-
-    // console.log(this.itemForForm.controls['city'].value);
-    // console.log('onChangeLevelTwo--------end');
   }
 
   /**

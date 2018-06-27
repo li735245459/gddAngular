@@ -212,8 +212,11 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="itemForForm.invalid==true||formSubmitState==false||itemForForm.controls['hobby'].value==''">保存
+            [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
+    <!--<div>{{formSubmitState}}</div>-->
+    <!--<div>{{itemForForm.controls['hobby'].value==''}}</div>-->
+    <!--<div>{{itemForForm.invalid}}</div>-->
   </eui-panel-footer>
 </eui-dialog>
