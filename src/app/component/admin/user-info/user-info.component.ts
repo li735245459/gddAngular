@@ -13,7 +13,7 @@ import {province, hobby} from '../../../data/UserData';
 })
 
 export class UserInfoComponent implements OnInit {
-  msg: string; // 全局提示消息
+  msg: string = null; // 全局提示消息
   // 表格
   title = '用户信息';
   loading = true; // 开启datagrid加载提示
@@ -31,20 +31,20 @@ export class UserInfoComponent implements OnInit {
     sex: ''
   };
   // 添加、编辑弹框
-  editDlgTitle; // 添加、编辑弹框标题
-  editState = false; // false表示添加数据(默认),true表示编辑数据
-  editRow: User; // 当前需要编辑的数据,默认为undefine
-  editDlgState = true; // false弹框打开,true弹框关闭(默认)
+  editDlgTitle: String = null;
+  editRow: User = null; // 当前需要编辑的数据
+  // editState = false; // true编辑数据,false添加数据
+  editDlgState = true; // true关闭弹框,false打开弹框
   // 删除弹框
-  selectedRow; // 当前选中的行(可多选,[{},{}])
-  deleteDlgTitle; // 弹框标题
-  deleteState = false; // false表示删除选择数据(默认),true表示删除所有数据
-  deleteDlgBtnState = false; // 弹框按钮状态,false表示可用(默认),true表示禁用
-  deleteDlgState = true; // false弹框打开,true弹框关闭(默认)
+  deleteDlgTitle: String = null;
+  selectedRow: Array<any> = null; // 当前选中的数据
+  deleteState = false; // true删除所有数据,false删除当前选中的数据
+  deleteDlgState = true; // true关闭弹框,false打开弹框
+  deleteDlgBtnState = false; // true表示禁用,false表示可用
   // 表单
-  itemForForm: FormGroup; // 表单对象
-  formSubmitState = false; // true禁止表单提交,默认false
-  formValidStyle; // 0表单校验成功样式, 1表单校验失败样式
+  itemForForm: FormGroup = null; // 表单对象
+  formSubmitState = false; // true禁止表单提交,false启用表单提交
+  formValidStyle = 0; // 0表单校验成功样式, 1表单校验失败样式
   placeholder = { // 表单字段说明
     name: {'title': '姓名', 'prompt': '(2~4位汉子)'},
     phone: {'title': '手机号码', 'prompt': '(11位数字)'},
@@ -56,7 +56,7 @@ export class UserInfoComponent implements OnInit {
   };
   /*
     hobby类型为checkbox:
-      初始化加载数据为本地json数组对象-[{'id':'1','name':'篮球'},{'id':'2','name':'足球'}]
+      初始化加载数据为本地数组对象-[{'id':'1','name':'篮球'},{'id':'2','name':'足球'}]
       用户选择后存取数据库的值为id字符串--'1,2'
     添加数据时,创建表单对象时该属性值为[]
     编辑数据时,创建表单对象时该属性值为--'1,2'.split(',')) => [1,2]
@@ -66,18 +66,18 @@ export class UserInfoComponent implements OnInit {
   hobby = hobby;
   /*
     省、市、区类型为级联下拉列表:
-      初始化加载数据为本地json对象
+      初始化加载数据为本地对象
       用户选择后存取数据库的值为下拉列表的值
     添加数据时,
    */
-  levelOne: any; // 一级数据,默认为undefine
-  levelTwo: any; // 二级数据,默认为undefine
-  levelThree: any; // 二级数据,默认为undefine
+  levelOne: any = null; // 一级数据
+  levelTwo: any = null; // 二级数据
+  levelThree: any = null; // 二级数据
 
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder) {
-    this.createItemForForm(this.editRow); // 初始化创建空的表单对象(必须)
+    this.createItemForForm(this.editRow); // 创建表单对象
   }
 
   /**
@@ -126,20 +126,24 @@ export class UserInfoComponent implements OnInit {
    */
   onOpenDeleteDlg(param): void {
     if (param === 'delete') {
-      this.deleteState = false; // 删除所选
+      // 删除所选
+      this.deleteState = false;
       this.deleteDlgTitle = '删除数据';
       if (this.selectedRow) {
         this.msg = '确定要删除所选数据!';
       } else {
-        this.deleteDlgBtnState = true; // 禁用删除弹框(确认、取消)按钮
+        // 禁用删除弹框(确认、取消)按钮
+        this.deleteDlgBtnState = true;
         this.msg = '请先选中需要删除的数据';
       }
     } else {
-      this.deleteState = true; // 删除所有
+      // 删除所有
+      this.deleteState = true;
       this.deleteDlgTitle = '清空数据';
       this.msg = '确定要删除所有数据!';
     }
-    this.deleteDlgState = false; // 打开删除弹框
+    // 打开删除弹框
+    this.deleteDlgState = false;
   }
 
   /**
@@ -147,15 +151,16 @@ export class UserInfoComponent implements OnInit {
    */
   onDeleteSure(): void {
     this.deleteDlgBtnState = true; // 禁用删除弹框按钮
-    let id = '';
-    if (this.deleteState) { // 删除所有
+    let id = null;
+    if (this.deleteState) {
+      // 删除所有
       id = 'all';
-    } else { // 删除所选
+    } else {
+      // 删除所选
       if (this.selectedRow) {
         id = this.selectedRow.map(row => row.id).join(',');
       } else {
-        id = '';
-        this.deleteDlgState = true; // 关闭删除弹框
+        id = null;
       }
     }
     if (id) {
@@ -164,8 +169,10 @@ export class UserInfoComponent implements OnInit {
           this.deleteDlgBtnState = true;
           this.msg = '删除成功！';
           setTimeout(() => {
-            this.page(); // 分页
-            this.deleteDlgState = true; // 关闭删除弹框
+            // 刷新数据
+            this.page();
+            // 关闭删除弹框
+            this.deleteDlgState = true;
           }, 2000);
         } else {
           this.msg = '删除失败！';
@@ -178,16 +185,14 @@ export class UserInfoComponent implements OnInit {
    * 取消删除
    */
   onDeleteCancel(): void {
-    this.deleteDlgState = true; // 触发onCloseDeleteDlg事件关闭弹框
+    this.onCloseDeleteDlg();
   }
 
   /**
    * 关闭删除弹框
    */
   onCloseDeleteDlg(): void {
-    this.onUnSelect(); // 取消所有选中数据
-    this.deleteDlgBtnState = false; // 激活删除弹框(确认、取消)按钮
-    this.deleteDlgState = true; // 关闭删除弹框
+    this.clean();
   }
 
   /**
@@ -198,22 +203,24 @@ export class UserInfoComponent implements OnInit {
   }
 
   /**
-   * 打开添加、编辑弹框
+   * 点击添加按钮打开添加弹框
+   * 双击行打开编辑弹框
    * @param param
    */
   onOpenEditDlg(param): void {
     if (param === 'add') {
       this.editDlgTitle = '添加用户信息';
-      this.editRow = undefined;
-      this.editState = false;
+      this.editRow = null;
     } else {
       this.editDlgTitle = '编辑用户信息';
-      this.onUnSelect();
       this.editRow = param;
-      this.editState = true;
+      // 取消选中的数据
+      this.selectedRow = null;
     }
-    this.createItemForForm(this.editRow); // 创建新的表单对象
-    this.editDlgState = false; // 打开添加弹框
+    // 创建表单对象
+    this.createItemForForm(this.editRow);
+    // 打开添加弹框
+    this.editDlgState = false;
   }
 
   /**
@@ -221,22 +228,25 @@ export class UserInfoComponent implements OnInit {
    */
   createItemForForm(editRow): void {
     this.msg = '';
-    // editState为true表示编辑用户信息
-    if (this.editState) {
+    if (editRow) {
+      /*编辑操作*/
       // 解析级联数据,回显下拉列表
       // 判断province是否存在
       if (editRow.province) {
-        this.levelOne = province; // 初始化levelOne
+        // 初始化levelOne
+        this.levelOne = province;
         // 判断city是否存在
         if (editRow.city) {
           for (let i = 0; i < this.levelOne.length; i++) {
             if (this.levelOne[i].id === editRow.province) {
-              this.levelTwo = this.levelOne[i].child; // 初始化levelTwo
+              // 初始化levelTwo
+              this.levelTwo = this.levelOne[i].child;
               // 判断area是否存在
               if (editRow.area) {
                 for (let j = 0; j < this.levelTwo.length; j++) {
                   if (this.levelTwo[j].id === editRow.city) {
-                    this.levelThree = this.levelTwo[j].child; // 初始化levelThree
+                    // 初始化levelThree
+                    this.levelThree = this.levelTwo[j].child;
                     break;
                   } else {
                     this.levelThree = undefined;
@@ -256,14 +266,13 @@ export class UserInfoComponent implements OnInit {
       } else {
         this.levelOne = undefined;
       }
-    } else { // editState为false表示添加用户信息
+    } else {
+      /*添加操作*/
       this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree由用户选择生成
       editRow = new User();
       editRow.province = '0'; // 设置一级下拉列表值为'0'
     }
-    /**
-     * 创建表单对象
-     */
+    /*创建表单对象*/
     this.itemForForm = this.formBuilder.group({
       'name': [editRow.name, [
         Validators.required,
@@ -280,30 +289,27 @@ export class UserInfoComponent implements OnInit {
       ]],
       'introduce': [editRow.introduce, Validators.pattern('^.{0,50}$')],
       'sex': [editRow.sex, Validators.pattern('^["male"|"female"].*$')],
-      'hobby': [this.editState ? editRow.hobby.split(',') : []],
+      'hobby': [editRow.hobby ? editRow.hobby.split(',') : []],
       'province': [editRow.province, Validators.pattern('^[^"0"].*$')]
     });
-    /**
-     * 编辑状态下,动态添加表单对象的city、area属性对象
-     */
-    if (this.editState && editRow.city && this.levelTwo) {
+    /*编辑状态下,动态添加表单对象的city、area属性对象*/
+    if (editRow.city && this.levelTwo) {
       this.itemForForm.addControl('city', new FormControl(editRow.city, Validators.pattern('^[^"0"].*$')));
     }
-    if (this.editState && editRow.area && this.levelThree) {
+    if (editRow.area && this.levelThree) {
       this.itemForForm.addControl('area', new FormControl(editRow.area, Validators.pattern('^[^"0"].*$')));
     }
-    /**
-     * 动态加载表单对象的hobby属性对象,添加状态无需回显,编辑状态需要回显
-     */
+    /*动态加载表单对象的checkbox属性对象*/
     for (let i = 0; i < this.hobby.length; i++) {
       const hobbyId = this.hobby[i].id;
       const hobbyName = `hobby${hobbyId}`;
-      if (this.editState && editRow.hobby.includes(hobbyId)) {
+      if (editRow.hobby && editRow.hobby.includes(hobbyId)) {
         this.itemForForm.addControl(hobbyName, new FormControl(hobbyId));
       } else {
         this.itemForForm.addControl(hobbyName, new FormControl(null));
       }
     }
+    // console.log(this.itemForForm.value);
   }
 
   /**
@@ -339,19 +345,14 @@ export class UserInfoComponent implements OnInit {
    * 取消添加、编辑
    */
   onEditCancel(): void {
-    this.editDlgState = true; // 触发onCloseEditDlg事件关闭弹框
+    this.onCloseEditDlg();
   }
 
   /**
    * 关闭添加、编辑弹框
    */
   onCloseEditDlg(): void {
-    this.editRow = undefined;
-    this.levelOne = undefined;
-    this.levelTwo = undefined;
-    this.levelThree = undefined;
-    this.formSubmitState = false; // 激活表单提交
-    this.editDlgState = true; // 关闭弹框
+    this.clean();
   }
 
   /**
@@ -424,6 +425,25 @@ export class UserInfoComponent implements OnInit {
    */
   onCleanSearch(): void {
     this.itemForPage = {};
+  }
+
+  /**
+   * 重置全局参数
+   */
+  clean(): void {
+    this.editDlgTitle = null;
+    this.editRow = null;
+    this.editDlgState = true;
+    this.deleteDlgTitle = null;
+    this.selectedRow = null;
+    this.deleteState = false;
+    this.deleteDlgState = true;
+    this.deleteDlgBtnState = false;
+    this.formSubmitState = false;
+    this.formValidStyle = 0;
+    this.levelOne = null;
+    this.levelTwo = null;
+    this.levelThree = null;
   }
 
   /**
