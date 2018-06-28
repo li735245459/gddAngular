@@ -55,18 +55,18 @@ export class UserInfoComponent implements OnInit {
   };
   /*
     hobby类型为checkbox:
-      初始化加载数据为本地数组对象-[{'id':'1','name':'篮球'},{'id':'2','name':'足球'}]
-      用户选择后存取数据库的值为id字符串--'1,2'
-    添加数据时,创建表单对象时该属性值为[]
-    编辑数据时,创建表单对象时该属性值为--'1,2'.split(',')) => [1,2]
+      初始化数据为本地数组对象hobby：[{'id':'1','name':'篮球'},{'id':'2','name':'足球'}]
+      存储数据库的值为id字符串：'1,2'
+    添加数据时,创建表单对象时的hobby属性值为：[]
+    编辑数据时,创建表单对象时的hobby属性值为：'1,2'.split(',') => [1,2]
     当用户点击复选框时触发change回调函数对表单对象hobby属性值进行动态修改
     当用户提交表单时将表单对象hobby属性值转化成字符串--[1,2].join(',') => '1,2'
    */
   hobby = hobby;
   /*
-    省、市、区类型为级联下拉列表:
-      初始化加载数据为本地对象
-      用户选择后存取数据库的值为下拉列表的值
+    省、市、区级联下拉列表:
+      初始化数据为本地数组对象province
+    添加、编辑时,创建表单对象时的province属性值为0。级联操作时没有触发的下拉列表需动态设置其相应表单对象属性值为-1
    */
   levelOne: any = null; // 一级数据
   levelTwo: any = null; // 二级数据
@@ -230,45 +230,47 @@ export class UserInfoComponent implements OnInit {
       /*编辑操作*/
       // 解析级联数据,回显下拉列表
       // 判断province是否存在
-      if (editRow.province) {
+      if (editRow.province !== '-1') {
         // 初始化levelOne
         this.levelOne = province;
         // 判断city是否存在
-        if (editRow.city) {
+        if (editRow.city !== '-1') {
           for (let i = 0; i < this.levelOne.length; i++) {
             if (this.levelOne[i].id === editRow.province) {
               // 初始化levelTwo
               this.levelTwo = this.levelOne[i].child;
               // 判断area是否存在
-              if (editRow.area) {
+              if (editRow.area !== '-1') {
                 for (let j = 0; j < this.levelTwo.length; j++) {
                   if (this.levelTwo[j].id === editRow.city) {
                     // 初始化levelThree
                     this.levelThree = this.levelTwo[j].child;
                     break;
                   } else {
-                    this.levelThree = undefined;
+                    this.levelThree = null;
                   }
                 }
               } else {
-                this.levelThree = undefined;
+                this.levelThree = null;
               }
               break;
             } else {
-              this.levelTwo = undefined;
+              this.levelTwo = null;
             }
           }
         } else {
-          this.levelTwo = undefined;
+          this.levelTwo = null;
         }
       } else {
-        this.levelOne = undefined;
+        this.levelOne = null;
       }
     } else {
       /*添加操作*/
       this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree由用户选择生成
       editRow = new User();
       editRow.province = '0'; // 设置一级下拉列表值为'0'
+      editRow.city = '-1'; // 设置二级下拉列表值为'-1'
+      editRow.area = '-1'; // 设置三级下拉列表值为'-1'
     }
     /*创建表单对象*/
     this.itemForForm = this.formBuilder.group({
@@ -288,14 +290,20 @@ export class UserInfoComponent implements OnInit {
       'introduce': [editRow.introduce, Validators.pattern('^.{0,50}$')],
       'sex': [editRow.sex, Validators.pattern('^["male"|"female"].*$')],
       'hobby': [editRow.hobby ? editRow.hobby.split(',') : []],
-      'province': [editRow.province, Validators.pattern('^[^"0"].*$')]
+      'province': [editRow.province, Validators.pattern('^[^"0"].*$')],
+      'city': [editRow.city, Validators.pattern('^[^"0"].*$')],
+      'area': [editRow.area, Validators.pattern('^[^"0"].*$')]
     });
     /*编辑状态下,动态添加表单对象的city、area属性对象*/
-    if (editRow.city && this.levelTwo) {
-      this.itemForForm.addControl('city', new FormControl(editRow.city, Validators.pattern('^[^"0"].*$')));
+    if (editRow.city !== '-1' && this.levelTwo) {
+      this.itemForForm.patchValue({'city': editRow.city});
+    } else {
+      this.itemForForm.patchValue({'city': '-1'});
     }
-    if (editRow.area && this.levelThree) {
-      this.itemForForm.addControl('area', new FormControl(editRow.area, Validators.pattern('^[^"0"].*$')));
+    if (editRow.area !== '-1' && this.levelThree) {
+      this.itemForForm.patchValue({'area': editRow.area});
+    } else {
+      this.itemForForm.patchValue({'area': '-1'});
     }
     /*动态加载表单对象的checkbox属性对象*/
     for (let i = 0; i < this.hobby.length; i++) {
@@ -307,7 +315,7 @@ export class UserInfoComponent implements OnInit {
         this.itemForForm.addControl(hobbyName, new FormControl(null));
       }
     }
-    // console.log(this.itemForForm.value);
+    console.log(this.itemForForm.value);
   }
 
   /**
@@ -377,16 +385,23 @@ export class UserInfoComponent implements OnInit {
    * @param selectedOption
    */
   onChangeLevelOne(selectedOption): void {
-    this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前选中下拉列表值
+    // 设置表单对象province属性值为当前选中值
+    this.itemForForm.patchValue({'province': selectedOption.value});
     if (selectedOption.value !== '0' && this.levelOne[selectedOption.selectedIndex - 1].child) {
-      this.itemForForm.addControl('city', new FormControl('0', Validators.pattern('^[^"0"].*$'))); // 添加表单对象的city属性对象
-      this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 初始化levelTwo
+      // 显示二级下拉列表
+      this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child;
+      // 设置表单对象city属性值为'0'
+      this.itemForForm.patchValue({'city': '0'});
     } else {
-      this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
-      this.levelTwo = undefined; // 屏蔽二级下拉列表
+      // 屏蔽二级下拉列表
+      this.levelTwo = null;
+      // 设置表单对象city属性值为'-1'
+      this.itemForForm.patchValue({'city': '-1'});
     }
-    this.itemForForm.removeControl('area'); // 移除表单对象的area属性对象
-    this.levelThree = undefined; // 屏蔽三级下拉列表
+    // 屏蔽三级下拉列表
+    this.levelThree = null;
+    // 设置表单对象area属性值为'-1'
+    this.itemForForm.patchValue({'area': '-1'});
   }
 
   /**
@@ -398,11 +413,11 @@ export class UserInfoComponent implements OnInit {
   onChangeLevelTwo(selectedOption): void {
     this.itemForForm.patchValue({'city': selectedOption.value});
     if (selectedOption.value !== '0' && this.levelTwo[selectedOption.selectedIndex - 1].child) {
-      this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
       this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
+      this.itemForForm.patchValue({'area': '0'});
     } else {
-      this.itemForForm.removeControl('area');
-      this.levelThree = undefined;
+      this.levelThree = null;
+      this.itemForForm.patchValue({'area': '-1'});
     }
   }
 

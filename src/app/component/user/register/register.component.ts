@@ -84,7 +84,9 @@ export class RegisterComponent implements OnInit {
       'introduce': [null, Validators.pattern('^.{0,50}$')],
       'sex': [null, Validators.pattern('^["male"|"female"].*$')],
       'hobby': [[]],
-      'province': ['0', Validators.pattern('^[^"0"].*$')]
+      'province': ['0', Validators.pattern('^[^"0"].*$')],
+      'city': ['-1', Validators.pattern('^[^"0"].*$')],
+      'area': ['-1', Validators.pattern('^[^"0"].*$')]
     });
     /*动态加载表单对象的checkbox属性对象*/
     for (let i = 0; i < this.hobby.length; i++) {
@@ -105,7 +107,6 @@ export class RegisterComponent implements OnInit {
     } else {
       this.itemForForm.value.hobby.splice(index, 1);
     }
-    // console.log(this.itemForForm.value.hobby);
   }
 
   /**
@@ -115,16 +116,23 @@ export class RegisterComponent implements OnInit {
    * @param selectedOption
    */
   onChangeLevelOne(selectedOption): void {
-    this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前选中下拉列表值
+    // 设置表单对象province属性值为当前选中值
+    this.itemForForm.patchValue({'province': selectedOption.value});
     if (selectedOption.value !== '0' && this.levelOne[selectedOption.selectedIndex - 1].child) {
-      this.itemForForm.addControl('city', new FormControl('0', Validators.pattern('^[^"0"].*$'))); // 添加表单对象的city属性对象
-      this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 初始化levelTwo
+      // 显示二级下拉列表
+      this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child;
+      // 设置表单对象city属性值为'0'
+      this.itemForForm.patchValue({'city': '0'});
     } else {
-      this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
-      this.levelTwo = undefined; // 屏蔽二级下拉列表
+      // 屏蔽二级下拉列表
+      this.levelTwo = null;
+      // 设置表单对象city属性值为'-1'
+      this.itemForForm.patchValue({'city': '-1'});
     }
-    this.itemForForm.removeControl('area'); // 移除表单对象的area属性对象
-    this.levelThree = undefined; // 屏蔽三级下拉列表
+    // 屏蔽三级下拉列表
+    this.levelThree = null;
+    // 设置表单对象area属性值为'-1'
+    this.itemForForm.patchValue({'area': '-1'});
   }
 
   /**
@@ -136,11 +144,11 @@ export class RegisterComponent implements OnInit {
   onChangeLevelTwo(selectedOption): void {
     this.itemForForm.patchValue({'city': selectedOption.value});
     if (selectedOption.value !== '0' && this.levelTwo[selectedOption.selectedIndex - 1].child) {
-      this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
       this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
+      this.itemForForm.patchValue({'area': '0'});
     } else {
-      this.itemForForm.removeControl('area');
-      this.levelThree = undefined;
+      this.levelThree = null;
+      this.itemForForm.patchValue({'area': '-1'});
     }
   }
 
@@ -158,9 +166,6 @@ export class RegisterComponent implements OnInit {
    */
   onSubmit(itemForForm): void {
     if (itemForForm.value.password === itemForForm.value.rePassword) {
-      // this.formSubmitState = true;
-      // this.formValidStyle = 0;
-      // this.msg = '表单校验成功';
       this.userService.register(itemForForm.value).subscribe((responseJson) => {
           if (responseJson.code === 0) {
             // 操作成功
