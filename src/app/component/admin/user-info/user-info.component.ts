@@ -33,7 +33,6 @@ export class UserInfoComponent implements OnInit {
   // 添加、编辑弹框
   editDlgTitle: String = null;
   editRow: User = null; // 当前需要编辑的数据
-  // editState = false; // true编辑数据,false添加数据
   editDlgState = true; // true关闭弹框,false打开弹框
   // 删除弹框
   deleteDlgTitle: String = null;
@@ -68,7 +67,6 @@ export class UserInfoComponent implements OnInit {
     省、市、区类型为级联下拉列表:
       初始化加载数据为本地对象
       用户选择后存取数据库的值为下拉列表的值
-    添加数据时,
    */
   levelOne: any = null; // 一级数据
   levelTwo: any = null; // 二级数据
@@ -316,12 +314,15 @@ export class UserInfoComponent implements OnInit {
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    this.formSubmitState = true; // 禁用表单提交
-    this.formValidStyle = 0; // 设置全局消息样式为成功
-    this.msg = '表单校验成功';
-    itemForForm.value.id = this.editRow.id;
+    if (this.editRow && this.editRow.id) {
+      itemForForm.value.id = this.editRow.id; // 设置修改参考ID
+      this.msg = '编辑用户信息成功';
+    } else {
+      this.msg = '添加用户信息成功';
+    }
     this.userService.modify(itemForForm.value).subscribe(responseJson => {
       if (responseJson.code === 0) {
+        // 操作成功
         this.formSubmitState = true; // 禁用表单提交
         this.formValidStyle = 0; // 设置全局消息样式为成功
         this.msg = '用户信息修改成功';
@@ -334,6 +335,7 @@ export class UserInfoComponent implements OnInit {
           this.editDlgState = true; // 关闭窗口
         }, 1000);
       } else {
+        // 操作失败
         this.formSubmitState = false; // 激活表单提交
         this.formValidStyle = 1; // 设置全局消息样式为失败
         this.msg = responseJson.msg;

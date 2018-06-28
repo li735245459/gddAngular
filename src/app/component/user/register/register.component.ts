@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {User} from '../../../model/user';
 import {UserService} from '../../../service/user.service';
-import {province} from '../../../data/UserData';
+import {hobby, province} from '../../../data/UserData';
 
 @Component({
   selector: 'app-register',
@@ -12,53 +11,29 @@ import {province} from '../../../data/UserData';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  msg: string; // 全局提示信息
+  msg: string = null; // 全局提示信息
+  // 表单
+  itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,默认false
-  formValidStyle; // 0表单校验成功样式, 1表单校验失败样式
-  levelOne: any; // 省级数据
-  levelTwo: any; // 级联市级数据
-  levelThree: any; // 级联区级数据
-  user: User = { // User模型
-    id: '',
-    name: '李星',
-    phone: '17502503714',
-    email: 'lixing_java@163.com',
-    password: 'li12345',
-    rePassword: 'li12345',
-    sex: 'male',
-    hobby: [],
-    province: '0',
-    city: '0',
-    area: '0',
-    address: '谷里街道泉塘公寓12栋403',
-    introduce: '',
-  };
-  userForm = new FormGroup({ // User表单
-    name: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[\u4e00-\u9fa5]{2,5}$')]),
-    phone: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9])\\d{8}$')]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[a-zA-Z]\\w{5,9}$')]),
-    rePassword: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[a-zA-Z]\\w{5,9}$')]),
-    address: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^.{10,20}$')]),
-    introduce: new FormControl('', [Validators.pattern('^.{0,}$')]),
-    sex: new FormControl(),
-    hobby: new FormControl(),
-    province: new FormControl(),
-    city: new FormControl(),
-    area: new FormControl()
-  });
+  formValidStyle = 0; // 0表单校验成功样式, 1表单校验失败样式
+  /*
+    hobby类型为checkbox:
+      初始化加载数据为本地数组对象-[{'id':'1','name':'篮球'},{'id':'2','name':'足球'}]
+      用户选择后存取数据库的值为id字符串--'1,2'
+    添加数据时,创建表单对象时该属性值为[]
+    编辑数据时,创建表单对象时该属性值为--'1,2'.split(',')) => [1,2]
+    当用户点击复选框时触发change回调函数对表单对象hobby属性值进行动态修改
+    当用户提交表单时将表单对象hobby属性值转化成字符串--[1,2].join(',') => '1,2'
+   */
+  hobby = hobby;
+  /*
+    省、市、区类型为级联下拉列表:
+      初始化加载数据为本地对象
+      用户选择后存取数据库的值为下拉列表的值
+   */
+  levelOne: any = null; // 一级数据
+  levelTwo: any = null; // 二级数据
+  levelThree: any = null; // 二级数据
   placeholder = { // User模型字段说明
     name: {'title': '姓名', 'prompt': '(2~4位汉子)'},
     phone: {'title': '手机号码', 'prompt': '(11位数字)'},
@@ -71,116 +46,140 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService) {
+    private userService: UserService,
+    private formBuilder: FormBuilder) {
+    this.createItemForForm(); // 创建表单对象
   }
 
   ngOnInit() {
-    this.levelOne = province; // 初始化: 加载省级数据
   }
 
   /**
-   * 选择爱好
-   *  选择时会将其id添加到hobby数组中
-   *  提交注册时会将hobby数组转化成hobby字符串
-   *  注册失败则在回调函数中将hobby字符串重新转换成hobby数组
-   * @param hobby
+   * 创建表单对象
    */
-  onChangeHobby(hobby): void {
-    const index = this.user.hobby.indexOf(hobby);
-    if (index === -1) {
-      this.user.hobby.push(hobby);
-    } else {
-      this.user.hobby.splice(index, 1);
+  createItemForForm(): void {
+    this.levelOne = province;
+    this.itemForForm = this.formBuilder.group({
+      'name': [null, [
+        Validators.required,
+        Validators.pattern('^[\u4e00-\u9fa5]{2,5}$')]],
+      'email': [null, [
+        Validators.required,
+        Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]],
+      'phone': [null, [
+        Validators.required,
+        Validators.pattern('^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9])\\d{8}$')]],
+      'password': [null, [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]],
+      'rePassword': [null, [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]],
+      'address': [null, [
+        Validators.required,
+        Validators.pattern('^.{10,20}$')
+      ]],
+      'introduce': [null, Validators.pattern('^.{0,50}$')],
+      'sex': [null, Validators.pattern('^["male"|"female"].*$')],
+      'hobby': [[]],
+      'province': ['0', Validators.pattern('^[^"0"].*$')]
+    });
+    /*动态加载表单对象的checkbox属性对象*/
+    for (let i = 0; i < this.hobby.length; i++) {
+      const hobbyId = this.hobby[i].id;
+      const hobbyName = `hobby${hobbyId}`;
+      this.itemForForm.addControl(hobbyName, new FormControl(null));
     }
   }
 
   /**
-   * 选择省: 设置当前省级数据并级联出其市级数据
-   * @param province
+   * 复选框点击事件
+   * @param event
    */
-  onChangeProvince(selectedOption): void {
-    this.user.province = selectedOption.value; // 设置省级数据
-    this.user.city = '0';
-    this.levelTwo = '';
-    this.levelThree = '';
-    this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].levelTwo; // 级联市级数据
+  onChangeHobby(checkbox) {
+    const index = this.itemForForm.value.hobby.indexOf(checkbox.value);
+    if (index === -1) {
+      this.itemForForm.value.hobby.push(checkbox.value);
+    } else {
+      this.itemForForm.value.hobby.splice(index, 1);
+    }
+    // console.log(this.itemForForm.value.hobby);
   }
 
   /**
-   * 选择市: 设置当前市级数据并级联出其区级数据
+   * 一级下拉列表change事件
+   *  值为'0',置空所有级联下拉列表数据以及表单相关属性对象
+   *  值不为'0',设置二级联下拉列表数据以及表单相关属性对象
    * @param selectedOption
    */
-  onChangeCity(selectedOption): void {
-    this.user.city = selectedOption.value; // 设置市级数据
-    this.user.area = '0';
-    this.levelThree = '';
-    this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].levelThree; // 级联区级数据
+  onChangeLevelOne(selectedOption): void {
+    this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前选中下拉列表值
+    if (selectedOption.value !== '0' && this.levelOne[selectedOption.selectedIndex - 1].child) {
+      this.itemForForm.addControl('city', new FormControl('0', Validators.pattern('^[^"0"].*$'))); // 添加表单对象的city属性对象
+      this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 初始化levelTwo
+    } else {
+      this.itemForForm.removeControl('city'); // 移除表单对象的city属性对象
+      this.levelTwo = undefined; // 屏蔽二级下拉列表
+    }
+    this.itemForForm.removeControl('area'); // 移除表单对象的area属性对象
+    this.levelThree = undefined; // 屏蔽三级下拉列表
   }
 
   /**
-   * 选择区: 设置当前区级数据
+   * 二级下拉列表change事件
+   *  值为'0',置空所有级联下拉列表数据以及表单相关属性对象
+   *  值不为'0',设置三级下拉列表数据以及表单相关属性对象
    * @param selectedOption
    */
-  onChangeArea(selectedOption): void {
-    this.user.area = selectedOption.value; // 设置区级数据
+  onChangeLevelTwo(selectedOption): void {
+    this.itemForForm.patchValue({'city': selectedOption.value});
+    if (selectedOption.value !== '0' && this.levelTwo[selectedOption.selectedIndex - 1].child) {
+      this.itemForForm.addControl('area', new FormControl('0', Validators.pattern('^[^"0"].*$')));
+      this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
+    } else {
+      this.itemForForm.removeControl('area');
+      this.levelThree = undefined;
+    }
+  }
+
+  /**
+   * 三级下拉列表change事件
+   * @param selectedOption
+   */
+  onChangeLevelThree(selectedOption): void {
+    this.itemForForm.patchValue({'area': selectedOption.value});
   }
 
   /**
    * 提交注册表单
    * @param userForm
    */
-  onSubmit(userForm): void {
-    /**
-     * 注册表单校验成功
-     */
-    if (userForm.valid && this.user.province !== '0' && this.user.city !== '0' &&
-      ((this.levelThree === '' && this.user.area === '0') || (this.levelThree !== '' && this.user.area !== '0'))) {
-      if (userForm.value.password === userForm.value.rePassword) {
-        /**
-         * 密码一致
-         */
-        this.formSubmitState = false;
-        this.formValidStyle = 0;
-        this.msg = '表单校验成功';
-        userForm.value.hobby = this.user.hobby;
-        this.userService.register(userForm.value).subscribe((responseJson) => {
-            /**
-             * 注册成功
-             */
-            if (responseJson.code === 0) {
-              this.formValidStyle = 0;
-              this.msg = '注册成功';
-              setTimeout(() => this.router.navigateByUrl('/login'), 1000);
-            } else if (responseJson.code === 13) {
-              this.formSubmitState = true;
-              this.formValidStyle = 1;
-              this.msg = '邮箱已被注册';
-              if (typeof this.user.hobby === 'string') {
-                this.user.hobby = this.user.hobby.split(','); // 将hobby字符串转化成hobby数组
-              }
-            } else {
-              /**
-               * 注册失败
-               */
-              this.formSubmitState = true;
-              this.formValidStyle = 1;
-              this.msg = responseJson.msg;
-            }
+  onSubmit(itemForForm): void {
+    if (itemForForm.value.password === itemForForm.value.rePassword) {
+      // this.formSubmitState = true;
+      // this.formValidStyle = 0;
+      // this.msg = '表单校验成功';
+      this.userService.register(itemForForm.value).subscribe((responseJson) => {
+          if (responseJson.code === 0) {
+            // 操作成功
+            this.formSubmitState = true;
+            this.formValidStyle = 0;
+            this.msg = '注册成功';
+            setTimeout(() => this.router.navigateByUrl('/login'), 2000);
+          } else {
+            // 操作失败
+            this.formSubmitState = false;
+            this.formValidStyle = 1;
+            this.msg = responseJson.msg;
           }
-        );
-      } else {
-        /**
-         * 密码不一致
-         */
-        this.formValidStyle = 1;
-        this.msg = '密码不一致';
-      }
+        }
+      );
     } else {
-      /**
-       * 注册表单校验失败
-       */
+      this.msg = '密码不一致';
       this.formValidStyle = 1;
-      this.msg = '表单校验失败';
+      this.formSubmitState = false;
     }
   }
 }

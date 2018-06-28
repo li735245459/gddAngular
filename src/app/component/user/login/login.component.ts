@@ -35,10 +35,10 @@ export class LoginComponent implements OnInit {
    */
   createItemForForm(): void {
     // itemForForm = new FormGroup({
-    //   email: new FormControl('lixing_java@163.com', [
+    //   email: new FormControl('', [
     //     Validators.required,
     //     Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]),
-    //   password: new FormControl('li12345', [
+    //   password: new FormControl('', [
     //     Validators.required,
     //     Validators.pattern('^[a-zA-Z]\\w{5,9}$')])
     // });
@@ -58,9 +58,6 @@ export class LoginComponent implements OnInit {
    * @param userForm
    */
   onSubmitForm(userForm): void {
-    this.formSubmitState = true; // 禁用表单提交
-    this.formValidStyle = 0; // 设置全局消息样式为成功
-    this.msg = '表单校验成功';
     this.userService.login(userForm.value).subscribe((responseJson) => {
       if (responseJson.code === 0) {
         this.formSubmitState = true; // 禁用表单提交
@@ -68,9 +65,7 @@ export class LoginComponent implements OnInit {
         this.msg = '登陆成功';
         sessionStorage.removeItem('jwt');
         sessionStorage.setItem('jwt', responseJson.data.jwt); // 本地存储jwt,随浏览器窗口共存亡
-        setTimeout(() => {
-          this.router.navigateByUrl('/admin');
-        }, 1000);
+        setTimeout(() => {this.router.navigateByUrl('/admin');}, 1000);
       } else {
         this.formSubmitState = false; // 激活表单提交
         this.formValidStyle = 1; // 设置全局消息样式为失败

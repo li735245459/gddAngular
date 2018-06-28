@@ -19,11 +19,11 @@ export class UserService {
    * @returns {Observable<User>}
    */
   register(userFormValue): Observable<any> {
-    userFormValue.hobby = userFormValue.hobby.join(','); // 将hobby数组转化成字符串
-    // console.log(`加密前:${userFormValue.password}`);
-    userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString(); // 对密码进行加密
+    // 将hobby数组转化成字符串
+    userFormValue.hobby = userFormValue.hobby.join(',');
+    // 对密码进行加密
+    userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString();
     userFormValue.rePassword = userFormValue.password;
-    // console.log(`加密后:${userFormValue.password}`);
     return this.http.post<any>(`/gdd/user/register`, userFormValue);
   }
 
@@ -86,8 +86,8 @@ export class UserService {
 
   /**
    * 删除
-   * id=all表示删除所有
-   * id="id"或"id,id"表示批量删除
+   * id="all"表示删除所有
+   * id="3b2ebfa1-ed59-4091-a800-aef6e867f1a1,3b2ebfa1-ed59-4091-a800-aef6e867f1a2"表示批量删除
    * @param id
    */
   delete(id): Observable<any> {
@@ -99,7 +99,7 @@ export class UserService {
    * @param userFormValue
    */
   modify(userFormValue): Observable<any> {
-    userFormValue.hobby = userFormValue.hobby.split(',');
+    userFormValue.hobby = userFormValue.hobby.join(',');
     return this.http.post<any>(`/gdd/user/modify`, userFormValue);
   }
 }

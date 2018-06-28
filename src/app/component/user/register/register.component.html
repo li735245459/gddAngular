@@ -8,29 +8,29 @@
   <!--body-->
   <div class="row text-left body">
     <div class="col-sm-12 col-md-12 col-lg-10 col-xl-10" style="margin: 0 auto;"><!--自适应设置-->
-      <form action="#" role="form" method="post" novalidate [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)">
+      <form action="#" role="form" method="post" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmit(itemForForm)">
         <!--全局消息-->
         <div class="form-group">
-          <div class="alert" [ngClass]="checkCode==0?'alert-success':'alert-danger'"
+          <div class="alert" [ngClass]="formValidStyle==0?'alert-success':'alert-danger'"
                *ngIf="msg">{{msg}}
           </div>
         </div>
         <!--姓名-->
         <div class="form-group user-field">
           <i class="fa fa-user fa-lg"></i>
-          <input type="text" class="form-control" formControlName="name" name="name" [(ngModel)]="user.name"
+          <input type="text" class="form-control" formControlName="name"
                  placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
         </div>
         <!--手机号码-->
         <div class="form-group user-field">
           <i class="fa fa-phone fa-lg"></i>
-          <input type="text" class="form-control" formControlName="phone" name="phone" [(ngModel)]="user.phone"
+          <input type="text" class="form-control" formControlName="phone"
                  placeholder="{{placeholder.phone.title}}{{placeholder.phone.prompt}}">
         </div>
         <!--邮箱-->
         <div class="form-group user-field">
           <i class="fa fa-envelope-o fa-lg"></i>
-          <input type="text" class="form-control" formControlName="email" name="email" [(ngModel)]="user.email"
+          <input type="text" class="form-control" formControlName="email" name="email"
                  placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">
         </div>
         <!--密码-->
@@ -39,82 +39,64 @@
             <div class="user-field">
               <i class="fa fa-key fa-lg"></i>
               <input type="password" class="form-control" formControlName="password" name="password"
-                     [(ngModel)]="user.password"
                      placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">
             </div>
           </div>
           <div class="col-6">
             <div class="user-field">
               <i class="fa fa-key fa-lg"></i>
-              <input type="password" class="form-control" formControlName="rePassword" name="rePassword"
-                     [(ngModel)]="user.rePassword"
+              <input type="password" class="form-control" formControlName="rePassword"
                      placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">
             </div>
           </div>
         </div>
         <!--性别-->
-        <div class="form-group row">
-          <div class="col">
-            <label class="radio-inline">
-              性别:
+        <div class="form-group text-left">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">性别:</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="sex" value="male">男
             </label>
-            &nbsp;
-            <label class="radio-inline">
-              <input type="radio" formControlName="sex" name="sex" value="male" [checked]="user.sex=='male'"
-                     [(ngModel)]="user.sex">&nbsp;男
-            </label>
-            &nbsp;
-            <label class="radio-inline">
-              <input type="radio" formControlName="sex" name="sex" value="female" [checked]="user.sex=='female'"
-                     [(ngModel)]="user.sex">&nbsp;女
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="sex" value="female">女
             </label>
           </div>
         </div>
         <!--爱好-->
-        <div class="form-group">
+        <div class="form-group text-left" *ngIf="hobby">
           <div class="form-check form-check-inline">
-            <label class="form-check-label">
-              爱好:
-            </label>
+            <label class="form-check-label">爱好:</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check form-check-inline" *ngFor="let item of hobby;">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby1" value=1
-                     (change)="onChangeHobby($event.target.value)">篮球
-            </label>
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby2" value=2
-                     (change)="onChangeHobby($event.target.value)">足球
-            </label>
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" name="hobby3" value=3
-                     (change)="onChangeHobby($event.target.value)">排球
+              <input type="checkbox" class="form-check-input" formControlName="hobby{{item.id}}" value="{{item.id}}"
+                     (change)="onChangeHobby($event.target)">{{item.name}}
             </label>
           </div>
         </div>
         <!--地址-->
         <div class="form-group row">
           <div class="col-2" *ngIf="levelOne">
-            <select class="form-control" formControlName="userData" name="province" [(ngModel)]="user.userData"
-                    (change)="onChangeProvince($event.target)">
+            <select class="form-control" formControlName="province"
+                    (change)="onChangeLevelOne($event.target)">
               <option value="0">请选择省</option>
               <option value="{{item.id}}" *ngFor="let item of levelOne;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-2" *ngIf="levelTwo">
-            <select class="form-control" formControlName="city" name="city" [(ngModel)]="user.city"
-                    (change)="onChangeCity($event.target)">
+            <select class="form-control" formControlName="city"
+                    (change)="onChangeLevelTwo($event.target)">
               <option value="0">请选择市</option>
               <option value="{{item.id}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-2" *ngIf="levelThree">
-            <select class="form-control" formControlName="area" name="area" [(ngModel)]="user.area"
-                    (change)="onChangeArea($event.target)">
+            <select class="form-control" formControlName="area"
+                    (change)="onChangeLevelThree($event.target)">
               <option value="0">请选择区</option>
               <option value="{{item.id}}" *ngFor="let item of levelThree;">{{item.name}}</option>
             </select>
@@ -122,24 +104,19 @@
           <div class="col-6">
             <div class="user-field">
               <i class="fa fa-home fa-lg"></i>
-              <input type="text" class="form-control" formControlName="address" name="address"
-                     [(ngModel)]="user.address"
+              <input type="text" class="form-control" formControlName="address"
                      placeholder="{{placeholder.address.title}}{{placeholder.address.prompt}}">
             </div>
           </div>
         </div>
         <!--自我介绍-->
         <div class="form-group">
-        <textarea class="form-control" rows="3" formControlName="introduce" name="introduce"
-                  [(ngModel)]="user.introduce"
+        <textarea class="form-control" rows="3" formControlName="introduce"
                   placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>
         </div>
         <!--登陆按钮-->
         <div class="form-group">
-          <button type="submit" class="btn btn-block btn-info"
-                  [disabled]="userForm.invalid==true||canSubmit==false||user.hobby.length==0||user.userData==''||user.city==''||user.area==''">
-            提交
-          </button>
+          <button type="submit" class="btn btn-block btn-info" [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">提交</button>
         </div>
       </form>
     </div>
