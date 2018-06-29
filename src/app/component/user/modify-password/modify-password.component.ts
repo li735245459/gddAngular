@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 
 import {UserService} from '../../../service/user.service';
+import {Md5} from 'ts-md5';
 
 @Component({
   selector: 'app-modify-password',
@@ -61,6 +62,9 @@ export class ModifyPasswordComponent implements OnInit {
   onSubmit(itemForForm): void {
     if (this.itemForForm.value.password === this.itemForForm.value.rePassword) {
       itemForForm.value.email = this.email;
+      // 密码加密
+      itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
+      itemForForm.value.rePassword = itemForForm.value.password;
       this.userService.modifyPassword(itemForForm.value).subscribe(responseJson => {
         if (responseJson.code === 0) {
           this.formSubmitState = true;

@@ -19,11 +19,6 @@ export class UserService {
    * @returns {Observable<User>}
    */
   register(userFormValue): Observable<any> {
-    // 将hobby数组转化成字符串
-    userFormValue.hobby = userFormValue.hobby.join(',');
-    // 对密码进行加密
-    userFormValue.password = Md5.hashStr(userFormValue.password.trim()).toString();
-    userFormValue.rePassword = userFormValue.password;
     return this.http.post<any>(`/gdd/user/register`, userFormValue);
   }
 
@@ -33,10 +28,6 @@ export class UserService {
    * @returns {Observable<any>}
    */
   login(userFormValue): Observable<any> {
-    // 对密码进行加密
-    // console.log(`加密前:${userFormValue.password}`);
-    userFormValue.password = Md5.hashStr(userFormValue.password).toString();
-    // console.log(`加密后:${userFormValue.password}`);
     return this.http.post<any>(`/gdd/user/login`, userFormValue);
   }
 
@@ -65,9 +56,6 @@ export class UserService {
    * @returns {Observable<any>}
    */
   modifyPassword(userFormValue): Observable<any> {
-    // 密码加密
-    userFormValue.password = Md5.hashStr(userFormValue.password);
-    userFormValue.rePassword = userFormValue.password;
     return this.http.post<any>(`/gdd/user/modifyPassword`, userFormValue);
   }
 
@@ -102,11 +90,6 @@ export class UserService {
    * @param userFormValue
    */
   modify(userFormValue): Observable<any> {
-    // 将hobby数组转化成字符串
-    userFormValue.hobby = userFormValue.hobby.join(',');
-    // 密码加密
-    userFormValue.password = Md5.hashStr(userFormValue.password);
-    userFormValue.rePassword = userFormValue.password;
     return this.http.post<any>(`/gdd/user/modify`, userFormValue);
   }
 }

@@ -4,6 +4,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {UserService} from '../../../service/user.service';
 import {hobby, province} from '../../../data/UserData';
+import {Md5} from 'ts-md5';
 
 @Component({
   selector: 'app-register',
@@ -166,6 +167,11 @@ export class RegisterComponent implements OnInit {
    */
   onSubmit(itemForForm): void {
     if (itemForForm.value.password === itemForForm.value.rePassword) {
+      // 将hobby数组转化成字符串
+      itemForForm.value.hobby = itemForForm.value.hobby.join(',');
+      // 密码加密
+      itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
+      itemForForm.value.rePassword = itemForForm.value.password;
       this.userService.register(itemForForm.value).subscribe((responseJson) => {
           if (responseJson.code === 0) {
             // 操作成功

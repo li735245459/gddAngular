@@ -4,6 +4,7 @@ import {User} from '../../../model/user';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {province, hobby} from '../../../data/UserData';
+import {Md5} from 'ts-md5';
 
 @Component({
   selector: 'app-user-info',
@@ -335,6 +336,17 @@ export class UserInfoComponent implements OnInit {
       if (this.editRow && this.editRow.id) {
         itemForForm.value.id = this.editRow.id;
       }
+      if (this.editRow && this.editRow.email === this.itemForForm.value.email) {
+        this.itemForForm.value.email = null;
+      }
+      if (this.editRow && this.editRow.phone === this.itemForForm.value.phone) {
+        this.itemForForm.value.phone = null;
+      }
+      // 将hobby数组转化成字符串
+      itemForForm.value.hobby = itemForForm.value.hobby.join(',');
+      // 密码加密
+      itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
+      itemForForm.value.rePassword = itemForForm.value.password;
       this.userService.modify(itemForForm.value).subscribe(responseJson => {
         if (responseJson.code === 0) {
           this.formSubmitState = true; // 禁用表单提交
@@ -350,6 +362,7 @@ export class UserInfoComponent implements OnInit {
           }, 1000);
         } else {
           // 操作失败
+          this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(',');
           this.formSubmitState = false; // 激活表单提交
           this.formValidStyle = false; // 设置全局消息样式为失败
           this.msg = responseJson.msg;
