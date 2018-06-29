@@ -43,7 +43,7 @@ export class UserInfoComponent implements OnInit {
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,false启用表单提交
-  formValidStyle = 0; // 0表单校验成功样式, 1表单校验失败样式
+  formValidStyle = true; // true表单校验成功样式, false表单校验失败样式
   placeholder = { // 表单字段说明
     name: {'title': '姓名', 'prompt': '(2~4位汉子)'},
     phone: {'title': '手机号码', 'prompt': '(11位数字)'},
@@ -287,8 +287,16 @@ export class UserInfoComponent implements OnInit {
         Validators.required,
         Validators.pattern('^.{10,20}$')
       ]],
+      'password': [editRow.password, [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]],
+      'rePassword': [editRow.password, [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]],
       'introduce': [editRow.introduce, Validators.pattern('^.{0,50}$')],
-      'sex': [editRow.sex, Validators.pattern('^["male"|"female"].*$')],
+      'sex': [editRow.sex, [Validators.required, Validators.pattern('^["male"|"female"].*$')]],
       'hobby': [editRow.hobby ? editRow.hobby.split(',') : []],
       'province': [editRow.province, Validators.pattern('^[^"0"].*$')],
       'city': [editRow.city, Validators.pattern('^[^"0"].*$')],
@@ -322,33 +330,36 @@ export class UserInfoComponent implements OnInit {
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    if (this.editRow && this.editRow.id) {
-      itemForForm.value.id = this.editRow.id; // 设置修改参考ID
-      this.msg = '编辑用户信息成功';
-    } else {
-      this.msg = '添加用户信息成功';
-    }
-    this.userService.modify(itemForForm.value).subscribe(responseJson => {
-      if (responseJson.code === 0) {
-        // 操作成功
-        this.formSubmitState = true; // 禁用表单提交
-        this.formValidStyle = 0; // 设置全局消息样式为成功
-        this.msg = '用户信息修改成功';
-        setTimeout(() => {
-          /**
-           * 1)重新分页
-           * 2)使用itemForForm.value填充editRow
-           */
-          this.page();
-          this.editDlgState = true; // 关闭窗口
-        }, 1000);
-      } else {
-        // 操作失败
-        this.formSubmitState = false; // 激活表单提交
-        this.formValidStyle = 1; // 设置全局消息样式为失败
-        this.msg = responseJson.msg;
+    console.log(itemForForm.value);
+    if (itemForForm.value.password === itemForForm.value.rePassword) {
+      if (this.editRow && this.editRow.id) {
+        itemForForm.value.id = this.editRow.id;
       }
-    });
+      this.userService.modify(itemForForm.value).subscribe(responseJson => {
+        if (responseJson.code === 0) {
+          this.formSubmitState = true; // 禁用表单提交
+          this.formValidStyle = true; // 设置全局消息样式为成功
+          this.msg = '操作成功!';
+          setTimeout(() => {
+            /**
+             * 1)重新分页
+             * 2)使用itemForForm.value填充editRow
+             */
+            this.page();
+            this.editDlgState = true; // 关闭窗口
+          }, 1000);
+        } else {
+          // 操作失败
+          this.formSubmitState = false; // 激活表单提交
+          this.formValidStyle = false; // 设置全局消息样式为失败
+          this.msg = responseJson.msg;
+        }
+      });
+    } else {
+      this.msg = '密码不一致';
+      this.formValidStyle = false;
+      this.formSubmitState = false;
+    }
   }
 
   /**
@@ -457,7 +468,7 @@ export class UserInfoComponent implements OnInit {
     this.deleteDlgState = true;
     this.deleteDlgBtnState = false;
     this.formSubmitState = false;
-    this.formValidStyle = 0;
+    this.formValidStyle = true;
     this.levelOne = null;
     this.levelTwo = null;
     this.levelThree = null;

@@ -125,7 +125,7 @@
     <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
       <!--全局消息-->
       <div class="form-group">
-        <div class="alert" [ngClass]="formValidStyle==0?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+        <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
       </div>
       <!--姓名-->
       <div class="form-group user-field">
@@ -144,6 +144,23 @@
         <i class="fa fa-envelope-o fa-lg"></i>
         <input type="text" class="form-control" formControlName="email"
                placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">
+      </div>
+      <!--密码-->
+      <div class="form-group row">
+        <div class="col-6">
+          <div class="user-field">
+            <i class="fa fa-key fa-lg"></i>
+            <input type="password" class="form-control" formControlName="password"
+                   placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="user-field">
+            <i class="fa fa-key fa-lg"></i>
+            <input type="password" class="form-control" formControlName="rePassword"
+                   placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">
+          </div>
+        </div>
       </div>
       <!--性别-->
       <div class="form-group text-left">

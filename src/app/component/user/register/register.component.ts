@@ -15,7 +15,7 @@ export class RegisterComponent implements OnInit {
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,默认false
-  formValidStyle = 0; // 0表单校验成功样式, 1表单校验失败样式
+  formValidStyle = true; // true表单校验成功样式, false表单校验失败样式
   /*
     hobby类型为checkbox:
       初始化数据为本地数组对象hobby：[{'id':'1','name':'篮球'},{'id':'2','name':'足球'}]
@@ -82,7 +82,7 @@ export class RegisterComponent implements OnInit {
         Validators.pattern('^.{10,20}$')
       ]],
       'introduce': [null, Validators.pattern('^.{0,50}$')],
-      'sex': [null, Validators.pattern('^["male"|"female"].*$')],
+      'sex': [null, [Validators.required, Validators.pattern('^["male"|"female"].*$')]],
       'hobby': [[]],
       'province': ['0', Validators.pattern('^[^"0"].*$')],
       'city': ['-1', Validators.pattern('^[^"0"].*$')],
@@ -170,20 +170,21 @@ export class RegisterComponent implements OnInit {
           if (responseJson.code === 0) {
             // 操作成功
             this.formSubmitState = true;
-            this.formValidStyle = 0;
+            this.formValidStyle = true;
             this.msg = '注册成功';
             setTimeout(() => this.router.navigateByUrl('/login'), 2000);
           } else {
             // 操作失败
+            this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(',');
             this.formSubmitState = false;
-            this.formValidStyle = 1;
+            this.formValidStyle = false;
             this.msg = responseJson.msg;
           }
         }
       );
     } else {
       this.msg = '密码不一致';
-      this.formValidStyle = 1;
+      this.formValidStyle = false;
       this.formSubmitState = false;
     }
   }

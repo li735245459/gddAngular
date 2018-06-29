@@ -16,7 +16,7 @@ export class ModifyPasswordComponent implements OnInit {
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,false启用表单提交
-  formValidStyle = 0; // 0表单校验成功样式, 1表单校验失败样式
+  formValidStyle = true; // true表单校验成功样式, false表单校验失败样式
   placeholder = { // 表单字段说明
     password: {'title': '新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
     rePassword: {'title': '重复新密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
@@ -64,7 +64,7 @@ export class ModifyPasswordComponent implements OnInit {
       this.userService.modifyPassword(itemForForm.value).subscribe(responseJson => {
         if (responseJson.code === 0) {
           this.formSubmitState = true;
-          this.formValidStyle = 0;
+          this.formValidStyle = true;
           this.msg = '修改成功';
           setTimeout(() => {
             sessionStorage.removeItem('code');
@@ -72,13 +72,13 @@ export class ModifyPasswordComponent implements OnInit {
           }, 1000);
         } else {
           this.formSubmitState = false;
-          this.formValidStyle = 1;
+          this.formValidStyle = false;
           this.msg = responseJson.msg;
         }
       });
     } else {
       this.formSubmitState = false;
-      this.formValidStyle = 1;
+      this.formValidStyle = false;
       this.msg = '两次输入的密码不一致';
     }
   }

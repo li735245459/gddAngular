@@ -102,7 +102,11 @@ export class UserService {
    * @param userFormValue
    */
   modify(userFormValue): Observable<any> {
+    // 将hobby数组转化成字符串
     userFormValue.hobby = userFormValue.hobby.join(',');
+    // 密码加密
+    userFormValue.password = Md5.hashStr(userFormValue.password);
+    userFormValue.rePassword = userFormValue.password;
     return this.http.post<any>(`/gdd/user/modify`, userFormValue);
   }
 }

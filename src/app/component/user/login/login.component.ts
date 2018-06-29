@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   // 表单
   itemForForm: FormGroup;
   formSubmitState = false; // true禁止表单提交,默认false
-  formValidStyle; // 0表单校验成功样式, 1表单校验失败样式
+  formValidStyle = true; // true表单校验成功样式, false表单校验失败样式
   placeholder = { // 表单字段说明
     email: {'title': '邮箱', 'prompt': 'you@example.com'},
     password: {'title': '密码', 'prompt': '字母开头,长度在6~10之间,只能包含字母、数字和下划线'},
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
     this.userService.login(userForm.value).subscribe((responseJson) => {
       if (responseJson.code === 0) {
         this.formSubmitState = true; // 禁用表单提交
-        this.formValidStyle = 0; // 设置全局消息样式为成功
+        this.formValidStyle = true; // 设置全局消息样式为成功
         this.msg = '登陆成功';
         sessionStorage.clear();
         sessionStorage.setItem('jwt', responseJson.data.jwt);
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
         }, 1000);
       } else {
         this.formSubmitState = false; // 激活表单提交
-        this.formValidStyle = 1; // 设置全局消息样式为失败
+        this.formValidStyle = false; // 设置全局消息样式为失败
         this.msg = responseJson.msg;
       }
     });
