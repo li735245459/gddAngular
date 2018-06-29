@@ -207,10 +207,6 @@ Observable可观察对象用于在发布者和订阅者之间传递消息
         tap(n => console.log(n)),
         retry(2)
       );
-3)angular中的Observable可观察对象:
-  事件发送器 EventEmitter
-  HttpClient 从 HTTP 方法调用中返回了可观察对象
-======HttpClient: 实现HTTP请求,基于浏览器提供的XMLHttpRequest接口======
 
 
 

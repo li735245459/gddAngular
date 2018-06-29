@@ -55,7 +55,7 @@ export class UserService {
    * @param {String} email
    * @param {String} code
    */
-  checkEmailCode(type: String, email: String, code: String): Observable<any> {
+  checkEmailCode(type, email, code): Observable<any> {
     return this.http.get<any>(`/gdd/email/checkEmailCode/${type}/${email}/${code}`);
   }
 
@@ -65,6 +65,9 @@ export class UserService {
    * @returns {Observable<any>}
    */
   modifyPassword(userFormValue): Observable<any> {
+    // 密码加密
+    userFormValue.password = Md5.hashStr(userFormValue.password);
+    userFormValue.rePassword = userFormValue.password;
     return this.http.post<any>(`/gdd/user/modifyPassword`, userFormValue);
   }
 

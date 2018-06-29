@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Router} from '@angular/router';
+import {User} from '../../model/user';
 
 @Component({
   selector: 'app-admin',
@@ -8,6 +9,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
+  user: User = new User();
   title = 'GDD宠物馆';
   width = 250;
   collapsed = false;
@@ -67,6 +69,8 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user.name = sessionStorage.getItem('name');
+    this.user.cover = sessionStorage.getItem('cover');
   }
 
   // 隐藏左侧菜单栏

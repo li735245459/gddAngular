@@ -20,11 +20,11 @@
     <div class="sidebar-body f-animate" [style.width.px]="width" style="height: 92vh;overflow-y: auto;overflow-x: hidden;">
       <div *ngIf="!collapsed" class="sidebar-user row">
         <div class="col-5">
-          <img src="../../../assets/img/cover.jpg"
+          <img src="../../../assets/img/{{user.cover}}"
                style="width:80px;height:80px;border:4px double rgba(0,0,0,0.2);border-radius:50%;">
         </div>
         <div class="col-7" style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
-          <span>李星</span>
+          <span>{{user.name}}</span>
         </div>
       </div>
       <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" [multiple]="true" (itemClick)="onItemClick($event)"></eui-sidemenu>
