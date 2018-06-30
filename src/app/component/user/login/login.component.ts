@@ -58,10 +58,10 @@ export class LoginComponent implements OnInit {
    * 提交登录表单
    * @param userForm
    */
-  onSubmitForm(userFormValue): void {
+  onSubmitForm(itemForForm): void {
     // 对密码进行加密
-    userFormValue.value.password = Md5.hashStr(userFormValue.value.password).toString();
-    this.userService.login(userFormValue.value).subscribe((responseJson) => {
+    itemForForm.value.password = Md5.hashStr(itemForForm.value.password).toString();
+    this.userService.login(itemForForm.value).subscribe((responseJson) => {
       if (responseJson.code === 0) {
         this.formSubmitState = true; // 禁用表单提交
         this.formValidStyle = true; // 设置全局消息样式为成功

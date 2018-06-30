@@ -74,8 +74,8 @@
   <!--<eui-grid-column field="city" title="市" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="area" title="区" width="100"></eui-grid-column>-->
   <!--<eui-grid-column field="address" title="街道" width="100"></eui-grid-column>-->
+  <eui-grid-column field="email" title="邮箱" width="150"></eui-grid-column>
   <eui-grid-column field="phone" title="手机号码" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="email" title="邮箱" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
   <!--<eui-grid-column field="loginIp" title="登陆IP" align="center" width="150"></eui-grid-column>-->
@@ -122,109 +122,109 @@
   <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
   <div class="container user">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
-    <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
-      <!--全局消息-->
-      <div class="form-group">
-        <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
-      </div>
-      <!--姓名-->
-      <div class="form-group user-field">
-        <i class="fa fa-user fa-lg"></i>
-        <input type="text" class="form-control" formControlName="name"
-               placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
-      </div>
-      <!--手机号码-->
-      <div class="form-group user-field">
-        <i class="fa fa-phone fa-lg"></i>
-        <input type="text" class="form-control" formControlName="phone"
-               placeholder="{{placeholder.phone.title}}{{placeholder.phone.prompt}}">
-      </div>
-      <!--邮箱-->
-      <div class="form-group user-field">
-        <i class="fa fa-envelope-o fa-lg"></i>
-        <input type="text" class="form-control" formControlName="email"
-               placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">
-      </div>
-      <!--密码-->
-      <div class="form-group row">
-        <div class="col-6">
-          <div class="user-field">
-            <i class="fa fa-key fa-lg"></i>
-            <input type="password" class="form-control" formControlName="password"
-                   placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">
+      <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
+        <!--全局消息-->
+        <div class="form-group">
+          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+        </div>
+        <!--姓名-->
+        <div class="form-group user-field">
+          <i class="fa fa-user fa-lg"></i>
+          <input type="text" class="form-control" formControlName="name"
+                 placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
+        </div>
+        <!--手机号码-->
+        <div class="form-group user-field">
+          <i class="fa fa-phone fa-lg"></i>
+          <input type="text" class="form-control" formControlName="phone"
+                 placeholder="{{placeholder.phone.title}}{{placeholder.phone.prompt}}">
+        </div>
+        <!--邮箱-->
+        <div class="form-group user-field">
+          <i class="fa fa-envelope-o fa-lg"></i>
+          <input type="text" class="form-control" formControlName="email"
+                 placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">
+        </div>
+        <!--密码-->
+        <div class="form-group row" *ngIf="editRow==null">
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="password"
+                     placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="rePassword"
+                     placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">
+            </div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="user-field">
-            <i class="fa fa-key fa-lg"></i>
-            <input type="password" class="form-control" formControlName="rePassword"
-                   placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">
+        <!--性别-->
+        <div class="form-group text-left">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">性别:</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="sex" value="male">男
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="sex" value="female">女
+            </label>
           </div>
         </div>
-      </div>
-      <!--性别-->
-      <div class="form-group text-left">
-        <div class="form-check form-check-inline">
-          <label class="form-check-label">性别:</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <label class="form-check-label">
-            <input type="radio" formControlName="sex" value="male">男
-          </label>
-        </div>
-        <div class="form-check form-check-inline">
-          <label class="form-check-label">
-            <input type="radio" formControlName="sex" value="female">女
-          </label>
-        </div>
-      </div>
-      <!--爱好-->
-      <div class="form-group text-left" *ngIf="hobby">
-        <div class="form-check form-check-inline">
-          <label class="form-check-label">爱好:</label>
-        </div>
-        <div class="form-check form-check-inline" *ngFor="let item of hobby;">
-          <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" formControlName="hobby{{item.id}}" value="{{item.id}}"
-                   (change)="onChangeHobby($event.target)">{{item.name}}
-          </label>
-        </div>
-      </div>
-      <!--地址-->
-      <div class="form-group row">
-        <div class="col-2" *ngIf="levelOne">
-          <select class="form-control" formControlName="province" (change)="onChangeLevelOne($event.target)">
-            <option value="0">请选择省</option>
-            <option value="{{item.id}}" *ngFor="let item of levelOne;">{{item.name}}</option>
-          </select>
-        </div>
-        <div class="col-2" *ngIf="levelTwo">
-          <select class="form-control" formControlName="city" (change)="onChangeLevelTwo($event.target)">
-            <option value="0">请选择市</option>
-            <option value="{{item.id}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
-          </select>
-        </div>
-        <div class="col-2" *ngIf="levelThree">
-          <select class="form-control" formControlName="area" (change)="onChangeLevelThree($event.target)">
-            <option value="0">请选择区</option>
-            <option value="{{item.id}}" *ngFor="let item of levelThree;">{{item.name}}</option>
-          </select>
-        </div>
-        <div class="col-6">
-          <div class="user-field">
-            <i class="fa fa-home fa-lg"></i>
-            <input type="text" class="form-control" formControlName="address"
-                   placeholder="{{placeholder.address.title}}{{placeholder.address.prompt}}">
+        <!--爱好-->
+        <div class="form-group text-left" *ngIf="hobby">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">爱好:</label>
+          </div>
+          <div class="form-check form-check-inline" *ngFor="let item of hobby;">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" formControlName="hobby{{item.id}}" value="{{item.id}}"
+                     (change)="onChangeHobby($event.target)">{{item.name}}
+            </label>
           </div>
         </div>
-      </div>
-      <!--自我介绍-->
-      <div class="form-group">
+        <!--地址-->
+        <div class="form-group row">
+          <div class="col-2" *ngIf="levelOne">
+            <select class="form-control" formControlName="province" (change)="onChangeLevelOne($event.target)">
+              <option value="0">请选择省</option>
+              <option value="{{item.id}}" *ngFor="let item of levelOne;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-2" *ngIf="levelTwo">
+            <select class="form-control" formControlName="city" (change)="onChangeLevelTwo($event.target)">
+              <option value="0">请选择市</option>
+              <option value="{{item.id}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-2" *ngIf="levelThree">
+            <select class="form-control" formControlName="area" (change)="onChangeLevelThree($event.target)">
+              <option value="0">请选择区</option>
+              <option value="{{item.id}}" *ngFor="let item of levelThree;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-home fa-lg"></i>
+              <input type="text" class="form-control" formControlName="address"
+                     placeholder="{{placeholder.address.title}}{{placeholder.address.prompt}}">
+            </div>
+          </div>
+        </div>
+        <!--自我介绍-->
+        <div class="form-group">
         <textarea class="form-control" rows="3" formControlName="introduce"
                   placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>
-      </div>
-    </form>
-  </div>
+        </div>
+      </form>
+    </div>
   </div>
   <!--提交按钮-->
   <eui-panel-footer>

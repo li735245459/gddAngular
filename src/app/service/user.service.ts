@@ -14,7 +14,7 @@ export class UserService {
   }
 
   /**
-   * 用户注册
+   * 注册
    * @param {User} user
    * @returns {Observable<User>}
    */
@@ -23,7 +23,7 @@ export class UserService {
   }
 
   /**
-   * 用户登陆
+   * 登陆
    * @param userFormValue
    * @returns {Observable<any>}
    */
@@ -51,7 +51,7 @@ export class UserService {
   }
 
   /**
-   * 修改密码
+   * 根据邮箱修改密码
    * @param userFormValue
    * @returns {Observable<any>}
    */

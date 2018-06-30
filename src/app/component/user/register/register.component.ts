@@ -23,8 +23,9 @@ export class RegisterComponent implements OnInit {
       存储数据库的值为id字符串：'1,2'
     添加数据时,创建表单对象时的hobby属性值为：[]
     编辑数据时,创建表单对象时的hobby属性值为：'1,2'.split(',') => [1,2]
-    当用户点击复选框时触发change回调函数对表单对象hobby属性值进行动态修改
-    当用户提交表单时将表单对象hobby属性值转化成字符串--[1,2].join(',') => '1,2'
+    当用户点击复选框时触发change回调函数对表单对象hobby属性值以数组的形式进行动态添加或删除
+    当用户提交表单时需将表单对象hobby属性值转化成字符串：[1,2].join(',') => '1,2'
+    当用户提交表单后服务器执行失败需将表单对象hobby属性值转化成数组：'1,2'.split(',') => [1,2]
    */
   hobby = hobby;
   /*
@@ -171,7 +172,7 @@ export class RegisterComponent implements OnInit {
       itemForForm.value.hobby = itemForForm.value.hobby.join(',');
       // 密码加密
       itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
-      itemForForm.value.rePassword = itemForForm.value.password;
+      itemForForm.value.rePassword = null;
       this.userService.register(itemForForm.value).subscribe((responseJson) => {
           if (responseJson.code === 0) {
             // 操作成功
@@ -181,6 +182,7 @@ export class RegisterComponent implements OnInit {
             setTimeout(() => this.router.navigateByUrl('/login'), 2000);
           } else {
             // 操作失败
+            // 将hobby字符串转化成数组
             this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(',');
             this.formSubmitState = false;
             this.formValidStyle = false;

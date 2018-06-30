@@ -37,7 +37,7 @@ export class UserInfoComponent implements OnInit {
   editDlgState = true; // true关闭弹框,false打开弹框
   // 删除弹框
   deleteDlgTitle: String = null;
-  selectedRow: Array<any> = null; // 当前选中的数据
+  selectedRow = []; // 当前选中的数据
   deleteState = false; // true删除所有数据,false删除当前选中的数据
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
@@ -60,8 +60,9 @@ export class UserInfoComponent implements OnInit {
       存储数据库的值为id字符串：'1,2'
     添加数据时,创建表单对象时的hobby属性值为：[]
     编辑数据时,创建表单对象时的hobby属性值为：'1,2'.split(',') => [1,2]
-    当用户点击复选框时触发change回调函数对表单对象hobby属性值进行动态修改
-    当用户提交表单时将表单对象hobby属性值转化成字符串--[1,2].join(',') => '1,2'
+    当用户点击复选框时触发change回调函数对表单对象hobby属性值以数组的形式进行动态添加或删除
+    当用户提交表单时需将表单对象hobby属性值转化成字符串：[1,2].join(',') => '1,2'
+    当用户提交表单后服务器执行失败需将表单对象hobby属性值转化成数组：'1,2'.split(',') => [1,2]
    */
   hobby = hobby;
   /*
@@ -128,7 +129,7 @@ export class UserInfoComponent implements OnInit {
       // 删除所选
       this.deleteState = false;
       this.deleteDlgTitle = '删除数据';
-      if (this.selectedRow) {
+      if (this.selectedRow.length > 0) {
         this.msg = '确定要删除所选数据!';
       } else {
         // 禁用删除弹框(确认、取消)按钮
@@ -267,8 +268,8 @@ export class UserInfoComponent implements OnInit {
       }
     } else {
       /*添加操作*/
-      this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree由用户选择生成
       editRow = new User();
+      this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree由用户选择生成
       editRow.province = '0'; // 设置一级下拉列表值为'0'
       editRow.city = '-1'; // 设置二级下拉列表值为'-1'
       editRow.area = '-1'; // 设置三级下拉列表值为'-1'
@@ -288,14 +289,6 @@ export class UserInfoComponent implements OnInit {
         Validators.required,
         Validators.pattern('^.{10,20}$')
       ]],
-      'password': [editRow.password, [
-        Validators.required,
-        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
-      ]],
-      'rePassword': [editRow.password, [
-        Validators.required,
-        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
-      ]],
       'introduce': [editRow.introduce, Validators.pattern('^.{0,50}$')],
       'sex': [editRow.sex, [Validators.required, Validators.pattern('^["male"|"female"].*$')]],
       'hobby': [editRow.hobby ? editRow.hobby.split(',') : []],
@@ -303,50 +296,60 @@ export class UserInfoComponent implements OnInit {
       'city': [editRow.city, Validators.pattern('^[^"0"].*$')],
       'area': [editRow.area, Validators.pattern('^[^"0"].*$')]
     });
-    /*编辑状态下,动态添加表单对象的city、area属性对象*/
-    if (editRow.city !== '-1' && this.levelTwo) {
-      this.itemForForm.patchValue({'city': editRow.city});
+    /*动态添加表单对象的password属性对象*/
+    if (this.editRow == null) {
+      // 添加状态
+      this.itemForForm.addControl('password', new FormControl(null, [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]));
+      this.itemForForm.addControl('rePassword', new FormControl(null, [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]));
     } else {
-      this.itemForForm.patchValue({'city': '-1'});
-    }
-    if (editRow.area !== '-1' && this.levelThree) {
-      this.itemForForm.patchValue({'area': editRow.area});
-    } else {
-      this.itemForForm.patchValue({'area': '-1'});
+      // 编辑状态
+      this.itemForForm.addControl('password', new FormControl(null));
+      this.itemForForm.addControl('rePassword', new FormControl(null));
     }
     /*动态加载表单对象的checkbox属性对象*/
     for (let i = 0; i < this.hobby.length; i++) {
       const hobbyId = this.hobby[i].id;
       const hobbyName = `hobby${hobbyId}`;
-      if (editRow.hobby && editRow.hobby.includes(hobbyId)) {
+      // 编辑状态
+      if (this.editRow && editRow.hobby.includes(hobbyId)) {
         this.itemForForm.addControl(hobbyName, new FormControl(hobbyId));
       } else {
         this.itemForForm.addControl(hobbyName, new FormControl(null));
       }
     }
-    console.log(this.itemForForm.value);
+    // console.log(this.itemForForm.value);
   }
 
   /**
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    console.log(itemForForm.value);
     if (itemForForm.value.password === itemForForm.value.rePassword) {
+      // 编辑状态下设置ID
       if (this.editRow && this.editRow.id) {
         itemForForm.value.id = this.editRow.id;
       }
+      // 编辑状态下若邮箱没有改变则置空
       if (this.editRow && this.editRow.email === this.itemForForm.value.email) {
         this.itemForForm.value.email = null;
       }
+      // 编辑状态下若手机号码没有改变则置空
       if (this.editRow && this.editRow.phone === this.itemForForm.value.phone) {
         this.itemForForm.value.phone = null;
       }
+      // 添加状态下密码加密
+      if (this.editRow == null) {
+        itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
+        itemForForm.value.rePassword = itemForForm.value.password;
+      }
       // 将hobby数组转化成字符串
       itemForForm.value.hobby = itemForForm.value.hobby.join(',');
-      // 密码加密
-      itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
-      itemForForm.value.rePassword = itemForForm.value.password;
       this.userService.modify(itemForForm.value).subscribe(responseJson => {
         if (responseJson.code === 0) {
           this.formSubmitState = true; // 禁用表单提交
@@ -362,6 +365,7 @@ export class UserInfoComponent implements OnInit {
           }, 1000);
         } else {
           // 操作失败
+          // 将hobby字符串转化成数组
           this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(',');
           this.formSubmitState = false; // 激活表单提交
           this.formValidStyle = false; // 设置全局消息样式为失败
@@ -476,7 +480,7 @@ export class UserInfoComponent implements OnInit {
     this.editRow = null;
     this.editDlgState = true;
     this.deleteDlgTitle = null;
-    this.selectedRow = null;
+    this.selectedRow = [];
     this.deleteState = false;
     this.deleteDlgState = true;
     this.deleteDlgBtnState = false;

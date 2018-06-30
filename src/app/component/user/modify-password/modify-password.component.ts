@@ -64,7 +64,7 @@ export class ModifyPasswordComponent implements OnInit {
       itemForForm.value.email = this.email;
       // 密码加密
       itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
-      itemForForm.value.rePassword = itemForForm.value.password;
+      itemForForm.value.rePassword = null;
       this.userService.modifyPassword(itemForForm.value).subscribe(responseJson => {
         if (responseJson.code === 0) {
           this.formSubmitState = true;
@@ -83,7 +83,7 @@ export class ModifyPasswordComponent implements OnInit {
     } else {
       this.formSubmitState = false;
       this.formValidStyle = false;
-      this.msg = '两次输入的密码不一致';
+      this.msg = '密码不一致';
     }
   }
 
