@@ -13,31 +13,40 @@
   </eui-panel-header>
   <div class="container-fluid">
     <div class="row">
-      <div class="col form-inline">
+      <div class="col-3 form-inline">
         <label for="name">姓名：</label>
         <input type="text" class="form-control" id="name" name="name" [(ngModel)]="itemForPage.name">
       </div>
-      <div class="col form-inline">
+      <div class="col-3 form-inline">
         <label for="phone">号码：</label>
         <input type="text" class="form-control" id="phone" name="phone" [(ngModel)]="itemForPage.phone">
       </div>
-      <div class="col form-inline">
+      <div class="col-3 form-inline">
         <label for="email">邮箱：</label>
         <input type="text" class="form-control" id="email" name="email" [(ngModel)]="itemForPage.email">
       </div>
-      <div class="col form-inline">
+      <div class="col-3 form-inline">
         <label for="sex">性别：</label>
         <select class="form-control" id="sex" name="sex" [(ngModel)]="itemForPage.sex">
-          <option value="">所有</option>
-          <option value="{{item.value}}" *ngFor="let item of [{value:'male',name:'男'},{value:'female',name:'女'}];"
-                  [selected]="itemForPage.sex==item.value">
+          <option value="0">所有</option>
+          <option value="{{item.value}}" *ngFor="let item of [{value:'male',name:'男'},{value:'female',name:'女'}];">
             {{item.name}}
           </option>
         </select>
       </div>
     </div>
+    <div class="row" style="height: 10px;"></div>
+    <div class="row">
+      <div class="col-3"><label [for]="loginTime" align="left">登陆时间：</label>
+        <eui-datetimespinner #loginTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss" [(ngModel)]="itemForPage.loginTime"></eui-datetimespinner>
+      </div>
+      <div class="col-3"><label [for]="createTime" align="left">注册时间：</label>
+        <eui-datetimespinner #createTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss" [(ngModel)]="itemForPage.createTime"></eui-datetimespinner>
+      </div>
+    </div>
   </div>
   <eui-panel-footer>
+    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
     <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onOpenEditDlg('add')">添加</eui-linkbutton>
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('delete')">删除</eui-linkbutton>
     <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('clean')">清空数据</eui-linkbutton>
@@ -46,14 +55,14 @@
     <eui-linkbutton iconCls="icon-undo" [plain]="true" (click)="onReLoad()">导出</eui-linkbutton>
     <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空查询条件</eui-linkbutton>
     <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
   </eui-panel-footer>
 </eui-panel>
 
 <!--
 表格
 -->
-<eui-datagrid [pagination]="true" [data]="data" [total]="total" [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions"
+<eui-datagrid [pagination]="true" [data]="data" [total]="total" [pageNumber]="pageNumber" [pageSize]="pageSize"
+              [pageOptions]="pageOptions"
               idField="id" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
               [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)" (pageChange)="onPageChange($event)">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">

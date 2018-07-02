@@ -28,8 +28,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   };
   data = []; // 分页数据
   total: Number = 0; // 所有数据条数
-  itemForPage: User = { // 分页参数对象
-    sex: ''
+  // 分页参数对象
+  itemForPage: User = {
+    sex: '0'
   };
   // 添加、编辑弹框
   editDlgTitle: String = null;
@@ -90,9 +91,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 在组件相应的视图初始化之后调用
    */
   ngAfterViewInit() {
-    console.log('ngAfterViewInit 调用 page');
-    console.log(this.pageNumber);
-    console.log(this.pageSize);
+    // console.log('ngAfterViewInit 调用 page');
+    // console.log(this.pageNumber);
+    // console.log(this.pageSize);
     this.page(); // 加载分页数据
   }
 
@@ -101,7 +102,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * @param event
    */
   onPageChange(event) {
-    if (event.pageNumber && event.pageNumber > 1) {
+    if (event.pageNumber && event.pageNumber > 0) {
       console.log('onPageChange 调用 page');
       this.pageNumber = event.pageNumber;
       this.pageSize = event.pageSize;
@@ -127,9 +128,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.msg = '查询成功';
         this.data = responseJson.data.list;
         this.total = responseJson.data.total;
-        // console.log(`Paging load success`);
-        // console.log(`The data parameter is ${this.data}`);
-        // console.log(`The total parameter is ${this.total}`);
+        console.log(`Paging load success`);
+        console.log(`The data parameter is ${this.data}`);
+        console.log(`The total parameter is ${this.total}`);
         this.loading = false;
       } else {
         this.msg = '查询失败';
@@ -477,7 +478,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 刷新数据
    */
   onReLoad(): void {
-    this.itemForPage = {};
+    this.itemForPage = {
+      sex: '0'
+    };
     this.page();
   }
 
@@ -485,7 +488,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 清空分页查询条件
    */
   onCleanSearch(): void {
-    this.itemForPage = {};
+    this.itemForPage = {
+      sex: '0'
+    };
   }
 
   /**

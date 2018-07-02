@@ -1,7 +1,7 @@
-.panel-body-form .row .col {
-  margin: 2px 0px;
-  text-align: left;
-}
+/*.panel-body-form .row .col {*/
+  /*margin: 2px 0px;*/
+  /*text-align: left;*/
+/*}*/
 
 /*自定义删除Dialog框样式*/
 .deleteDlg {
@@ -60,3 +60,5 @@
 .editDlgBtn {
   width:80px;
 }
+
+/*自定义分页搜索栏样式*/
