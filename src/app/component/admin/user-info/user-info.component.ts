@@ -5,6 +5,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {province, hobby} from '../../../data/UserData';
 import {Md5} from 'ts-md5';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-user-info',
@@ -19,15 +20,15 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   title = '用户信息';
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
+  total: Number = 0; // 所有数据条数
   pageNumber = 1; // 当前分页号
   pageSize = 20; // 默认分页大小
-  // pageList: [20, 30, 40],
-  // displayMsg: '当前 {from} 到 {to} , 共 {total} 条'
-  pageOptions = { // 分页导航条参数设置
-    layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info']
-  };
+  // pageOptions = { // 分页导航条参数设置
+  //   pageList: [20, 30, 40],
+  //   displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
+  //   layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info']
+  // };
   data = []; // 分页数据
-  total: Number = 0; // 所有数据条数
   // 分页参数对象
   itemForPage: User = {
     sex: '0'
@@ -91,10 +92,10 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 在组件相应的视图初始化之后调用
    */
   ngAfterViewInit() {
-    // console.log('ngAfterViewInit 调用 page');
-    // console.log(this.pageNumber);
-    // console.log(this.pageSize);
-    this.page(); // 加载分页数据
+    console.log('ngAfterViewInit 调用 page');
+    console.log(this.pageNumber);
+    console.log(this.pageSize);
+    this.page();
   }
 
   /**
@@ -128,9 +129,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.msg = '查询成功';
         this.data = responseJson.data.list;
         this.total = responseJson.data.total;
-        console.log(`Paging load success`);
-        console.log(`The data parameter is ${this.data}`);
-        console.log(`The total parameter is ${this.total}`);
+        // console.log(`Paging load success`);
+        // console.log(`The data parameter is ${this.data}`);
+        // console.log(`The total parameter is ${this.total}`);
         this.loading = false;
       } else {
         this.msg = '查询失败';

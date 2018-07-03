@@ -38,10 +38,12 @@
     <div class="row" style="height: 10px;"></div>
     <div class="row">
       <div class="col-3"><label [for]="loginTime" align="left">登陆时间：</label>
-        <eui-datetimespinner #loginTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss" [(ngModel)]="itemForPage.loginTime"></eui-datetimespinner>
+        <eui-datetimespinner #loginTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss"
+                             [(ngModel)]="itemForPage.loginTime"></eui-datetimespinner>
       </div>
       <div class="col-3"><label [for]="createTime" align="left">注册时间：</label>
-        <eui-datetimespinner #createTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss" [(ngModel)]="itemForPage.createTime"></eui-datetimespinner>
+        <eui-datetimespinner #createTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss"
+                             [(ngModel)]="itemForPage.createTime"></eui-datetimespinner>
       </div>
     </div>
   </div>
@@ -60,11 +62,12 @@
 
 <!--
 表格
+(pageChange)="onPageChange($event)"
+[pagination]="true" [pageOptions]="pageOptions" [total]="total" [pageNumber]="pageNumber" [pageSize]="pageSize"
 -->
-<eui-datagrid [pagination]="true" [data]="data" [total]="total" [pageNumber]="pageNumber" [pageSize]="pageSize"
-              [pageOptions]="pageOptions"
+<eui-datagrid [data]="data"
               idField="id" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
-              [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)" (pageChange)="onPageChange($event)">
+              [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
@@ -75,26 +78,32 @@
       <div *ngIf="row.sex=='female'">女</div>
     </ng-template>
   </eui-grid-column>
-  <!--<eui-grid-column field="password" title="密码"></eui-grid-column>-->
-  <!--<eui-grid-column field="hobby" title="兴趣" width="100"></eui-grid-column>-->
-  <!--<eui-grid-column field="introduce" title="备注" width="100"></eui-grid-column>-->
-  <!--<eui-grid-column field="province" title="省" width="100"></eui-grid-column>-->
-  <!--<eui-grid-column field="city" title="市" width="100"></eui-grid-column>-->
-  <!--<eui-grid-column field="area" title="区" width="100"></eui-grid-column>-->
-  <!--<eui-grid-column field="address" title="街道" width="100"></eui-grid-column>-->
   <eui-grid-column field="email" title="邮箱" width="150"></eui-grid-column>
   <eui-grid-column field="phone" title="手机号码" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="address" title="地址" width="500"></eui-grid-column>
   <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="150"></eui-grid-column>
   <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
-  <!--<eui-grid-column field="loginIp" title="登陆IP" align="center" width="150"></eui-grid-column>-->
-  <!--<eui-grid-column field="id" title="编号" align="center" width="400"></eui-grid-column>-->
   <!--<eui-grid-column title="操作" align="center" width="120">-->
   <!--<ng-template euiCellTemplate let-row let-rowIndex="rowIndex">-->
   <!--<eui-linkbutton iconCls="icon-edit" [plain]="true">编辑</eui-linkbutton>-->
   <!--<eui-linkbutton iconCls="icon-remove" [plain]="true">删除</eui-linkbutton>-->
   <!--</ng-template>-->
   <!--</eui-grid-column>-->
+  <!--<ng-template euiPageTemplate let-pager>-->
+  <!--<eui-linkbutton plain="true" iconCls="icon-add"></eui-linkbutton>-->
+  <!--<eui-linkbutton plain="true" iconCls="icon-remove"></eui-linkbutton>-->
+  <!--<eui-textbox iconCls="icon-search" style="height:26px;margin-left:4px"></eui-textbox>-->
+  <!--</ng-template>-->
 </eui-datagrid>
+<!--分页-->
+<eui-panel [bodyStyle]="{border:'0px'}" [footerStyle]="{marginBottom:'1px', marginTop:'1px'}">
+  <eui-panel-footer>
+    <eui-pagination [total]="total" [pageSize]="pageSize" [pageNumber]="pageNumber"
+                    [pageList]="[20,30,40,50]" [displayMsg]="'当前 {from} 到 {to} , 共 {total} 条'"
+                    [layout]="['list','sep','first','prev','sep','tpl','sep','next','last','sep','links','info']"
+                    (pageChange)="onPageChange($event)"></eui-pagination>
+  </eui-panel-footer>
+</eui-panel>
 
 <!--
 删除提示弹框
