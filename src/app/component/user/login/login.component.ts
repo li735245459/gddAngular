@@ -44,10 +44,10 @@ export class LoginComponent implements OnInit {
     //     Validators.pattern('^[a-zA-Z]\\w{5,9}$')])
     // });
     this.itemForForm = this.formBuilder.group({
-      email: [null, [
+      email: ['lixing_java@163.com', [
         Validators.required,
         Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]],
-      password: [null, [
+      password: ['li12345', [
         Validators.required,
         Validators.pattern('^[a-zA-Z]\\w{5,9}$')
       ]]
