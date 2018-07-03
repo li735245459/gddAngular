@@ -21,14 +21,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
   total: Number = 0; // 所有数据条数
+  data = []; // 分页数据
   pageNumber = 1; // 当前分页号
   pageSize = 20; // 默认分页大小
   pageOptions = { // 分页导航条参数设置
-    pageList: [20, 30, 40],
+    pageList: [10, 20, 30, 40, 50],
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
-    layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info']
+    layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'links', 'info', 'sep', 'refresh', 'sep']
   };
-  data = []; // 分页数据
   // 分页参数对象
   itemForPage: User = {
     sex: '0'
@@ -90,38 +90,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 在组件相应的视图初始化之后调用
-   */
-  ngAfterViewInit() {
-    console.log('ngAfterViewInit 调用 page');
-    console.log(`this.pageNumber-${this.pageNumber}`);
-    console.log(`this.pageSize-${this.pageSize}`);
-    this.page();
-  }
-
-  /**
-   * 分页插件触发分页查询
-   * @param event
-   */
-  onPageChange(event) {
-    // if (event.pageNumber && event.pageNumber > 0) {
-    this.pageNumber = event.pageNumber;
-    this.pageSize = event.pageSize;
-    console.log('onPageChange 调用 page');
-    console.log(`this.pageNumber-${this.pageNumber}`);
-    console.log(`this.pageSize-${this.pageSize}`);
-    this.page();
-    // }
-  }
-
-  /**
-   * 查询按钮触发分页查询
-   */
-  onSearch(): void {
-    this.page();
-  }
-
-  /**
    * 分页查询
    */
   page() {
@@ -130,14 +98,37 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.msg = '查询成功';
         this.data = responseJson.data.list;
         this.total = responseJson.data.total;
-        console.log(`Paging load success`);
-        console.log(`The data parameter is ${this.data}`);
-        console.log(`The total parameter is ${this.total}`);
         this.loading = false;
       } else {
         this.msg = '查询失败';
       }
     });
+  }
+
+  /**
+   * 在组件相应的视图初始化之后调用
+   */
+  ngAfterViewInit() {
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
+  }
+
+  /**
+   * 分页插件触发分页查询
+   * @param event
+   */
+  onPageChange(event) {
+    if (event.pageNumber > 0) {
+      this.pageNumber = event.pageNumber;
+      this.pageSize = event.pageSize;
+      this.page();
+    }
+  }
+
+  /**
+   * 查询按钮触发分页查询
+   */
+  onSearch(): void {
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
 
   /**
@@ -189,7 +180,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
           this.msg = '删除成功！';
           setTimeout(() => {
             // 刷新数据
-            this.page();
+            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
             // 关闭删除弹框
             this.deleteDlgState = true;
           }, 2000);
@@ -379,7 +370,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
              * 1)重新分页
              * 2)使用itemForForm.value填充editRow
              */
-            this.page();
+            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
             this.editDlgState = true; // 关闭窗口
           }, 1000);
         } else {
@@ -483,7 +474,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
     this.itemForPage = {
       sex: '0'
     };
-    this.page();
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
 
   /**

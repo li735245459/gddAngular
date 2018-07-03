@@ -62,12 +62,9 @@
 
 <!--
 表格
-(pageChange)="onPageChange($event)"
-[pagination]="true" [pageOptions]="pageOptions" [total]="total" [pageNumber]="pageNumber" [pageSize]="pageSize"
 -->
-<eui-datagrid (pageChange)="onPageChange($event)"
-              [pagination]="true" [pageOptions]="pageOptions" [total]="total" [pageNumber]="pageNumber" [pageSize]="pageSize"
-              [data]="data"
+<eui-datagrid [pagination]="true" [data]="data" [total]="total"
+              [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true" (pageChange)="onPageChange($event)"
               idField="id" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
               [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
   <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
@@ -97,15 +94,6 @@
   <!--<eui-textbox iconCls="icon-search" style="height:26px;margin-left:4px"></eui-textbox>-->
   <!--</ng-template>-->
 </eui-datagrid>
-<!--分页-->
-<!--<eui-panel [bodyStyle]="{border:'0px'}" [footerStyle]="{marginBottom:'1px', marginTop:'1px'}">-->
-  <!--<eui-panel-footer>-->
-    <!--<eui-pagination [total]="total" [pageSize]="pageSize" [pageNumber]="pageNumber"-->
-                    <!--[pageList]="[20,30,40,50]" [displayMsg]="'当前 {from} 到 {to} , 共 {total} 条'"-->
-                    <!--[layout]="['list','sep','first','prev','sep','tpl','sep','next','last','sep','links','info']"-->
-                    <!--(pageChange)="onPageChange($event)"></eui-pagination>-->
-  <!--</eui-panel-footer>-->
-<!--</eui-panel>-->
 
 <!--
 删除提示弹框
