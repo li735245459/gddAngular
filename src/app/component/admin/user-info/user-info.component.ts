@@ -2,10 +2,10 @@ import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core
 import {UserService} from '../../../service/user.service';
 import {User} from '../../../model/user';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 
 import {province, hobby} from '../../../data/UserData';
 import {Md5} from 'ts-md5';
-import {of} from 'rxjs';
 
 @Component({
   selector: 'app-user-info',
@@ -23,11 +23,11 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   total: Number = 0; // 所有数据条数
   pageNumber = 1; // 当前分页号
   pageSize = 20; // 默认分页大小
-  // pageOptions = { // 分页导航条参数设置
-  //   pageList: [20, 30, 40],
-  //   displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
-  //   layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info']
-  // };
+  pageOptions = { // 分页导航条参数设置
+    pageList: [20, 30, 40],
+    displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
+    layout: ['list', 'sep', 'first', 'prev', 'next', 'last', 'sep', 'tpl', 'info']
+  };
   data = []; // 分页数据
   // 分页参数对象
   itemForPage: User = {
@@ -78,7 +78,8 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
 
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private messagerService: MessagerService) {
     this.createItemForForm(this.editRow); // 创建表单对象
   }
 
@@ -103,14 +104,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * @param event
    */
   onPageChange(event) {
-    if (event.pageNumber && event.pageNumber > 0) {
-      this.pageNumber = event.pageNumber;
-      this.pageSize = event.pageSize;
-      console.log('onPageChange 调用 page');
-      console.log(`this.pageNumber-${this.pageNumber}`);
-      console.log(`this.pageSize-${this.pageSize}`);
-      this.page();
-    }
+    // if (event.pageNumber && event.pageNumber > 0) {
+    this.pageNumber = event.pageNumber;
+    this.pageSize = event.pageSize;
+    console.log('onPageChange 调用 page');
+    console.log(`this.pageNumber-${this.pageNumber}`);
+    console.log(`this.pageSize-${this.pageSize}`);
+    this.page();
+    // }
   }
 
   /**
@@ -129,9 +130,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.msg = '查询成功';
         this.data = responseJson.data.list;
         this.total = responseJson.data.total;
-        // console.log(`Paging load success`);
-        // console.log(`The data parameter is ${this.data}`);
-        // console.log(`The total parameter is ${this.total}`);
+        console.log(`Paging load success`);
+        console.log(`The data parameter is ${this.data}`);
+        console.log(`The total parameter is ${this.total}`);
         this.loading = false;
       } else {
         this.msg = '查询失败';
@@ -483,6 +484,34 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       sex: '0'
     };
     this.page();
+  }
+
+  /**
+   * 导出
+   */
+  onExport(): void {
+    this.userService.export(this.itemForPage).subscribe(responseJson => {
+      if (responseJson.code === 0) {
+        this.messagerService.alert({
+          title: 'Info',
+          icon: 'info',
+          msg: '导出成功!'
+        });
+      } else {
+        this.messagerService.alert({
+          title: 'Warning',
+          icon: 'warning',
+          msg: '导出失败!'
+        });
+      }
+    });
+  }
+
+  /**
+   * 导入
+   */
+  onImport(): void {
+
   }
 
   /**

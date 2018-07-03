@@ -92,4 +92,13 @@ export class UserService {
   modify(userFormValue): Observable<any> {
     return this.http.post<any>(`/gdd/user/modify`, userFormValue);
   }
+
+  /**
+   * 导出
+   * @param itemForPage
+   * @returns {Observable<any>}
+   */
+  export(itemForPage): Observable<any> {
+    return this.http.post<any>(`/gdd/user/export`, itemForPage);
+  }
 }
