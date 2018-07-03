@@ -93,22 +93,22 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    */
   ngAfterViewInit() {
     console.log('ngAfterViewInit 调用 page');
-    console.log(this.pageNumber);
-    console.log(this.pageSize);
+    console.log(`this.pageNumber-${this.pageNumber}`);
+    console.log(`this.pageSize-${this.pageSize}`);
     this.page();
   }
 
   /**
-   * 分页插件触发分页查询: 初始化时会自动触发,不需要在初始化函数中调用page分页方法
+   * 分页插件触发分页查询
    * @param event
    */
   onPageChange(event) {
     if (event.pageNumber && event.pageNumber > 0) {
-      console.log('onPageChange 调用 page');
       this.pageNumber = event.pageNumber;
       this.pageSize = event.pageSize;
-      console.log(this.pageNumber);
-      console.log(this.pageSize);
+      console.log('onPageChange 调用 page');
+      console.log(`this.pageNumber-${this.pageNumber}`);
+      console.log(`this.pageSize-${this.pageSize}`);
       this.page();
     }
   }
