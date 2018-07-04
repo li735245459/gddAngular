@@ -482,19 +482,40 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    */
   onExport(): void {
     this.userService.export(this.itemForPage).subscribe(responseJson => {
-      if (responseJson.code === 0) {
-        this.messagerService.alert({
-          title: 'Info',
-          icon: 'info',
-          msg: '导出成功!'
-        });
-      } else {
-        this.messagerService.alert({
-          title: 'Warning',
-          icon: 'warning',
-          msg: '导出失败!'
-        });
-      }
+      // {type: "application/vnd.ms-excel"}保存为xls格式
+      // “application/vnd.openxmlformats-officedocument.spreadsheetml.sheet”保存为xlsx
+      const blob = new Blob([responseJson], {type: 'application/vnd.ms-excel'});
+      const fileName = '用户信息' + '.xlsx';
+
+      console.log(blob);
+
+
+      // if (window.navigator.msSaveOrOpenBlob) {// For IE浏览器
+      //   navigator.msSaveBlob(blob, fileName);
+      // } else { // For 其他浏览器
+      //   const objectUrl = URL.createObjectURL(blob);
+      //   const a = document.createElement('a');
+      //   document.body.appendChild(a);
+      //   a.setAttribute('style', 'display:none');
+      //   a.setAttribute('href', objectUrl);
+      //   a.setAttribute('download', fileName);
+      //   a.click();
+      //   URL.revokeObjectURL(objectUrl);
+      // }
+
+      // if (responseJson.code === 0) {
+      //   this.messagerService.alert({
+      //     title: 'Info',
+      //     icon: 'info',
+      //     msg: '导出成功!'
+      //   });
+      // } else {
+      //   this.messagerService.alert({
+      //     title: 'Warning',
+      //     icon: 'warning',
+      //     msg: '导出失败!'
+      //   });
+      // }
     });
   }
 

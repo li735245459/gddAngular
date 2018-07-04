@@ -24,13 +24,23 @@ export class GlobalHttpIntercept implements HttpInterceptor {
    */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let globalReq = req.clone({setHeaders: {'Content-Type': 'application/json'}});
-    this.logService.print(`全局HTTP拦截器发起请求${req.url}`);
-    if (req.url.includes('gdd/user/register') || req.url.includes('gdd/user/login')
-      || req.url.includes('gdd/email/send') || req.url.includes('gdd/email/checkEmailCode')
-      || req.url.includes('gdd/user/modifyPassword')) {
+    // this.logService.print(`全局HTTP拦截器发起请求${req.url}`);
+    if (
+      req.url.includes('gdd/user/register') ||
+      req.url.includes('gdd/user/login') ||
+      req.url.includes('gdd/user/forgetPassword') ||
+      req.url.includes('gdd/email/send') ||
+      req.url.includes('gdd/email/checkEmailCode') ||
+      req.url.includes('gdd/user/modifyPassword')
+    ) {
       // console.log(`该类型的请求无需远程校验jwt`);
     } else {
       // console.log(`该类型的请求需要远程校验jwt`);
+      if (req.url.includes('gdd/excel/export')) {
+        // globalReq.detectContentTypeHeader();
+        // globalReq = globalReq.clone({setHeaders: {'responseType': 'arraybuffer'}}); // 否则下载的excel会乱码
+        // globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/vnd.ms-excel'}});
+      }
       globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + sessionStorage.getItem('jwt')}});
     }
     /**
@@ -40,7 +50,7 @@ export class GlobalHttpIntercept implements HttpInterceptor {
       catchError(this.logService.handleError<any>(`${globalReq.url}请求发生错误`)), // 错误处理
       tap(event => { // 查看响应数据
         if (event instanceof HttpResponse) {
-          this.logService.print(`全局HTTP拦截器响应请求${globalReq.url}--状态:${event.statusText},信息:${event.body.msg}`);
+          // this.logService.print(`全局HTTP拦截器响应请求${globalReq.url}--状态:${event.statusText},信息:${event.body.msg}`);
         }
       })
     );
