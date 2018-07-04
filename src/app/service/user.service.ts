@@ -99,6 +99,6 @@ export class UserService {
    * @returns {Observable<any>}
    */
   export(itemForPage): Observable<any> {
-    return this.http.post<any>(`/gdd/user/export`, itemForPage);
+    return this.http.post<any>(`/gdd/excel/exportUser`, itemForPage);
   }
 }

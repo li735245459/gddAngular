@@ -27,7 +27,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   pageOptions = { // 分页导航条参数设置
     pageList: [10, 20, 30, 40, 50],
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
-    layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'links', 'info', 'sep', 'refresh', 'sep']
+    layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'refresh', 'sep', 'links', 'info']
   };
   // 分页参数对象
   itemForPage: User = {

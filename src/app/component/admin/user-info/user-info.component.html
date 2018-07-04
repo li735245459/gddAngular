@@ -53,10 +53,12 @@
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('delete')">删除</eui-linkbutton>
     <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('clean')">清空数据</eui-linkbutton>
     <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空查询条件</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
     <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onImport()">导入</eui-linkbutton>
     <eui-linkbutton iconCls="icon-undo" [plain]="true" (click)="onExport()">导出</eui-linkbutton>
+    <div style="display: inline-block;float: right;">
+      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空查询条件</eui-linkbutton>
+    </div>
   </eui-panel-footer>
 </eui-panel>
 
