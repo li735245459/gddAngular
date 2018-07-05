@@ -53,11 +53,17 @@
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('delete')">删除</eui-linkbutton>
     <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('clean')">清空数据</eui-linkbutton>
     <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-redo" [plain]="true" (click)="onImport()">导入</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-undo" [plain]="true" (click)="onExport()">导出</eui-linkbutton>
+    <eui-menubutton iconCls="icon-print" [plain]="true" [menu]="excelMenu">Excel表格</eui-menubutton>
+    <eui-menu #excelMenu (itemClick)="excel($event)">
+      <eui-menu-item text="导入Excel2013(.xls)" iconCls="icon-redo" value="ixls"></eui-menu-item>
+      <eui-menu-item text="导入Excel2017(.xlsx)" iconCls="icon-redo" value="ixlsx"></eui-menu-item>
+      <eui-menu-sep></eui-menu-sep>
+      <eui-menu-item text="导出Excel2013(.xls)" iconCls="icon-undo" value="oxls"></eui-menu-item>
+      <eui-menu-item text="导出Excel2017(.xlsx)" iconCls="icon-undo" value="oxlsx"></eui-menu-item>
+    </eui-menu>
     <div style="display: inline-block;float: right;">
       <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
-      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空查询条件</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空条件</eui-linkbutton>
     </div>
   </eui-panel-footer>
 </eui-panel>
@@ -66,24 +72,25 @@
 表格
 -->
 <eui-datagrid [pagination]="true" [data]="data" [total]="total"
-              [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true" (pageChange)="onPageChange($event)"
+              [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
+              (pageChange)="onPageChange($event)"
               idField="id" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
               [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
-  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="40">
+  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" width="80">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
-  <eui-grid-column field="name" title="姓名" frozen="false" width="60"></eui-grid-column>
-  <eui-grid-column field="sex" title="性别" width="80" align="center" [cellCss]="setSexCellCss">
+  <eui-grid-column field="name" title="姓名" width="80"></eui-grid-column>
+  <eui-grid-column field="sex" title="性别" [cellCss]="setSexCellCss" align="center" width="40">
     <ng-template euiCellTemplate let-row>
       <div *ngIf="row.sex=='male'">男</div>
       <div *ngIf="row.sex=='female'">女</div>
     </ng-template>
   </eui-grid-column>
-  <eui-grid-column field="email" title="邮箱" width="150"></eui-grid-column>
   <eui-grid-column field="phone" title="手机号码" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="address" title="地址" width="500"></eui-grid-column>
-  <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="150"></eui-grid-column>
-  <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="150"></eui-grid-column>
+  <eui-grid-column field="email" title="邮箱" width="180"></eui-grid-column>
+  <eui-grid-column field="loginTime" title="登陆时间" [sortable]="true" align="center" width="160"></eui-grid-column>
+  <eui-grid-column field="createTime" title="注册时间" [sortable]="true" align="center" width="160"></eui-grid-column>
+  <eui-grid-column field="address" title="地址" width="400"></eui-grid-column>
   <!--<eui-grid-column title="操作" align="center" width="120">-->
   <!--<ng-template euiCellTemplate let-row let-rowIndex="rowIndex">-->
   <!--<eui-linkbutton iconCls="icon-edit" [plain]="true">编辑</eui-linkbutton>-->
@@ -100,7 +107,7 @@
 <!--
 删除提示弹框
 -->
-<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDeleteDlg()" borderType="none"
+<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
   <div>{{msg}}</div>
@@ -119,7 +126,7 @@
 <!--
 添加、编辑弹框
 -->
-<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseEditDlg()"
+<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
             [bodyStyle]="{padding:'5px 2px'}"
             [footerStyle]="{padding: '10px 0px'}">
@@ -236,10 +243,17 @@
             [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
-    <!--<div>{{formSubmitState}}</div>-->
     <!--<div>{{itemForForm.controls['hobby'].value==''}}</div>-->
     <!--<div>{{itemForForm.invalid}}</div>-->
   </eui-panel-footer>
+</eui-dialog>
+
+<!-- 上传文件弹框 -->
+<eui-dialog [title]="excelDlgTitle" [closed]="excelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+            [panelStyle]="{width:'400px',height:'100px'}">
+  <p style="text-align:center;margin:15px 0;">
+    <eui-filebutton (select)="onExcelSelect($event)">请选择Excel文件</eui-filebutton>
+  </p>
 </eui-dialog>
 
 <!--

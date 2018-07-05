@@ -37,9 +37,7 @@ export class GlobalHttpIntercept implements HttpInterceptor {
     } else {
       // console.log(`该类型的请求需要远程校验jwt`);
       if (req.url.includes('gdd/excel/export')) {
-        // globalReq.detectContentTypeHeader();
-        // globalReq = globalReq.clone({setHeaders: {'responseType': 'arraybuffer'}}); // 否则下载的excel会乱码
-        // globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/vnd.ms-excel'}});
+        globalReq = globalReq.clone({responseType: 'blob'});
       }
       globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + sessionStorage.getItem('jwt')}});
     }

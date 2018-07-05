@@ -43,6 +43,12 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   deleteState = false; // true删除所有数据,false删除当前选中的数据
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
+  // 上传excel文件弹框
+  upExcelDlgState = true; // true关闭弹框,false打开弹框
+  upExcelDlgTitle: String  = null;
+  // 下载excel文件弹框
+  downExcelDlgState = true; // true关闭弹框,false打开弹框
+  downExcelDlgTitle: String  = null;
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,false启用表单提交
@@ -195,14 +201,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 取消删除
    */
   onDeleteCancel(): void {
-    this.onCloseDeleteDlg();
-  }
-
-  /**
-   * 关闭删除弹框
-   */
-  onCloseDeleteDlg(): void {
-    this.clean();
+    this.onCloseDlg();
   }
 
   /**
@@ -393,14 +392,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 取消添加、编辑
    */
   onEditCancel(): void {
-    this.onCloseEditDlg();
-  }
-
-  /**
-   * 关闭添加、编辑弹框
-   */
-  onCloseEditDlg(): void {
-    this.clean();
+    this.onCloseDlg();
   }
 
   /**
@@ -468,71 +460,68 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 刷新数据
-   */
-  onReLoad(): void {
-    this.itemForPage = {
-      sex: '0'
-    };
-    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
+   * excel
+  */
+  excel(param): void {
+    if (param.includes('i')) {
+      /**
+       * 导入操作
+       */
+      this.upExcelDlgTitle = '导入Excel2013';
+      if (param.includes('ixlsx')) {
+        this.upExcelDlgTitle = '导入Excel2017';
+      }
+      this.upExcelDlgState = false;
+    } else {
+      /**
+       * 导出操作
+       */
+      let fileName = '用户信息.xls';
+      if (param.includes('oxlsx')) {
+        fileName = '用户信息.xlsx';
+      }
+      this.itemForPage.id = param; // excel版本控制参数
+      this.userService.export(this.itemForPage).subscribe((responseBlob) => {
+        // {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+        // {'type': 'application/vnd.ms-excel'}
+        const blob = new Blob([responseBlob], {'type': 'application/octet-stream'});
+        if (window.navigator.msSaveOrOpenBlob) {
+          // For IE浏览器
+          navigator.msSaveBlob(blob, fileName);
+        } else {
+          // For 其他浏览器
+          const objectUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          document.body.appendChild(a);
+          a.setAttribute('style', 'display:none');
+          a.setAttribute('href', objectUrl);
+          a.setAttribute('download', fileName);
+          a.click();
+          URL.revokeObjectURL(objectUrl);
+        }
+      });
+    }
   }
 
   /**
-   * 导出
+   * 选择文件上传
+   * @param param
    */
-  onExport(): void {
-    this.userService.export(this.itemForPage).subscribe(responseJson => {
-      // {type: "application/vnd.ms-excel"}保存为xls格式
-      // “application/vnd.openxmlformats-officedocument.spreadsheetml.sheet”保存为xlsx
-      const blob = new Blob([responseJson], {type: 'application/vnd.ms-excel'});
-      const fileName = '用户信息' + '.xlsx';
-
-      console.log(blob);
-
-
-      // if (window.navigator.msSaveOrOpenBlob) {// For IE浏览器
-      //   navigator.msSaveBlob(blob, fileName);
-      // } else { // For 其他浏览器
-      //   const objectUrl = URL.createObjectURL(blob);
-      //   const a = document.createElement('a');
-      //   document.body.appendChild(a);
-      //   a.setAttribute('style', 'display:none');
-      //   a.setAttribute('href', objectUrl);
-      //   a.setAttribute('download', fileName);
-      //   a.click();
-      //   URL.revokeObjectURL(objectUrl);
-      // }
-
-      // if (responseJson.code === 0) {
-      //   this.messagerService.alert({
-      //     title: 'Info',
-      //     icon: 'info',
-      //     msg: '导出成功!'
-      //   });
-      // } else {
-      //   this.messagerService.alert({
-      //     title: 'Warning',
-      //     icon: 'warning',
-      //     msg: '导出失败!'
-      //   });
-      // }
+  onExcelSelect(excel): void {
+    console.log(excel);
+    this.messagerService.alert({
+      title: 'Excel导入',
+      icon: 'warning',
+      msg: '上传成功'
     });
+    this.onCloseDlg();
   }
 
   /**
-   * 导入
+   * 关闭弹框
    */
-  onImport(): void {
-
-  }
-
-  /**
-   * 清空分页查询条件
-   */
-  onCleanSearch(): void {
-    this.itemForPage = {
-      sex: '0'
-    };
+  onCloseDlg(): void {
+    this.clean();
   }
 
   /**
@@ -547,11 +536,32 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
     this.deleteState = false;
     this.deleteDlgState = true;
     this.deleteDlgBtnState = false;
+    this.upExcelDlgState = true;
+    this.upExcelDlgTitle = null;
     this.formSubmitState = false;
     this.formValidStyle = true;
     this.levelOne = null;
     this.levelTwo = null;
     this.levelThree = null;
+  }
+
+  /**
+   * 刷新数据
+   */
+  onReLoad(): void {
+    this.itemForPage = {
+      sex: '0'
+    };
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
+  }
+
+  /**
+   * 清空分页查询条件
+   */
+  onCleanSearch(): void {
+    this.itemForPage = {
+      sex: '0'
+    };
   }
 
   /**
