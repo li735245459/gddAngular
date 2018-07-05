@@ -546,22 +546,20 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 刷新数据
-   */
-  onReLoad(): void {
-    this.itemForPage = {
-      sex: '0'
-    };
-    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
-  }
-
-  /**
    * 清空分页查询条件
    */
   onCleanSearch(): void {
     this.itemForPage = {
       sex: '0'
     };
+  }
+
+  /**
+   * 刷新数据
+   */
+  onReLoad(): void {
+    this.onCleanSearch();
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
 
   /**

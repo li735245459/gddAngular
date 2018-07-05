@@ -249,7 +249,7 @@
 </eui-dialog>
 
 <!-- 上传文件弹框 -->
-<eui-dialog [title]="excelDlgTitle" [closed]="excelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+<eui-dialog [title]="upExcelDlgTitle" [closed]="upExcelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'400px',height:'100px'}">
   <p style="text-align:center;margin:15px 0;">
     <eui-filebutton (select)="onExcelSelect($event)">请选择Excel文件</eui-filebutton>
