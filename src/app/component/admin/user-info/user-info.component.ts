@@ -6,6 +6,7 @@ import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 
 import {province, hobby} from '../../../data/UserData';
 import {Md5} from 'ts-md5';
+import {interval} from 'rxjs';
 
 @Component({
   selector: 'app-user-info',
@@ -45,10 +46,10 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   deleteDlgBtnState = false; // true表示禁用,false表示可用
   // 上传excel文件弹框
   upExcelDlgState = true; // true关闭弹框,false打开弹框
-  upExcelDlgTitle: String  = null;
+  upExcelDlgTitle: String = null;
   // 下载excel文件弹框
   downExcelDlgState = true; // true关闭弹框,false打开弹框
-  downExcelDlgTitle: String  = null;
+  downExcelProgressValue = 0;
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,false启用表单提交
@@ -461,7 +462,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
 
   /**
    * excel
-  */
+   */
   excel(param): void {
     if (param.includes('i')) {
       /**
@@ -476,12 +477,22 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       /**
        * 导出操作
        */
+      this.downExcelDlgState = false;
+      const secondsCounter = interval(500).subscribe(n => {
+        this.downExcelProgressValue += Math.floor(Math.random() * 10);
+        if (this.downExcelProgressValue > 100) {
+          this.downExcelProgressValue = 0;
+        }
+      });
       let fileName = '用户信息.xls';
       if (param.includes('oxlsx')) {
         fileName = '用户信息.xlsx';
       }
       this.itemForPage.id = param; // excel版本控制参数
       this.userService.export(this.itemForPage).subscribe((responseBlob) => {
+        secondsCounter.unsubscribe();
+        this.downExcelProgressValue = 0;
+        this.downExcelDlgState = true;
         // {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
         // {'type': 'application/vnd.ms-excel'}
         const blob = new Blob([responseBlob], {'type': 'application/octet-stream'});
