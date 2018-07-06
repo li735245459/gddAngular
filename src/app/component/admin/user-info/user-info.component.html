@@ -37,13 +37,17 @@
     </div>
     <div class="row" style="height: 10px;"></div>
     <div class="row">
-      <div class="col-3"><label [for]="loginTime" align="left">登陆时间：</label>
+      <div class="col-3">
+        <label align="left" [for]="loginTime">登陆时间：</label>
         <eui-datetimespinner #loginTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss"
-                             [(ngModel)]="itemForPage.loginTime"></eui-datetimespinner>
+                             [(ngModel)]="itemForPage.loginTime">
+        </eui-datetimespinner>
       </div>
-      <div class="col-3"><label [for]="createTime" align="left">注册时间：</label>
+      <div class="col-3">
+        <label align="left" [for]="createTime">注册时间：</label>
         <eui-datetimespinner #createTime style="width: 14.2em;height: 38px;" value="" format="yyyy-MM-dd HH:mm:ss"
-                             [(ngModel)]="itemForPage.createTime"></eui-datetimespinner>
+                             [(ngModel)]="itemForPage.createTime">
+        </eui-datetimespinner>
       </div>
     </div>
   </div>
@@ -205,19 +209,19 @@
           <div class="col-2" *ngIf="levelOne">
             <select class="form-control" formControlName="province" (change)="onChangeLevelOne($event.target)">
               <option value="0">请选择省</option>
-              <option value="{{item.id}}" *ngFor="let item of levelOne;">{{item.name}}</option>
+              <option value="{{item.name}}" *ngFor="let item of levelOne;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-2" *ngIf="levelTwo">
             <select class="form-control" formControlName="city" (change)="onChangeLevelTwo($event.target)">
               <option value="0">请选择市</option>
-              <option value="{{item.id}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
+              <option value="{{item.name}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-2" *ngIf="levelThree">
             <select class="form-control" formControlName="area" (change)="onChangeLevelThree($event.target)">
               <option value="0">请选择区</option>
-              <option value="{{item.id}}" *ngFor="let item of levelThree;">{{item.name}}</option>
+              <option value="{{item.name}}" *ngFor="let item of levelThree;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-6">

@@ -248,13 +248,13 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         // 判断city是否存在
         if (editRow.city !== '-1') {
           for (let i = 0; i < this.levelOne.length; i++) {
-            if (this.levelOne[i].id === editRow.province) {
+            if (this.levelOne[i].name === editRow.province) {
               // 初始化levelTwo
               this.levelTwo = this.levelOne[i].child;
               // 判断area是否存在
               if (editRow.area !== '-1') {
                 for (let j = 0; j < this.levelTwo.length; j++) {
-                  if (this.levelTwo[j].id === editRow.city) {
+                  if (this.levelTwo[j].name === editRow.city) {
                     // 初始化levelThree
                     this.levelThree = this.levelTwo[j].child;
                     break;
@@ -333,7 +333,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.itemForForm.addControl(hobbyName, new FormControl(null));
       }
     }
-    // console.log(this.itemForForm.value);
+    console.log(this.itemForForm.value);
   }
 
   /**
@@ -398,7 +398,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
 
   /**
    * 复选框点击事件
-   * @param event
+   * @param checkbox
    */
   onChangeHobby(checkbox) {
     const index = this.itemForForm.value.hobby.indexOf(checkbox.value);
@@ -478,7 +478,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
        * 导出操作
        */
       this.downExcelDlgState = false;
-      const secondsCounter = interval(500).subscribe(n => {
+      const secondsCounter = interval(500).subscribe(() => {
         this.downExcelProgressValue += Math.floor(Math.random() * 10);
         if (this.downExcelProgressValue > 100) {
           this.downExcelProgressValue = 0;
@@ -516,7 +516,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
 
   /**
    * 选择文件上传
-   * @param param
    */
   onExcelSelect(excel): void {
     console.log(excel);
@@ -574,21 +573,17 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * row 样式定义
-   * @param row
+   * 样式定义
    */
   setRowCss(row) {
-    // if (row.email === 'lisi13_java@163.com') {
-    //   return {background: '#b8eecf', fontSize: '14px', fontStyle: 'italic'};
-    // }
+    if (row.email === 'lisi13_java@163.com') {
+      return {background: '#b8eecf', fontSize: '14px', fontStyle: 'italic'};
+    }
     return null;
   }
 
   /**
-   * sex cell 样式定义
-   * @param row
-   * @param value
-   * @returns {{color: string}}
+   * 样式定义
    */
   setSexCellCss(row, value) {
     if (value === 'male') {
