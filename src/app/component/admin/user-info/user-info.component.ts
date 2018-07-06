@@ -464,19 +464,12 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * excel
    */
   excel(param): void {
-    if (param.includes('i')) {
-      /**
-       * 导入操作
-       */
-      this.upExcelDlgTitle = '导入Excel2013';
-      if (param.includes('ixlsx')) {
-        this.upExcelDlgTitle = '导入Excel2017';
-      }
+    if (param.includes('import')) {
+      // 导入操作---------------------------------------------------------->
+      this.upExcelDlgTitle = '导入Excel表格';
       this.upExcelDlgState = false;
     } else {
-      /**
-       * 导出操作
-       */
+      // 导出操作---------------------------------------------------------->
       this.downExcelDlgState = false;
       const secondsCounter = interval(500).subscribe(() => {
         this.downExcelProgressValue += Math.floor(Math.random() * 10);
@@ -484,11 +477,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
           this.downExcelProgressValue = 0;
         }
       });
-      let fileName = '用户信息.xls';
-      if (param.includes('oxlsx')) {
-        fileName = '用户信息.xlsx';
-      }
-      this.itemForPage.id = param; // excel版本控制参数
+      const fileName = '用户信息.xls';
       this.userService.export(this.itemForPage).subscribe((responseBlob) => {
         secondsCounter.unsubscribe();
         this.downExcelProgressValue = 0;
@@ -517,14 +506,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   /**
    * 选择文件上传
    */
-  onExcelSelect(excel): void {
-    console.log(excel);
-    this.messagerService.alert({
-      title: 'Excel导入',
-      icon: 'warning',
-      msg: '上传成功'
-    });
-    this.onCloseDlg();
+  onFileSelect(event): void {
+    console.log(event[0]);
+    // this.messagerService.alert({
+    //   title: 'Excel导入',
+    //   icon: 'warning',
+    //   msg: '上传成功'
+    // });
+    // this.onCloseDlg();
   }
 
   /**

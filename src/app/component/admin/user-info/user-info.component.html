@@ -29,7 +29,7 @@
         <label for="sex">性别：</label>
         <select class="form-control" id="sex" name="sex" [(ngModel)]="itemForPage.sex">
           <option value="0">所有</option>
-          <option value="{{item.value}}" *ngFor="let item of [{value:'male',name:'男'},{value:'female',name:'女'}];">
+          <option value="{{item.name}}" *ngFor="let item of [{value:'男',name:'男'},{value:'女',name:'女'}];">
             {{item.name}}
           </option>
         </select>
@@ -59,10 +59,9 @@
     <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
     <eui-menubutton iconCls="icon-print" [plain]="true" [menu]="excelMenu">Excel表格</eui-menubutton>
     <eui-menu #excelMenu (itemClick)="excel($event)">
-      <eui-menu-item text="导入Excel2013(.xls)" iconCls="icon-redo" value="ixls"></eui-menu-item>
-      <eui-menu-item text="导入Excel2017(.xlsx)" iconCls="icon-redo" value="ixlsx"></eui-menu-item>
+      <eui-menu-item text="导入(xls、xlsx)" iconCls="icon-redo" value="import"></eui-menu-item>
       <eui-menu-sep></eui-menu-sep>
-      <eui-menu-item text="导出Excel2013(.xls)" iconCls="icon-undo" value="oxls"></eui-menu-item>
+      <eui-menu-item text="导出(xls)" iconCls="icon-undo" value="export"></eui-menu-item>
     </eui-menu>
     <div style="display: inline-block;float: right;">
       <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
@@ -253,10 +252,8 @@
 
 <!-- 上传Excel弹框 -->
 <eui-dialog [title]="upExcelDlgTitle" [closed]="upExcelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
-            [panelStyle]="{width:'400px',height:'100px'}">
-  <p style="text-align:center;margin:15px 0;">
-    <eui-filebutton (select)="onExcelSelect($event)">请选择Excel文件</eui-filebutton>
-  </p>
+            [panelStyle]="{width:'400px'}">
+    <eui-filebutton style="width:100%;" (select)="onFileSelect($event)" [url]="'/gdd/excel/importUser'">请选择Excel文件</eui-filebutton>
 </eui-dialog>
 
 <!-- 下载Excel进度条弹框 -->
