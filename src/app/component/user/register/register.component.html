@@ -8,7 +8,8 @@
   <!--body-->
   <div class="row text-left body">
     <div class="col-sm-12 col-md-12 col-lg-10 col-xl-10" style="margin: 0 auto;"><!--自适应设置-->
-      <form action="#" role="form" method="post" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmit(itemForForm)">
+      <form action="#" role="form" method="post" novalidate [formGroup]="itemForForm"
+            (ngSubmit)="onSubmit(itemForForm)">
         <!--全局消息-->
         <div class="form-group">
           <div class="alert text-center" [ngClass]="formValidStyle?'alert-success':'alert-danger'"
@@ -57,12 +58,12 @@
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" formControlName="sex" value="male">男
+              <input type="radio" formControlName="sex" value="男">男
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" formControlName="sex" value="female">女
+              <input type="radio" formControlName="sex" value="女">女
             </label>
           </div>
         </div>
@@ -71,9 +72,9 @@
           <div class="form-check form-check-inline">
             <label class="form-check-label">爱好:</label>
           </div>
-          <div class="form-check form-check-inline" *ngFor="let item of hobby;">
+          <div class="form-check form-check-inline" *ngFor="let item of hobby;let i = index;">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" formControlName="hobby{{item.id}}" value="{{item.id}}"
+              <input type="checkbox" class="form-check-input" formControlName="hobby{{i+1}}" value="{{item.name}}"
                      (change)="onChangeHobby($event.target)">{{item.name}}
             </label>
           </div>
@@ -84,21 +85,21 @@
             <select class="form-control" formControlName="province"
                     (change)="onChangeLevelOne($event.target)">
               <option value="0">请选择省</option>
-              <option value="{{item.id}}" *ngFor="let item of levelOne;">{{item.name}}</option>
+              <option value="{{item.name}}" *ngFor="let item of levelOne;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-2" *ngIf="levelTwo">
             <select class="form-control" formControlName="city"
                     (change)="onChangeLevelTwo($event.target)">
               <option value="0">请选择市</option>
-              <option value="{{item.id}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
+              <option value="{{item.name}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-2" *ngIf="levelThree">
             <select class="form-control" formControlName="area"
                     (change)="onChangeLevelThree($event.target)">
               <option value="0">请选择区</option>
-              <option value="{{item.id}}" *ngFor="let item of levelThree;">{{item.name}}</option>
+              <option value="{{item.name}}" *ngFor="let item of levelThree;">{{item.name}}</option>
             </select>
           </div>
           <div class="col-6">
@@ -116,7 +117,9 @@
         </div>
         <!--登陆按钮-->
         <div class="form-group">
-          <button type="submit" class="btn btn-block btn-info" [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">提交</button>
+          <button type="submit" class="btn btn-block btn-info"
+                  [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">提交
+          </button>
         </div>
       </form>
     </div>

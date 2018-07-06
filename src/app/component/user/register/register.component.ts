@@ -81,10 +81,10 @@ export class RegisterComponent implements OnInit {
       ]],
       'address': [null, [
         Validators.required,
-        Validators.pattern('^.{10,20}$')
+        Validators.pattern('^.{4,20}$')
       ]],
       'introduce': [null, Validators.pattern('^.{0,50}$')],
-      'sex': [null, [Validators.required, Validators.pattern('^["male"|"female"].*$')]],
+      'sex': [null, [Validators.required, Validators.pattern('^["男"|"女"].*$')]],
       'hobby': [[]],
       'province': ['0', Validators.pattern('^[^"0"].*$')],
       'city': ['-1', Validators.pattern('^[^"0"].*$')],
@@ -92,8 +92,7 @@ export class RegisterComponent implements OnInit {
     });
     /*动态加载表单对象的checkbox属性对象*/
     for (let i = 0; i < this.hobby.length; i++) {
-      const hobbyId = this.hobby[i].id;
-      const hobbyName = `hobby${hobbyId}`;
+      const hobbyName = `hobby${i + 1}`;
       this.itemForForm.addControl(hobbyName, new FormControl(null));
     }
   }

@@ -85,8 +85,8 @@
   <eui-grid-column field="name" title="姓名" width="80"></eui-grid-column>
   <eui-grid-column field="sex" title="性别" [cellCss]="setSexCellCss" align="center" width="40">
     <ng-template euiCellTemplate let-row>
-      <div *ngIf="row.sex=='male'">男</div>
-      <div *ngIf="row.sex=='female'">女</div>
+      <div *ngIf="row.sex=='男'">男</div>
+      <div *ngIf="row.sex=='女'">女</div>
     </ng-template>
   </eui-grid-column>
   <eui-grid-column field="phone" title="手机号码" align="center" width="150"></eui-grid-column>
@@ -183,12 +183,12 @@
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" formControlName="sex" value="male">男
+              <input type="radio" formControlName="sex" value="男">男
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" formControlName="sex" value="female">女
+              <input type="radio" formControlName="sex" value="女">女
             </label>
           </div>
         </div>
@@ -197,9 +197,9 @@
           <div class="form-check form-check-inline">
             <label class="form-check-label">爱好:</label>
           </div>
-          <div class="form-check form-check-inline" *ngFor="let item of hobby;">
+          <div class="form-check form-check-inline" *ngFor="let item of hobby;let i = index;">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" formControlName="hobby{{item.id}}" value="{{item.id}}"
+              <input type="checkbox" class="form-check-input" formControlName="hobby{{i+1}}" value="{{item.name}}"
                      (change)="onChangeHobby($event.target)">{{item.name}}
             </label>
           </div>

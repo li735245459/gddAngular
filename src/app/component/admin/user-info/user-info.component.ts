@@ -218,14 +218,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * @param param
    */
   onOpenEditDlg(param): void {
+    // 取消选中的数据
+    this.selectedRow = [];
     if (param === 'add') {
       this.editDlgTitle = '添加用户信息';
       this.editRow = null;
     } else {
       this.editDlgTitle = '编辑用户信息';
       this.editRow = param;
-      // 取消选中的数据
-      this.selectedRow = [];
     }
     // 创建表单对象
     this.createItemForForm(this.editRow);
@@ -238,25 +238,19 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    */
   createItemForForm(editRow): void {
     this.msg = '';
+    /*初始化表单数据*/
     if (editRow) {
-      /*编辑操作*/
-      // 解析级联数据,回显下拉列表
-      // 判断province是否存在
-      if (editRow.province !== '-1') {
-        // 初始化levelOne
-        this.levelOne = province;
-        // 判断city是否存在
-        if (editRow.city !== '-1') {
+      // 编辑状态下---------------------------------------------------------->
+      if (editRow.province && editRow.province !== '-1') { // province存在
+        this.levelOne = province; // 初始化levelOne
+        if (editRow.city && editRow.city !== '-1') { // city存在
           for (let i = 0; i < this.levelOne.length; i++) {
             if (this.levelOne[i].name === editRow.province) {
-              // 初始化levelTwo
-              this.levelTwo = this.levelOne[i].child;
-              // 判断area是否存在
-              if (editRow.area !== '-1') {
+              this.levelTwo = this.levelOne[i].child; // 初始化levelTwo
+              if (editRow.area && editRow.area !== '-1') { // area存在
                 for (let j = 0; j < this.levelTwo.length; j++) {
                   if (this.levelTwo[j].name === editRow.city) {
-                    // 初始化levelThree
-                    this.levelThree = this.levelTwo[j].child;
+                    this.levelThree = this.levelTwo[j].child; // 初始化levelThree
                     break;
                   } else {
                     this.levelThree = null;
@@ -277,12 +271,12 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.levelOne = null;
       }
     } else {
-      /*添加操作*/
+      // 添加状态下---------------------------------------------------------->
       editRow = new User();
       this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree由用户选择生成
-      editRow.province = '0'; // 设置一级下拉列表值为'0'
-      editRow.city = '-1'; // 设置二级下拉列表值为'-1'
-      editRow.area = '-1'; // 设置三级下拉列表值为'-1'
+      editRow.province = '0'; // 设置一级下拉列表初始值为'0'
+      editRow.city = '-1'; // 设置二级下拉列表值为'-1',表示该项地址不存在
+      editRow.area = '-1'; // 设置三级下拉列表值为'-1',表示该项地址不存在
     }
     /*创建表单对象*/
     this.itemForForm = this.formBuilder.group({
@@ -297,43 +291,46 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         Validators.pattern('^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0|1|2|3|5|6|7|8|9])\\d{8}$')]],
       'address': [editRow.address, [
         Validators.required,
-        Validators.pattern('^.{10,20}$')
+        Validators.pattern('^.{4,20}$')
       ]],
       'introduce': [editRow.introduce, Validators.pattern('^.{0,50}$')],
-      'sex': [editRow.sex, [Validators.required, Validators.pattern('^["male"|"female"].*$')]],
+      'sex': [editRow.sex, [Validators.required, Validators.pattern('^["男"|"女"].*$')]],
       'hobby': [editRow.hobby ? editRow.hobby.split(',') : []],
       'province': [editRow.province, Validators.pattern('^[^"0"].*$')],
       'city': [editRow.city, Validators.pattern('^[^"0"].*$')],
       'area': [editRow.area, Validators.pattern('^[^"0"].*$')]
     });
-    /*动态添加表单对象的password属性对象*/
-    if (this.editRow == null) {
-      // 添加状态
-      this.itemForForm.addControl('password', new FormControl(null, [
-        Validators.required,
-        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
-      ]));
-      this.itemForForm.addControl('rePassword', new FormControl(null, [
-        Validators.required,
-        Validators.pattern('^[a-zA-Z]\\w{5,9}$')
-      ]));
-    } else {
-      // 编辑状态
+    /*动态添加表单对象属性*/
+    if (this.editRow) {
+      // 编辑状态下---------------------------------------------------------->
+      // 添加password属性对象,值为null,删除校验规则
       this.itemForForm.addControl('password', new FormControl(null));
       this.itemForForm.addControl('rePassword', new FormControl(null));
-    }
-    /*动态加载表单对象的checkbox属性对象*/
-    for (let i = 0; i < this.hobby.length; i++) {
-      const hobbyId = this.hobby[i].id;
-      const hobbyName = `hobby${hobbyId}`;
-      // 编辑状态
-      if (this.editRow && editRow.hobby.includes(hobbyId)) {
-        this.itemForForm.addControl(hobbyName, new FormControl(hobbyId));
-      } else {
+      // 添加hobby复选框属性对象,值为本地hobby数据对象的值
+      for (let i = 0; i < this.hobby.length; i++) {
+        const hobbyName = `hobby${i + 1}`;
+        if (editRow.hobby && editRow.hobby.includes(this.hobby[i].name)) {
+          this.itemForForm.addControl(hobbyName, new FormControl(this.hobby[i].name));
+        } else {
+          this.itemForForm.addControl(hobbyName, new FormControl(null));
+        }
+      }
+    } else {
+      // 添加状态下---------------------------------------------------------->
+      // 添加password属性对象,值为null,添加校验规则
+      this.itemForForm.addControl('password', new FormControl(null, [
+        Validators.required, Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]));
+      this.itemForForm.addControl('rePassword', new FormControl(null, [
+        Validators.required, Validators.pattern('^[a-zA-Z]\\w{5,9}$')
+      ]));
+      // 添加hobby复选框属性对象,值为null
+      for (let i = 0; i < this.hobby.length; i++) {
+        const hobbyName = `hobby${i + 1}`;
         this.itemForForm.addControl(hobbyName, new FormControl(null));
       }
     }
-    console.log(this.itemForForm.value);
+    // console.log(this.itemForForm.value);
   }
 
   /**
@@ -341,20 +338,23 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    */
   onSubmitForm(itemForForm): void {
     if (itemForForm.value.password === itemForForm.value.rePassword) {
-      // 编辑状态下设置ID
-      if (this.editRow && this.editRow.id) {
-        itemForForm.value.id = this.editRow.id;
-      }
-      // 编辑状态下若邮箱没有改变则置空
-      if (this.editRow && this.editRow.email === this.itemForForm.value.email) {
-        this.itemForForm.value.email = null;
-      }
-      // 编辑状态下若手机号码没有改变则置空
-      if (this.editRow && this.editRow.phone === this.itemForForm.value.phone) {
-        this.itemForForm.value.phone = null;
-      }
-      // 添加状态下密码加密
-      if (this.editRow == null) {
+      if (this.editRow) {
+        // 编辑状态下---------------------------------------------------------->
+        // 设置ID作为后台修改的凭证
+        if (this.editRow.id) {
+          itemForForm.value.id = this.editRow.id;
+        }
+        // 邮箱没有发生改变时设置为null
+        if (this.editRow.email === this.itemForForm.value.email) {
+          this.itemForForm.value.email = null;
+        }
+        // 手机号码没有发生改变时设置为null
+        if (this.editRow.phone === this.itemForForm.value.phone) {
+          this.itemForForm.value.phone = null;
+        }
+      } else {
+        // 添加状态下---------------------------------------------------------->
+        // 密码加密
         itemForForm.value.password = Md5.hashStr(itemForForm.value.password);
         itemForForm.value.rePassword = itemForForm.value.password;
       }
@@ -586,7 +586,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 样式定义
    */
   setSexCellCss(row, value) {
-    if (value === 'male') {
+    if (value === '男') {
       return {color: 'blue'};
     } else {
       return {color: 'red'};
