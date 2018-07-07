@@ -250,15 +250,17 @@
   </eui-panel-footer>
 </eui-dialog>
 
-<!-- 上传Excel弹框 -->
+<!-- 上传文件弹框 -->
 <eui-dialog [title]="upExcelDlgTitle" [closed]="upExcelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'400px'}">
-    <eui-filebutton style="width:100%;" (select)="onFileSelect($event)" [url]="'/gdd/excel/importUser'">请选择Excel文件</eui-filebutton>
+    <eui-filebutton style="width:100%;" [autoUpload]="false" [multiple]="false" (select)="onFileSelect($event)">选择文件(xls或xlsx)</eui-filebutton>
 </eui-dialog>
 
-<!-- 下载Excel进度条弹框 -->
-<eui-dialog [closed]="downExcelDlgState" [closable]="true" [modal]="true" [panelStyle]="{width:'400px'}" borderType="none">
-  <eui-progressbar [showValue]="false" [value]="downExcelProgressValue"></eui-progressbar>
+<!-- 进度条弹框 -->
+<eui-dialog [closed]="progressDlgState" [closable]="true" [modal]="true" [panelStyle]="{width:'400px'}" borderType="none">
+  <div style="padding: 1px;">
+    <eui-progressbar [value]="progressValue" barCls="c1"></eui-progressbar>
+  </div>
 </eui-dialog>
 
 <!--

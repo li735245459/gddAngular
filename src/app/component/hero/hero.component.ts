@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { HeroService } from '../../service/hero.service';
-import {Hero} from '../../model/hero';
+import {Hero} from '../../globalModel/hero';
 
 export class HeroComponent implements OnInit {
   @Input() hero: Hero;

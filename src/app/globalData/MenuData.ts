@@ -50,5 +50,9 @@ export const menus = [
       {
         text: '验证码',
         link: 'email_code',
+      },
+      {
+        text: 'Excel下载模板',
+        link: 'email_code',
       }]
   }];

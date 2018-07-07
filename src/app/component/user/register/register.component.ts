@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {UserService} from '../../../service/user.service';
-import {hobby, province} from '../../../data/UserData';
+import {hobby, province} from '../../../globalData/UserData';
 import {Md5} from 'ts-md5';
 
 @Component({

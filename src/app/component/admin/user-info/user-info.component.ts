@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {User} from '../../../model/user';
+import {User} from '../../../globalModel/user';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 
-import {province, hobby} from '../../../data/UserData';
+import {province, hobby} from '../../../globalData/UserData';
 import {Md5} from 'ts-md5';
+import {Progress} from '../../../globalUtil/progressUtil';
 import {interval} from 'rxjs';
 
 @Component({
@@ -47,9 +48,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   // 上传excel文件弹框
   upExcelDlgState = true; // true关闭弹框,false打开弹框
   upExcelDlgTitle: String = null;
-  // 下载excel文件弹框
-  downExcelDlgState = true; // true关闭弹框,false打开弹框
-  downExcelProgressValue = 0;
+  // 进度条弹框
+  progressDlgState = true; // true关闭弹框,false打开弹框
+  progressValue = 0;
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,false启用表单提交
@@ -470,27 +471,21 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       this.upExcelDlgState = false;
     } else {
       // 导出操作---------------------------------------------------------->
-      this.downExcelDlgState = false;
-      const secondsCounter = interval(500).subscribe(() => {
-        this.downExcelProgressValue += Math.floor(Math.random() * 10);
-        if (this.downExcelProgressValue > 100) {
-          this.downExcelProgressValue = 0;
-        }
+      this.progressValue = 0;
+      this.progressDlgState = false;
+      const progressSubscribe = interval(500).subscribe(() => {
+        this.progressValue += Math.floor(Math.random() * 20);
+        this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
       });
-      const fileName = '用户信息.xls';
       this.userService.export(this.itemForPage).subscribe((responseBlob) => {
-        secondsCounter.unsubscribe();
-        this.downExcelProgressValue = 0;
-        this.downExcelDlgState = true;
-        // {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
-        // {'type': 'application/vnd.ms-excel'}
-        const blob = new Blob([responseBlob], {'type': 'application/octet-stream'});
+        progressSubscribe.unsubscribe();
+        this.progressDlgState = true;
+        const blob = new Blob([responseBlob], {'type': 'application/vnd.ms-excel'});
+        const fileName = '用户信息.xls';
         if (window.navigator.msSaveOrOpenBlob) {
-          // For IE浏览器
-          navigator.msSaveBlob(blob, fileName);
+          navigator.msSaveBlob(blob, fileName); // For IE浏览器
         } else {
-          // For 其他浏览器
-          const objectUrl = URL.createObjectURL(blob);
+          const objectUrl = URL.createObjectURL(blob); // For 其他浏览器
           const a = document.createElement('a');
           document.body.appendChild(a);
           a.setAttribute('style', 'display:none');
@@ -507,13 +502,44 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 选择文件上传
    */
   onFileSelect(event): void {
-    console.log(event[0]);
-    // this.messagerService.alert({
-    //   title: 'Excel导入',
-    //   icon: 'warning',
-    //   msg: '上传成功'
-    // });
-    // this.onCloseDlg();
+    const file: File = event[0];
+    const fileType = file.type;
+    const fileSize = file.size;
+    if (fileSize < (1024 * 1024 * 5) &&
+      (fileType === 'application/vnd.ms-excel' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+      // 关闭上传文件弹框
+      this.onCloseDlg();
+      // 打开进度条 or 系统自带滚动条
+      // this.progressValue = 0;
+      // this.progressDlgState = false;
+      // const progressSubscribe = interval(500).subscribe(() => {
+      //   this.progressValue += Math.floor(Math.random() * 20);
+      //   this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
+      // });
+      const formData: FormData = new FormData();
+      formData.append('file', file);
+      this.userService.import(formData).subscribe((responseBlob) => {
+        if (responseBlob.code === 0) {
+          this.messagerService.alert({
+            title: '上传文件成功',
+            icon: 'info',
+            msg: 'success'
+          });
+        } else {
+          this.messagerService.alert({
+            title: '上传文件失败',
+            icon: 'warning',
+            msg: 'fail'
+          });
+        }
+      });
+    } else {
+      this.messagerService.alert({
+        title: '文件出错',
+        icon: 'warning',
+        msg: '请检查文件格式和文件大小是否合法!'
+      });
+    }
   }
 
   /**

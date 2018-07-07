@@ -1,7 +1,4 @@
-/*.panel-body-form .row .col {*/
-  /*margin: 2px 0px;*/
-  /*text-align: left;*/
-/*}*/
+@import "~ng-easyui/themes/color.css";
 
 /*自定义删除Dialog框样式*/
 .deleteDlg {

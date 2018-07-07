@@ -13,8 +13,8 @@ import {ForgetPasswordComponent} from './component/user/forget-password/forget-p
 import {ModifyPasswordComponent} from './component/user/modify-password/modify-password.component';
 import {UserComponent} from './component/user/user.component';
 import {ErrorComponent} from './component/error/error.component';
-import {GlobalRoutingGuard} from './router/global.routing.guard';
-import {httpInterceptor} from './Interceptor/interpectors';
+import {GlobalRoutingGuard} from './globalRouter/global.routing.guard';
+import {httpInterceptor} from './globalInterceptor/interpectors';
 import {IndexComponent} from './component/index/index.component';
 import {PetsComponent} from './component/index/pets/pets.component';
 import {HomeComponent} from './component/index/home/home.component';

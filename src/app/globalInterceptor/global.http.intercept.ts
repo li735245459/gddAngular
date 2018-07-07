@@ -7,7 +7,8 @@ import {LogService} from '../service/log.service';
 
 /**
  * 全局http拦截器: 监视和转换从应用发送到服务器的 HTTP 请求
- *
+ * intercept 方法会把请求转换成一个最终返回 HTTP 响应体的 Observable
+ * next.handle(globalReq)把 HTTP 请求转换成 HttpEvents 组成的 Observable,它最终包含的是来自服务器的响应
  */
 @Injectable()
 export class GlobalHttpIntercept implements HttpInterceptor {
@@ -16,14 +17,8 @@ export class GlobalHttpIntercept implements HttpInterceptor {
     private logService: LogService) {
   }
 
-  /**
-   * intercept 方法会把请求转换成一个最终返回 HTTP 响应体的 Observable
-   * @param {HttpRequest<any>} req
-   * @param {HttpHandler} next
-   * @returns {Observable<HttpEvent<any>>}
-   */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let globalReq = req.clone({setHeaders: {'Content-Type': 'application/json'}});
+    let globalReq = req;
     // this.logService.print(`全局HTTP拦截器发起请求${req.url}`);
     if (
       req.url.includes('gdd/user/register') ||
@@ -33,20 +28,24 @@ export class GlobalHttpIntercept implements HttpInterceptor {
       req.url.includes('gdd/email/checkEmailCode') ||
       req.url.includes('gdd/user/modifyPassword')
     ) {
-      // console.log(`该类型的请求无需远程校验jwt`);
+      // console.log(`服务器无需校验jwt`);
+      globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
     } else {
-      // console.log(`该类型的请求需要远程校验jwt`);
-      if (req.url.includes('gdd/excel/export')) {
+      // console.log(`服务器需要校验jwt`);
+      globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + sessionStorage.getItem('jwt')}});
+      if (req.url.includes('gdd/excel/export')) { // 导出操作
+        globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
         globalReq = globalReq.clone({responseType: 'blob'});
       }
-      globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + sessionStorage.getItem('jwt')}});
+      if (req.url.includes('gdd/excel/import')) { // 导入操作
+        // globalReq = globalReq.clone({reportProgress: true});
+      }
     }
-    /**
-     * handle() 方法也会把 HTTP 请求转换成 HttpEvents 组成的 Observable，它最终包含的是来自服务器的响应
-     */
     return next.handle(globalReq).pipe(
-      catchError(this.logService.handleError<any>(`${globalReq.url}请求发生错误`)), // 错误处理
-      tap(event => { // 查看响应数据
+      // 错误处理
+      catchError(this.logService.handleError<any>(`${globalReq.url}请求发生错误`)),
+      // 查看响应数据
+      tap(event => {
         if (event instanceof HttpResponse) {
           // this.logService.print(`全局HTTP拦截器响应请求${globalReq.url}--状态:${event.statusText},信息:${event.body.msg}`);
         }
