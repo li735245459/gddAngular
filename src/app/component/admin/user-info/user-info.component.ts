@@ -6,7 +6,6 @@ import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 
 import {province, hobby} from '../../../globalData/UserData';
 import {Md5} from 'ts-md5';
-import {Progress} from '../../../globalUtil/progressUtil';
 import {interval} from 'rxjs';
 
 @Component({
@@ -45,12 +44,12 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   deleteState = false; // true删除所有数据,false删除当前选中的数据
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
-  // 上传excel文件弹框
+  // excel上传文件弹框
   upExcelDlgState = true; // true关闭弹框,false打开弹框
   upExcelDlgTitle: String = null;
   // 进度条弹框
   progressDlgState = true; // true关闭弹框,false打开弹框
-  progressValue = 0;
+  progressValue = 10;
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,false启用表单提交
@@ -471,14 +470,16 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       this.upExcelDlgState = false;
     } else {
       // 导出操作---------------------------------------------------------->
-      this.progressValue = 0;
+      // 打开进度条
       this.progressDlgState = false;
       const progressSubscribe = interval(500).subscribe(() => {
         this.progressValue += Math.floor(Math.random() * 20);
         this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
       });
       this.userService.export(this.itemForPage).subscribe((responseBlob) => {
+        // 关闭进度条
         progressSubscribe.unsubscribe();
+        this.progressValue = 10;
         this.progressDlgState = true;
         const blob = new Blob([responseBlob], {'type': 'application/vnd.ms-excel'});
         const fileName = '用户信息.xls';
@@ -509,16 +510,19 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       (fileType === 'application/vnd.ms-excel' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
       // 关闭上传文件弹框
       this.onCloseDlg();
-      // 打开进度条 or 系统自带滚动条
-      // this.progressValue = 0;
-      // this.progressDlgState = false;
-      // const progressSubscribe = interval(500).subscribe(() => {
-      //   this.progressValue += Math.floor(Math.random() * 20);
-      //   this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
-      // });
+      // 打开进度条
+      this.progressDlgState = false;
+      const progressSubscribe = interval(500).subscribe(() => {
+        this.progressValue += Math.floor(Math.random() * 20);
+        this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
+      });
       const formData: FormData = new FormData();
       formData.append('file', file);
       this.userService.import(formData).subscribe((responseBlob) => {
+        // 关闭进度条
+        progressSubscribe.unsubscribe();
+        this.progressValue = 10;
+        this.progressDlgState = true;
         if (responseBlob.code === 0) {
           this.messagerService.alert({
             title: '上传文件成功',

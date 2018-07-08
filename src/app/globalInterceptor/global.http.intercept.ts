@@ -33,12 +33,15 @@ export class GlobalHttpIntercept implements HttpInterceptor {
     } else {
       // console.log(`服务器需要校验jwt`);
       globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + sessionStorage.getItem('jwt')}});
-      if (req.url.includes('gdd/excel/export')) { // 导出操作
+      // 导出操作
+      if (req.url.includes('gdd/excel/export')) {
         globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
         globalReq = globalReq.clone({responseType: 'blob'});
       }
-      if (req.url.includes('gdd/excel/import')) { // 导入操作
+      // 导入操作
+      if (req.url.includes('gdd/excel/import')) {
         // globalReq = globalReq.clone({reportProgress: true});
+        globalReq = globalReq.clone({setHeaders: {'Cache-Control': 'no-cache'}});
       }
     }
     return next.handle(globalReq).pipe(
