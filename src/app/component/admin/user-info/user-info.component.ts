@@ -525,15 +525,16 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.progressDlgState = true;
         if (responseBlob.code === 0) {
           this.messagerService.alert({
-            title: '上传文件成功',
+            title: 'Excel导入',
             icon: 'info',
-            msg: 'success'
+            msg: '成功'
           });
+          this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
         } else {
           this.messagerService.alert({
-            title: '上传文件失败',
+            title: 'Excel导入',
             icon: 'warning',
-            msg: 'fail'
+            msg: '失败'
           });
         }
       });

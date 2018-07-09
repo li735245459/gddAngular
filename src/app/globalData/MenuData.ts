@@ -44,7 +44,7 @@ export const menus = [
     text: '系统管理',
     iconCls: 'fa fa-print',
     children: [{
-      text: '日志信息',
+      text: '日志',
       link: 'log',
     },
       {
@@ -52,7 +52,7 @@ export const menus = [
         link: 'email_code',
       },
       {
-        text: 'Excel下载模板',
+        text: 'Excel模板',
         link: 'email_code',
       }]
   }];

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {LogService} from '../../../service/log.service';
 import {Log} from '../../../globalModel/log';
 import {User} from '../../../globalModel/user';
@@ -8,8 +8,7 @@ import {User} from '../../../globalModel/user';
   templateUrl: './log.component.html',
   styleUrls: ['./log.component.css']
 })
-export class LogComponent implements OnInit {
-  log: Log = {}; // 分页查询条件对象
+export class LogComponent implements OnInit, AfterViewInit {
   msg = '查询成功'; // 提示消息
   // 表格
   title = '异常信息';
@@ -18,12 +17,14 @@ export class LogComponent implements OnInit {
   pageNumber = 1; // 当前分页号
   pageSize = 20; // 默认分页大小
   pageOptions = { // 分页导航条参数设置
-    pageList: [20, 30, 40],
+    pageList: [10, 20, 30, 40, 50],
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
     layout: ['list', 'first', 'prev', 'next', 'last', 'info']
   };
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
+  // 分页查询条件对象
+  log: Log = {};
   // 添加、编辑弹框
   selectedRow; // 选中的行(此处可多选,至少选中一行)
   editingRow: User = {}; // 正在编辑的行
@@ -43,31 +44,12 @@ export class LogComponent implements OnInit {
    * 在第一轮 ngOnChanges 完成之后调用,此时所有输入属性都已经有了正确的初始绑定值
    */
   ngOnInit() {
-    this.page();
-  }
-
-
-  /**
-   * 分页插件触发分页查询: 初始化时会自动触发,不需要在初始化函数中调用page分页方法
-   * @param event
-   */
-  onPageChange(event) {
-    console.log('------------onPageChange()');
-    console.log(`event.pageNumber--${event.pageNumber}`);
-    console.log(`event.pageSize--${event.pageSize}`);
-    // this.pageNumber = (event.pageNumber === 0 ? 1 : event.pageNumber);
-    // this.pageSize = event.pageSize;
-    // this.page();
   }
 
   /**
    * 分页查询
    */
   page() {
-    console.log('------------page()');
-    console.log(this.log);
-    console.log(this.pageNumber);
-    console.log(this.pageSize);
     this.logService.page(this.log, this.pageNumber, this.pageSize).subscribe(responseJson => {
       if (responseJson.code === 0) {
         this.msg = '查询成功';
@@ -77,6 +59,23 @@ export class LogComponent implements OnInit {
         this.msg = '查询失败';
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
+  }
+
+
+  /**
+   * 分页插件触发分页查询: 初始化时会自动触发,不需要在初始化函数中调用page分页方法
+   * @param event
+   */
+  onPageChange(event) {
+    if (event.pageNumber > 0) {
+      this.pageNumber = event.pageNumber;
+      this.pageSize = event.pageSize;
+      this.page();
+    }
   }
 
   /**
@@ -171,7 +170,7 @@ export class LogComponent implements OnInit {
    */
   onReLoad(): void {
     this.log = {};
-    this.page();
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
 
 }

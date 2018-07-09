@@ -17,20 +17,16 @@
 </eui-panel>
 
 <!--表格-->
-<eui-datagrid idField="id" [data]="data" [loading]="loading" [loadMsg]="loadMsg"
+<eui-datagrid idField="id" [data]="data" [loading]="loading" [loadMsg]="loadMsg" [lazy]="true"
               [pagination]="true" [pageOptions]="pageOptions" [pageNumber]="pageNumber" [pageSize]="pageSize"
               [total]="total" selectionMode="multiple" [(selection)]="selectedRow"
               (pageChange)="onPageChange($event)" (rowDblClick)="onRowDblClick($event)">
-  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" frozen="false" width="20">
+  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="60">
     <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
   </eui-grid-column>
-  <eui-grid-column field="createTime" title="时间" [sortable]="true" width="150"></eui-grid-column>
-  <eui-grid-column field="reqMethod" title="类型" width="50"></eui-grid-column>
-  <eui-grid-column field="reqUrl" title="URL" width="300"></eui-grid-column>
-  <!--<eui-grid-column field="reqArgs" title="参数" width="200"></eui-grid-column>-->
+  <eui-grid-column field="createTime" title="时间" [sortable]="true" align="center" frozen="true" width="160"></eui-grid-column>
   <eui-grid-column field="controllerMethod" title="方法" width="400"></eui-grid-column>
   <eui-grid-column field="msg" title="异常" width="400"></eui-grid-column>
-  <!--<eui-grid-column field="id" title="编号" width="300"></eui-grid-column>-->
 </eui-datagrid>
 
 <!--添加、编辑弹框-->
