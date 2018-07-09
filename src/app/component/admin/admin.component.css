@@ -1,8 +1,7 @@
 @import "~ng-easyui/themes/material/easyui.css";
 @import "~ng-easyui/themes/angular.css";
 @import "~ng-easyui/themes/icon.css";
-
-/*header*/
+/****************************header****************************/
 .main-header {
   background: #3c8dbc;
   color: #fff;
@@ -38,8 +37,7 @@
   color: #fff;
   margin: 0 10px;
 }
-
-/*左侧菜单栏头像部分*/
+/****************************菜单栏头像****************************/
 .sidebar-body {
   background: #222d32;
 }
@@ -49,42 +47,48 @@
   padding: 10px;
   line-height: 20px;
 }
-
-/*左侧菜单栏头菜单分类部分*/
-.sidemenu .accordion .panel-title{
+/****************************菜单栏分类****************************/
+.sidemenu .accordion .panel-title {
   color: #b8c7ce;
   margin-left: 5px;
 }
-.sidemenu .accordion .accordion-header{
+
+.sidemenu .accordion .accordion-header {
   background: #222d32;
   color: #b8c7ce;
 }
-.sidemenu .accordion .accordion-body{
+
+.sidemenu .accordion .accordion-body {
   background: #2c3b41;
   color: #8aa4af;
 }
-.sidemenu .accordion .accordion-header-selected{
+
+.sidemenu .accordion .accordion-header-selected {
   background: #1e282c;
 }
-.sidemenu .tree-node-hover{
+
+.sidemenu .tree-node-hover {
   background: #2c3b41;
   color: #fff;
 }
-.sidemenu .tree-node-selected{
+
+.sidemenu .tree-node-selected {
   background: #2c3b41;
   color: #fff;
   border-right: 0;
   border-left: 2px solid #99cdff;
 }
-.sidemenu .accordion-header .panel-tool{
+
+.sidemenu .accordion-header .panel-tool {
   display: none;
 }
+
 .sidemenu .accordion-header::after,
-.sidemenu .tree-node-nonleaf::after{
+.sidemenu .tree-node-nonleaf::after {
   display: inline-block;
   vertical-align: top;
   border-style: solid;
-  transform:rotate(45deg);
+  transform: rotate(45deg);
   width: 4px;
   height: 4px;
   content: '';
@@ -94,23 +98,85 @@
   margin-top: -3px;
   border-width: 0 1px 1px 0;
 }
-.sidemenu .accordion-header-selected::after{
-  transform:rotate(-135deg);
-}
-.sidemenu .tree-node-nonleaf::after{
-  transform:rotate(-135deg);
-}
-.sidemenu .tree-node-nonleaf-collapsed::after{
-  transform:rotate(45deg);
-}
-.sidemenu-collapsed .accordion-header::after{
-  display: none;
-}
-.sidemenu-tooltip .accordion{
-  border-color: #1e282c;
+
+.sidemenu .accordion-header-selected::after {
+  transform: rotate(-135deg);
 }
 
-/*主体展示部分*/
+.sidemenu .tree-node-nonleaf::after {
+  transform: rotate(-135deg);
+}
+
+.sidemenu .tree-node-nonleaf-collapsed::after {
+  transform: rotate(45deg);
+}
+
+.sidemenu-collapsed .accordion-header::after {
+  display: none;
+}
+
+.sidemenu-tooltip .accordion {
+  border-color: #1e282c;
+}
+/****************************菜单栏分类内容****************************/
 .main-body {
-  /*background: #ecf0f5;*/
+  height:92vh;
+  width:0px;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: 1px;
+}
+/*自定义删除Dialog样式*/
+.deleteDlg {
+  width: 400px;
+  background: #ffffff;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, .2);
+  pointer-events: auto;
+  background-clip: padding-box;
+  box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 13px 19px 2px rgba(0, 0, 0, 0.14), 0 5px 24px 4px rgba(0, 0, 0, 0.12);
+}
+
+.deleteDlg .deleteDlg-header {
+  text-align: center;
+  line-height: 40px;
+  background: #ef3e29;
+  color: #fff;
+  font-weight: bold;
+  border: 0;
+}
+
+.deleteDlg .deleteDlg-body {
+  text-align: center;
+  margin: 50px 0;
+  font-size: 16px;
+}
+
+.deleteDlg .deleteDlg-footer {
+  background: #fafafa;
+  border-color: #dfdfdf;
+}
+
+.deleteDlgBtn, .deleteDlgBtn:hover {
+  color: #404040;
+  border: 0;
+}
+/*自定义添加、编辑Dialog样式*/
+.user .user-field {
+  position: relative;
+}
+
+.user .user-field i {
+  color: gray;
+  position: absolute;
+  left: 0.5em;
+  top: 0.65em;
+}
+
+.user .user-field input {
+  padding-left: 2.3em;
+}
+
+.editDlgBtn {
+  width:80px;
 }

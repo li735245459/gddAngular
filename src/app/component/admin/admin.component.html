@@ -1,5 +1,5 @@
 <div class="f-column" style="height:100vh;">
-  <!--header-->
+  <!-------------------------header------------------------->
   <div class="main-header f-row" style="height:8vh;min-height:40px;">
     <div class="f-row f-full">
       <div class="main-title f-animate f-row f-content-center" [style.width.px]="width">
@@ -14,10 +14,11 @@
       </div>
     </div>
   </div>
-  <!--body-->
+  <!-------------------------body------------------------->
   <div class="f-row f-full" style="height: 92vh;">
-    <!--左侧菜单栏-->
+    <!--菜单栏-->
     <div class="sidebar-body f-animate" [style.width.px]="width" style="height: 92vh;overflow-y: auto;overflow-x: hidden;">
+      <!--菜单栏头像-->
       <div *ngIf="!collapsed" class="sidebar-user row">
         <div class="col-5">
           <img src="../../../assets/img/{{user.cover}}"
@@ -27,10 +28,11 @@
           <span>{{user.name}}</span>
         </div>
       </div>
+      <!--菜单栏分类-->
       <eui-sidemenu [data]="menus" [border]="false" [collapsed]="collapsed" [multiple]="true" (itemClick)="onItemClick($event)"></eui-sidemenu>
      </div>
-    <!--主体展示部分-->
-    <div class="main-body f-full" style="height:92vh;width:0px;overflow-y: auto;overflow-x: auto;padding: 1px;">
+    <!--菜单栏分类内容-->
+    <div class="main-body f-full">
       <router-outlet></router-outlet>
     </div>
   </div>
