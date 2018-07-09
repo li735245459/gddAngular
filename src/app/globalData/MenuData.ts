@@ -49,10 +49,10 @@ export const menus = [
     },
       {
         text: '验证码',
-        link: 'email_code',
+        link: 'emailCode',
       },
       {
         text: 'Excel模板',
-        link: 'email_code',
+        link: 'emailCode',
       }]
   }];

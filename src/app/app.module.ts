@@ -23,6 +23,7 @@ import {GoodsComponent} from './component/admin/goods/goods.component';
 import {CoverComponent} from './component/admin/cover/cover.component';
 import {UserInfoComponent} from './component/admin/user-info/user-info.component';
 import {LogComponent} from './component/admin/log/log.component';
+import { EmailCodeComponent } from './component/admin/email-code/email-code.component';
 
 /**
  * 全局路由配置
@@ -42,6 +43,7 @@ const appRoutes: Routes = [
       {path: 'user', component: UserInfoComponent},
       {path: 'cover', component: CoverComponent},
       {path: 'log', component: LogComponent},
+      {path: 'emailCode', component: EmailCodeComponent},
     ], canActivate: [GlobalRoutingGuard]
   },
   {path: 'login', component: LoginComponent},
@@ -64,6 +66,7 @@ const appRoutes: Routes = [
     CoverComponent,
     UserInfoComponent,
     AdminComponent,
+    EmailCodeComponent,
     HomeComponent,
     ForgetPasswordComponent,
     ModifyPasswordComponent,
