@@ -1,4 +1,6 @@
-<!--表格操作栏-->
+<!--
+表格操作栏
+-->
 <eui-panel [collapsible]="false" [collapsed]="true"
            [panelStyle]=""
            [headerStyle]="{padding: '2px 0px'}"
@@ -12,37 +14,45 @@
   <eui-panel-footer>
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('delete')">删除</eui-linkbutton>
     <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('clean')">清空数据</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
   </eui-panel-footer>
 </eui-panel>
 
-<!--表格-->
-<eui-datagrid idField="id" [data]="data" [loading]="loading" [loadMsg]="loadMsg" [lazy]="true"
-              [pagination]="true" [pageOptions]="pageOptions" [pageNumber]="pageNumber" [pageSize]="pageSize"
-              [total]="total" selectionMode="multiple" [(selection)]="selectedRow"
-              (pageChange)="onPageChange($event)" (rowDblClick)="onRowDblClick($event)">
-  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="60">
-    <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
-  </eui-grid-column>
-  <eui-grid-column field="createTime" title="时间" [sortable]="true" align="center" frozen="true" width="160"></eui-grid-column>
-  <eui-grid-column field="controllerMethod" title="方法" width="400"></eui-grid-column>
-  <eui-grid-column field="msg" title="异常" width="400"></eui-grid-column>
+<!--
+表格
+-->
+<eui-datagrid [pagination]="true" [data]="data" [total]="total"
+              [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
+              (pageChange)="onPageChange($event)"
+              idField="id" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
+              [(selection)]="selectedRow">
+  <eui-grid-column-group frozen="true" align="left" width="620">
+    <eui-grid-header-row>
+      <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="60">
+        <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
+      </eui-grid-column>
+      <eui-grid-column field="createTime" title="时间" align="center" frozen="true" width="180"></eui-grid-column>
+      <eui-grid-column field="controllerMethod" title="方法" frozen="true" width="380"></eui-grid-column>
+    </eui-grid-header-row>
+  </eui-grid-column-group>
+  <eui-grid-column field="msg" title="异常" width="10000"></eui-grid-column>
 </eui-datagrid>
 
-<!--添加、编辑弹框-->
-<eui-dialog [title]="editDlgTitle" [panelStyle]="{width:'50%',height:'80%'}"
-            [closed]="editDlgState" [modal]="true" (close)="onEditClose()">
-  <div>{{editingRow.id}}</div>
-<!--删除提示弹框-->
-<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onDeleteCancel()" borderType="none"
+<!--
+删除提示弹框
+-->
+<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
   <div>{{msg}}</div>
   <eui-panel-footer>
     <eui-button-group style="width:100%;height:50px">
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState" (click)="onDeleteSure()">确定</eui-linkbutton>
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState" (click)="onDeleteCancel()">取消</eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteSure()">确定
+      </eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteCancel()">取消
+      </eui-linkbutton>
     </eui-button-group>
   </eui-panel-footer>
 </eui-dialog>
-

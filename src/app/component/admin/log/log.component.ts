@@ -9,32 +9,28 @@ import {User} from '../../../globalModel/user';
   styleUrls: ['./log.component.css']
 })
 export class LogComponent implements OnInit, AfterViewInit {
-  msg = '查询成功'; // 提示消息
+  msg: string = null; // 全局提示消息
   // 表格
-  title = '异常信息';
+  title = '用户信息';
+  loading = true; // 开启datagrid加载提示
+  loadMsg = '正在加载..';
+  total: Number = 0; // 所有数据条数
   data = []; // 分页数据
-  total = 0; // 所有数据条数
   pageNumber = 1; // 当前分页号
   pageSize = 20; // 默认分页大小
   pageOptions = { // 分页导航条参数设置
     pageList: [10, 20, 30, 40, 50],
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
-    layout: ['list', 'first', 'prev', 'next', 'last', 'info']
+    layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'refresh', 'sep', 'links', 'info']
   };
-  loading = true; // 开启datagrid加载提示
-  loadMsg = '正在加载..';
   // 分页查询条件对象
-  log: Log = {};
-  // 添加、编辑弹框
-  selectedRow; // 选中的行(此处可多选,至少选中一行)
-  editingRow: User = {}; // 正在编辑的行
-  editDlgState = true; // 添加、编辑弹框关闭
-  editDlgTitle; // 添加、编辑弹框标题
+  itemForPage: Log = {};
   // 删除弹框
-  deleteDlgState = true; // false弹框打开,true弹框关闭(默认)
-  deleteDlgTitle; // 弹框标题
-  deleteDlgBtnState = false; // 弹框按钮状态,false表示可用(默认),true表示禁用
-  deleteState = false; // false表示删除选择数据(默认),true表示删除所有数据
+  deleteDlgTitle: String = null;
+  selectedRow = []; // 当前选中的数据
+  deleteState = false; // true删除所有数据,false删除当前选中的数据
+  deleteDlgState = true; // true关闭弹框,false打开弹框
+  deleteDlgBtnState = false; // true表示禁用,false表示可用
 
   constructor(
     private logService: LogService) {
@@ -50,10 +46,11 @@ export class LogComponent implements OnInit, AfterViewInit {
    * 分页查询
    */
   page() {
-    this.logService.page(this.log, this.pageNumber, this.pageSize).subscribe(responseJson => {
+    this.logService.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
       if (responseJson.code === 0) {
         this.msg = '查询成功';
-        this.data = responseJson.data;
+        this.data = responseJson.data.list;
+        this.total = responseJson.data.total;
         this.loading = false;
       } else {
         this.msg = '查询失败';
@@ -148,29 +145,22 @@ export class LogComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 双击行-打开编辑框
-   * @param event
+   * 关闭弹框
    */
-  onRowDblClick(event): void {
-    this.editDlgTitle = '编辑用户';
-    this.editingRow = event;
-    this.editDlgState = false;
+  onCloseDlg(): void {
+    this.clean();
   }
 
   /**
-   * 关闭添加、编辑弹框回调
+   * 重置全局参数
    */
-  onEditClose(): void {
-    this.editingRow = {};
-    this.editDlgState = true;
+  clean(): void {
+    this.deleteDlgTitle = null;
+    this.selectedRow = [];
+    this.deleteState = false;
+    this.deleteDlgState = true;
+    this.deleteDlgBtnState = false;
   }
 
-  /**
-   * 刷新数据
-   */
-  onReLoad(): void {
-    this.log = {};
-    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
-  }
 
 }
