@@ -80,20 +80,24 @@ export class LogComponent implements OnInit, AfterViewInit {
    */
   onOpenDeleteDlg(param): void {
     if (param === 'delete') {
-      this.deleteState = false; // 删除所选
+      // 删除所选
+      this.deleteState = false;
       this.deleteDlgTitle = '删除数据';
-      if (this.selectedRow) {
-        this.msg = '确定要删除所选数据,删除后将无法恢复!';
+      if (this.selectedRow.length > 0) {
+        this.msg = '确定要删除所选数据!';
       } else {
-        this.deleteDlgBtnState = true; // 禁用删除弹框(确认、取消)按钮
+        // 禁用删除弹框(确认、取消)按钮
+        this.deleteDlgBtnState = true;
         this.msg = '请先选中需要删除的数据';
       }
     } else {
-      this.deleteState = true; // 删除所有
+      // 删除所有
+      this.deleteState = true;
       this.deleteDlgTitle = '清空数据';
-      this.msg = '确定要删除所有数据,删除后将无法恢复！';
+      this.msg = '确定要删除所有数据!';
     }
-    this.deleteDlgState = false; // 打开删除弹框
+    // 打开删除弹框
+    this.deleteDlgState = false;
   }
 
   /**
@@ -101,15 +105,16 @@ export class LogComponent implements OnInit, AfterViewInit {
    */
   onDeleteSure(): void {
     this.deleteDlgBtnState = true; // 禁用删除弹框按钮
-    let id = '';
-    if (this.deleteState) { // 删除所有
+    let id = null;
+    if (this.deleteState) {
+      // 删除所有
       id = 'all';
-    } else { // 删除所选
+    } else {
+      // 删除所选
       if (this.selectedRow) {
         id = this.selectedRow.map(row => row.id).join(',');
       } else {
-        id = '';
-        this.deleteDlgState = true; // 关闭删除弹框
+        id = null;
       }
     }
     if (id) {
@@ -118,8 +123,10 @@ export class LogComponent implements OnInit, AfterViewInit {
           this.deleteDlgBtnState = true;
           this.msg = '删除成功！';
           setTimeout(() => {
-            this.page(); // 分页
-            this.deleteDlgState = true; // 关闭删除弹框
+            // 刷新数据
+            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
+            // 关闭删除弹框
+            this.deleteDlgState = true;
           }, 2000);
         } else {
           this.msg = '删除失败！';
@@ -132,9 +139,7 @@ export class LogComponent implements OnInit, AfterViewInit {
    * 取消删除
    */
   onDeleteCancel(): void {
-    this.onUnSelect(); // 取消所有选中数据
-    this.deleteDlgBtnState = false; // 激活删除弹框(确认、取消)按钮
-    this.deleteDlgState = true; // 关闭删除弹框
+    this.onCloseDlg();
   }
 
   /**
