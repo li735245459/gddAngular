@@ -161,7 +161,7 @@
   color: #404040;
   border: 0;
 }
-/*自定义添加、编辑Dialog样式*/
+/*自定义添加、编辑Dialog中输入框小图标样式*/
 .user .user-field {
   position: relative;
 }
@@ -180,3 +180,24 @@
 .editDlgBtn {
   width:80px;
 }
+/*自定义messager消息提示框*/
+.m-content{
+  padding: 10px 10px;
+  text-align: center;
+}
+.m-content h2{
+  font-size: 24px;
+  margin: 10px 0;
+}
+.m-content p{
+  font-size: 16px;
+  color: #464646;
+}
+.m-buttons{
+  margin: 25px 0 15px 0;
+}
+.m-buttons eui-linkbutton{
+  width: 80px;
+  margin: 0 8px;
+}
+

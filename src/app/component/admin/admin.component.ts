@@ -34,7 +34,6 @@ export class AdminComponent implements OnInit {
   // 点击左侧菜单栏
   onItemClick(item) {
     this.selectedMenu = item;
-    // console.log(item);
     this.router.navigateByUrl(`admin/${item.link}`);
   }
 

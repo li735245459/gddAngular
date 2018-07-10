@@ -62,15 +62,18 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
           this.data = [];
           this.total = 0;
           this.loading = false;
-          this.messagerService.alert({title: '登录状态', icon: 'warning', msg: '登录超时!'});
-          // setTimeout(() => { this.router.navigateByUrl('/login'); }, 1000);
+          this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+            result: (r) => {
+              if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+            }
+          });
           break;
         case -1:
           // 系统错误
           this.data = [];
           this.total = 0;
           this.loading = true;
-          this.messagerService.alert({title: '系统状态', icon: 'warning', msg: '系统错误!'});
+          this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定', cancel: '取消'});
           break;
       }
     });
