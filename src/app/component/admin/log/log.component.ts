@@ -11,7 +11,7 @@ import {User} from '../../../globalModel/user';
 export class LogComponent implements OnInit, AfterViewInit {
   msg: string = null; // 全局提示消息
   // 表格
-  title = '用户信息';
+  title = '日志信息';
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
   total: Number = 0; // 所有数据条数
@@ -64,7 +64,7 @@ export class LogComponent implements OnInit, AfterViewInit {
 
 
   /**
-   * 分页插件触发分页查询: 初始化时会自动触发,不需要在初始化函数中调用page分页方法
+   * 分页插件
    * @param event
    */
   onPageChange(event) {

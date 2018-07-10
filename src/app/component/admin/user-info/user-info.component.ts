@@ -120,7 +120,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 分页插件触发分页查询
+   * 分页插件
    * @param event
    */
   onPageChange(event) {

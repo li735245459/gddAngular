@@ -8,8 +8,7 @@ import {User} from '../globalModel/user';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(
-    private http: HttpClient) {
+  constructor(private http: HttpClient) {
   }
 
   /**
