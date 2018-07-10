@@ -1,6 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {EmailCode} from '../../../globalModel/emailCode';
 import {EmailCodeService} from '../../../service/email-code.service';
+import {MessagerService} from 'ng-easyui/components/messager/messager.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-email-code',
@@ -25,16 +27,22 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
   // 分页查询条件对象
   itemForPage: EmailCode = {};
   // 删除弹框
-  deleteDlgTitle: String = null;
   selectedRow = []; // 当前选中的数据
+  deleteDlgTitle: String = null;
   deleteState = false; // true删除所有数据,false删除当前选中的数据
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
 
-  constructor(private emailCodeService: EmailCodeService) {
+  constructor(private emailCodeService: EmailCodeService,
+              private messagerService: MessagerService,
+              private router: Router) {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
 
   /**
@@ -42,19 +50,30 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
    */
   page() {
     this.emailCodeService.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
-      if (responseJson.code === 0) {
-        this.msg = '查询成功';
-        this.data = responseJson.data.list;
-        this.total = responseJson.data.total;
-        this.loading = false;
-      } else {
-        this.msg = '查询失败';
+      switch (responseJson.code) {
+        case 0:
+          // 查询成功
+          this.data = responseJson.data.list;
+          this.total = responseJson.data.total;
+          this.loading = false;
+          break;
+        case 1000:
+          // jwt校验失败
+          this.data = [];
+          this.total = 0;
+          this.loading = false;
+          this.messagerService.alert({title: '登录状态', icon: 'warning', msg: '登录超时!'});
+          // setTimeout(() => { this.router.navigateByUrl('/login'); }, 1000);
+          break;
+        case -1:
+          // 系统错误
+          this.data = [];
+          this.total = 0;
+          this.loading = true;
+          this.messagerService.alert({title: '系统状态', icon: 'warning', msg: '系统错误!'});
+          break;
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
 
 

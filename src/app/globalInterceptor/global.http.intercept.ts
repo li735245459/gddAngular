@@ -32,16 +32,19 @@ export class GlobalHttpIntercept implements HttpInterceptor {
       globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
     } else {
       // console.log(`服务器需要校验jwt`);
-      globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + sessionStorage.getItem('jwt')}});
-      // 导出操作
-      if (req.url.includes('gdd/excel/export')) {
-        globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
-        globalReq = globalReq.clone({responseType: 'blob'});
-      }
-      // 导入操作
-      if (req.url.includes('gdd/excel/import')) {
-        // globalReq = globalReq.clone({reportProgress: true});
-        globalReq = globalReq.clone({setHeaders: {'Cache-Control': 'no-cache'}});
+      const jwt = sessionStorage.getItem('jwt');
+      if (jwt) {
+        globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + jwt}});
+        // 导出操作
+        if (req.url.includes('gdd/excel/export')) {
+          globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
+          globalReq = globalReq.clone({responseType: 'blob'});
+        }
+        // 导入操作
+        if (req.url.includes('gdd/excel/import')) {
+          // globalReq = globalReq.clone({reportProgress: true});
+          // globalReq = globalReq.clone({setHeaders: {'Cache-Control': 'no-cache'}});
+        }
       }
     }
     return next.handle(globalReq).pipe(

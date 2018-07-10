@@ -1,6 +1,4 @@
-<!--
-表格操作栏
--->
+<!--表格操作栏-->
 <eui-panel [collapsible]="true" [collapsed]="true"
            [panelStyle]=""
            [headerStyle]="{padding: '2px 0px'}"
@@ -70,9 +68,7 @@
   </eui-panel-footer>
 </eui-panel>
 
-<!--
-表格
--->
+<!--表格-->
 <eui-datagrid [pagination]="true" [data]="data" [total]="total"
               [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
               (pageChange)="onPageChange($event)"
@@ -129,9 +125,7 @@
   <!--</ng-template>-->
 </eui-datagrid>
 
-<!--
-删除提示弹框
--->
+<!--删除提示弹框-->
 <eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
@@ -148,9 +142,7 @@
   </eui-panel-footer>
 </eui-dialog>
 
-<!--
-添加、编辑弹框
--->
+<!--添加、编辑弹框-->
 <eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
             [bodyStyle]="{padding:'5px 2px'}"
@@ -289,7 +281,5 @@
   </div>
 </eui-dialog>
 
-<!--
-Messager
--->
+<!--Messager-->
 <eui-messager></eui-messager>
