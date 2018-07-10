@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Router} from '@angular/router';
 import {User} from '../../globalModel/user';
 import {menus} from '../../globalData/MenuData';

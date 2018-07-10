@@ -27,8 +27,8 @@ export class LogComponent implements OnInit, AfterViewInit {
   // 分页查询条件对象
   itemForPage: Log = {};
   // 删除弹框
-  deleteDlgTitle: String = null;
   selectedRow = []; // 当前选中的数据
+  deleteDlgTitle: String = null;
   deleteState = false; // true删除所有数据,false删除当前选中的数据
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
@@ -52,13 +52,13 @@ export class LogComponent implements OnInit, AfterViewInit {
     this.service.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
       switch (responseJson.code) {
         case 0:
-          // 查询成功
+          // 成功
           this.data = responseJson.data.list;
           this.total = responseJson.data.total;
           this.loading = false;
           break;
         case 1000:
-          // jwt校验失败
+          // jwt非法
           this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
             result: (r) => {
               if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
@@ -67,9 +67,6 @@ export class LogComponent implements OnInit, AfterViewInit {
           break;
         case -1:
           // 系统错误
-          this.data = [];
-          this.total = 0;
-          this.loading = true;
           this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
           break;
       }
@@ -98,24 +95,22 @@ export class LogComponent implements OnInit, AfterViewInit {
    */
   onOpenDeleteDlg(param): void {
     if (param === 'delete') {
-      // 删除所选
-      this.deleteState = false;
+      // ----------------删除所选
+      this.deleteState = false; // 删除所选
       this.deleteDlgTitle = '删除数据';
       if (this.selectedRow.length > 0) {
         this.msg = '确定要删除所选数据!';
       } else {
-        // 禁用删除弹框(确认、取消)按钮
-        this.deleteDlgBtnState = true;
+        this.deleteDlgBtnState = true; // 禁用弹框(确认、取消)按钮
         this.msg = '请先选中需要删除的数据';
       }
     } else {
-      // 删除所有
-      this.deleteState = true;
+      // ----------------删除所有
+      this.deleteState = true; // 删除所有
       this.deleteDlgTitle = '清空数据';
       this.msg = '确定要删除所有数据!';
     }
-    // 打开删除弹框
-    this.deleteDlgState = false;
+    this.deleteDlgState = false; // 打开弹框
   }
 
   /**
@@ -125,10 +120,10 @@ export class LogComponent implements OnInit, AfterViewInit {
     this.deleteDlgBtnState = true; // 禁用删除弹框按钮
     let id = null;
     if (this.deleteState) {
-      // 删除所有
+      // ----------------删除所有
       id = 'all';
     } else {
-      // 删除所选
+      // ----------------删除所选
       if (this.selectedRow) {
         id = this.selectedRow.map(row => row.id).join(',');
       } else {
@@ -139,17 +134,16 @@ export class LogComponent implements OnInit, AfterViewInit {
       this.service.delete(id).subscribe(responseJson => {
         switch (responseJson.code) {
           case 0:
+            // 成功
             this.deleteDlgBtnState = true;
             this.msg = '删除成功！';
             setTimeout(() => {
-              // 刷新数据
-              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-              // 关闭删除弹框
-              this.deleteDlgState = true;
+              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+              this.deleteDlgState = true; // 关闭弹框
             }, 2000);
             break;
           case 1000:
-            // jwt校验失败
+            // jwt非法
             this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
               result: (r) => {
                 if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
@@ -196,6 +190,5 @@ export class LogComponent implements OnInit, AfterViewInit {
     this.deleteDlgState = true;
     this.deleteDlgBtnState = false;
   }
-
 
 }
