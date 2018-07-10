@@ -38,4 +38,17 @@
   </div>
 </div>
 
-
+<!--消息提示弹框-->
+<eui-messager [showHeader]="false" borderType="none">
+  <ng-template euiBodyTemplate let-messager>
+    <div class="m-content">
+      <h2>{{messager.title}}</h2>
+      <p>{{messager.msg}}</p>
+      <div class="m-buttons">
+        <eui-linkbutton *ngFor="let button of messager.buttons;let i = index;" [text]="button.text"
+                        (click)="messager.closeDialog(button)">{{i==0?messager.ok:messager.cancel}}
+        </eui-linkbutton>
+      </div>
+    </div>
+  </ng-template>
+</eui-messager>

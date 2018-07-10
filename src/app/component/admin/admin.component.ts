@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Router} from '@angular/router';
 import {User} from '../../globalModel/user';
 import {menus} from '../../globalData/MenuData';
@@ -10,12 +10,12 @@ import {menus} from '../../globalData/MenuData';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  user: User = new User();
-  title = 'GDD宠物馆';
-  width = 250;
-  collapsed = false;
-  selectedMenu = null;
-  menus = menus;
+  title = 'GDD宠物馆'; // 后台首页标题
+  width = 250; // 菜单栏宽度
+  collapsed = false; // 默认菜单栏展开
+  selectedMenu = null; // 当前选中的菜单栏
+  menus = menus; // 菜单栏数据
+  user: User = new User(); // 用户数据对象
 
   constructor(private router: Router) {
   }

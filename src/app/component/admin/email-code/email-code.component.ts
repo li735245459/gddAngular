@@ -33,7 +33,7 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
 
-  constructor(private emailCodeService: EmailCodeService,
+  constructor(private service: EmailCodeService,
               private messagerService: MessagerService,
               private router: Router) {
   }
@@ -49,7 +49,7 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
    * 分页查询
    */
   page() {
-    this.emailCodeService.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
+    this.service.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
       switch (responseJson.code) {
         case 0:
           // 查询成功
@@ -59,12 +59,14 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
           break;
         case 1000:
           // jwt校验失败
-          this.data = [];
-          this.total = 0;
-          this.loading = false;
-          this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+          this.messagerService.confirm({
+            title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
             result: (r) => {
-              if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+              if (r) {
+                setTimeout(() => {
+                  this.router.navigateByUrl('/login');
+                }, 500);
+              }
             }
           });
           break;
@@ -73,7 +75,7 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
           this.data = [];
           this.total = 0;
           this.loading = true;
-          this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定', cancel: '取消'});
+          this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
           break;
       }
     });
@@ -135,18 +137,32 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
       }
     }
     if (id) {
-      this.emailCodeService.delete(id).subscribe(responseObj => {
-        if (responseObj.code === 0) {
-          this.deleteDlgBtnState = true;
-          this.msg = '删除成功！';
-          setTimeout(() => {
-            // 刷新数据
-            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-            // 关闭删除弹框
-            this.deleteDlgState = true;
-          }, 2000);
-        } else {
-          this.msg = '删除失败！';
+      this.service.delete(id).subscribe(responseJson => {
+        switch (responseJson.code) {
+          case 0:
+            this.deleteDlgBtnState = true;
+            this.msg = '删除成功！';
+            setTimeout(() => {
+              // 刷新数据
+              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
+              // 关闭删除弹框
+              this.deleteDlgState = true;
+            }, 2000);
+            break;
+          case 1000:
+            // jwt校验失败
+            this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+              result: (r) => {
+                if (r) {
+                  setTimeout(() => { this.router.navigateByUrl('/login'); }, 500);
+                }
+              }
+            });
+            break;
+          case -1:
+            // 系统错误
+            this.msg = '删除失败！';
+            break;
         }
       });
     }

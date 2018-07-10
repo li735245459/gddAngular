@@ -126,7 +126,7 @@
   overflow-x: auto;
   padding: 1px;
 }
-/*自定义删除Dialog样式*/
+/*删除弹框*/
 .deleteDlg {
   width: 400px;
   background: #ffffff;
@@ -161,7 +161,7 @@
   color: #404040;
   border: 0;
 }
-/*自定义添加、编辑Dialog中输入框小图标样式*/
+/*自定义添加、编辑Dialog中输入框icon图标样式*/
 .user .user-field {
   position: relative;
 }
@@ -180,7 +180,7 @@
 .editDlgBtn {
   width:80px;
 }
-/*自定义messager消息提示框*/
+/*消息提示弹框*/
 .m-content{
   padding: 10px 10px;
   text-align: center;

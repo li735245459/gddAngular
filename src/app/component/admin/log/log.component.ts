@@ -1,7 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {LogService} from '../../../service/log.service';
 import {Log} from '../../../globalModel/log';
-import {User} from '../../../globalModel/user';
+import {MessagerService} from 'ng-easyui/components/messager/messager.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-log',
@@ -33,7 +34,9 @@ export class LogComponent implements OnInit, AfterViewInit {
   deleteDlgBtnState = false; // true表示禁用,false表示可用
 
   constructor(
-    private logService: LogService) {
+    private service: LogService,
+    private messagerService: MessagerService,
+    private router: Router) {
   }
 
   /**
@@ -46,14 +49,29 @@ export class LogComponent implements OnInit, AfterViewInit {
    * 分页查询
    */
   page() {
-    this.logService.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
-      if (responseJson.code === 0) {
-        this.msg = '查询成功';
-        this.data = responseJson.data.list;
-        this.total = responseJson.data.total;
-        this.loading = false;
-      } else {
-        this.msg = '查询失败';
+    this.service.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
+      switch (responseJson.code) {
+        case 0:
+          // 查询成功
+          this.data = responseJson.data.list;
+          this.total = responseJson.data.total;
+          this.loading = false;
+          break;
+        case 1000:
+          // jwt校验失败
+          this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+            result: (r) => {
+              if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+            }
+          });
+          break;
+        case -1:
+          // 系统错误
+          this.data = [];
+          this.total = 0;
+          this.loading = true;
+          this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
+          break;
       }
     });
   }
@@ -118,18 +136,30 @@ export class LogComponent implements OnInit, AfterViewInit {
       }
     }
     if (id) {
-      this.logService.delete(id).subscribe(responseObj => {
-        if (responseObj.code === 0) {
-          this.deleteDlgBtnState = true;
-          this.msg = '删除成功！';
-          setTimeout(() => {
-            // 刷新数据
-            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-            // 关闭删除弹框
-            this.deleteDlgState = true;
-          }, 2000);
-        } else {
-          this.msg = '删除失败！';
+      this.service.delete(id).subscribe(responseJson => {
+        switch (responseJson.code) {
+          case 0:
+            this.deleteDlgBtnState = true;
+            this.msg = '删除成功！';
+            setTimeout(() => {
+              // 刷新数据
+              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
+              // 关闭删除弹框
+              this.deleteDlgState = true;
+            }, 2000);
+            break;
+          case 1000:
+            // jwt校验失败
+            this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+              result: (r) => {
+                if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+              }
+            });
+            break;
+          case -1:
+            // 系统错误
+            this.msg = '删除失败！';
+            break;
         }
       });
     }

@@ -3,6 +3,7 @@ import {UserService} from '../../../service/user.service';
 import {User} from '../../../globalModel/user';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
+import {Router} from '@angular/router';
 
 import {province, hobby} from '../../../globalData/UserData';
 import {Md5} from 'ts-md5';
@@ -84,9 +85,10 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   levelThree: any = null; // 二级数据
 
   constructor(
-    private userService: UserService,
+    private service: UserService,
     private formBuilder: FormBuilder,
-    private messagerService: MessagerService) {
+    private messagerService: MessagerService,
+    private router: Router) {
     this.createItemForForm(this.editRow); // 创建表单对象
   }
 
@@ -100,14 +102,29 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    * 分页查询
    */
   page() {
-    this.userService.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
-      if (responseJson.code === 0) {
-        this.msg = '查询成功';
-        this.data = responseJson.data.list;
-        this.total = responseJson.data.total;
-        this.loading = false;
-      } else {
-        this.msg = '查询失败';
+    this.service.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
+      switch (responseJson.code) {
+        case 0:
+          // 查询成功
+          this.data = responseJson.data.list;
+          this.total = responseJson.data.total;
+          this.loading = false;
+          break;
+        case 1000:
+          // jwt校验失败
+          this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+            result: (r) => {
+              if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+            }
+          });
+          break;
+        case -1:
+          // 系统错误
+          this.data = [];
+          this.total = 0;
+          this.loading = true;
+          this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
+          break;
       }
     });
   }
@@ -181,18 +198,27 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       }
     }
     if (id) {
-      this.userService.delete(id).subscribe(responseObj => {
-        if (responseObj.code === 0) {
-          this.deleteDlgBtnState = true;
-          this.msg = '删除成功！';
-          setTimeout(() => {
-            // 刷新数据
-            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-            // 关闭删除弹框
-            this.deleteDlgState = true;
-          }, 2000);
-        } else {
-          this.msg = '删除失败！';
+      this.service.delete(id).subscribe(responseJson => {
+        switch (responseJson.code) {
+          case 0:
+            this.deleteDlgBtnState = true;
+            this.msg = '删除成功！';
+            setTimeout(() => {
+              // 刷新数据
+              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
+              // 关闭删除弹框
+              this.deleteDlgState = true;
+            }, 2000);
+            break;
+          case 1000:
+            // jwt校验失败
+            this.msg = '登录超时！';
+            setTimeout(() => { this.router.navigateByUrl('/login'); }, 500);
+            break;
+          case -1:
+            // 系统错误
+            this.msg = '删除失败！';
+            break;
         }
       });
     }
@@ -360,26 +386,35 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       }
       // 将hobby数组转化成字符串
       itemForForm.value.hobby = itemForForm.value.hobby.join(',');
-      this.userService.modify(itemForForm.value).subscribe(responseJson => {
-        if (responseJson.code === 0) {
-          this.formSubmitState = true; // 禁用表单提交
-          this.formValidStyle = true; // 设置全局消息样式为成功
-          this.msg = '操作成功!';
-          setTimeout(() => {
-            /**
-             * 1)重新分页
-             * 2)使用itemForForm.value填充editRow
-             */
-            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-            this.editDlgState = true; // 关闭窗口
-          }, 1000);
-        } else {
-          // 操作失败
-          // 将hobby字符串转化成数组
-          this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(',');
-          this.formSubmitState = false; // 激活表单提交
-          this.formValidStyle = false; // 设置全局消息样式为失败
-          this.msg = responseJson.msg;
+      this.service.modify(itemForForm.value).subscribe(responseJson => {
+        switch (responseJson.code) {
+          case 0:
+            // 查询成功
+            this.formSubmitState = true; // 禁用表单提交
+            this.formValidStyle = true; // 设置全局消息样式为成功
+            this.msg = '操作成功!';
+            setTimeout(() => {
+              /**
+               * 1)重新分页
+               * 2)使用itemForForm.value填充editRow
+               */
+              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
+              this.editDlgState = true; // 关闭窗口
+            }, 1000);
+            break;
+          case 1000:
+            // jwt校验失败
+            this.msg = '登录超时！';
+            setTimeout(() => { this.router.navigateByUrl('/login'); }, 500);
+            break;
+          case -1:
+            // 系统错误
+            // 将hobby字符串转化成数组
+            this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(',');
+            this.formSubmitState = false; // 激活表单提交
+            this.formValidStyle = false; // 设置全局消息样式为失败
+            this.msg = responseJson.msg;
+            break;
         }
       });
     } else {
@@ -476,7 +511,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
         this.progressValue += Math.floor(Math.random() * 20);
         this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
       });
-      this.userService.export(this.itemForPage).subscribe((responseBlob) => {
+      this.service.export(this.itemForPage).subscribe((responseBlob) => {
         // 关闭进度条
         progressSubscribe.unsubscribe();
         this.progressValue = 10;
@@ -518,32 +553,33 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
       });
       const formData: FormData = new FormData();
       formData.append('file', file);
-      this.userService.import(formData).subscribe((responseBlob) => {
+      this.service.import(formData).subscribe((responseJson) => {
         // 关闭进度条
         progressSubscribe.unsubscribe();
         this.progressValue = 10;
         this.progressDlgState = true;
-        if (responseBlob.code === 0) {
-          this.messagerService.alert({
-            title: 'Excel导入',
-            icon: 'info',
-            msg: '成功'
-          });
-          this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-        } else {
-          this.messagerService.alert({
-            title: 'Excel导入',
-            icon: 'warning',
-            msg: '失败'
-          });
+        switch (responseJson.code) {
+          case 0:
+            // 导入成功
+            this.messagerService.alert({title: '温馨提示', msg: '导入成功!', ok: '确定'});
+            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
+            break;
+          case 1000:
+            // jwt校验失败
+            this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+              result: (r) => {
+                if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+              }
+            });
+            break;
+          case -1:
+            // 系统错误
+            this.messagerService.alert({title: '温馨提示', msg: '导出错误!', ok: '确定'});
+            break;
         }
       });
     } else {
-      this.messagerService.alert({
-        title: '文件出错',
-        icon: 'warning',
-        msg: '请检查文件格式和文件大小是否合法!'
-      });
+      this.messagerService.alert({title: '温馨提示', msg: '请检查文件格式和文件大小是否合法!!', ok: '确定'});
     }
   }
 
