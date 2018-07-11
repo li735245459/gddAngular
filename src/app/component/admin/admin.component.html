@@ -1,10 +1,11 @@
+<!--后台模板组件-->
 <div class="f-column" style="height:100vh;">
   <!-------------------------header------------------------->
   <div class="main-header f-row" style="height:8vh;min-height:40px;">
     <div class="f-row f-full">
       <div class="main-title f-animate f-row f-content-center" [style.width.px]="width">
         <img class="app-logo" src="../../../assets/img/logo2.png">
-        <span *ngIf="!collapsed"><strong>{{title}}</strong></span>
+        <span *ngIf="!collapsed"><strong>{{adminTitle}}</strong></span>
       </div>
       <div class="main-bar f-full">
         <span class="main-toggle fa fa-bars" (click)="toggle()"></span>
@@ -38,7 +39,7 @@
   </div>
 </div>
 
-<!--消息提示弹框-->
+<!--全局消息提示弹框-->
 <eui-messager [showHeader]="false" borderType="none">
   <ng-template euiBodyTemplate let-messager>
     <div class="m-content">

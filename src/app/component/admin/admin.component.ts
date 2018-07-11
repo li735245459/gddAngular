@@ -12,7 +12,9 @@ import {AdminService} from '../../service/admin.service';
   providers: [AdminService]
 })
 export class AdminComponent implements OnInit {
-  title = 'GDD宠物馆'; // 后台首页标题
+  id: string = null;
+  msg: string = null; // 全局提示消息
+  adminTitle = 'GDD宠物馆'; // 后台首页标题
   width = 250; // 菜单栏宽度
   collapsed = false; // 默认菜单栏展开
   selectedMenu = null; // 当前选中的菜单栏
@@ -22,15 +24,24 @@ export class AdminComponent implements OnInit {
   constructor(
     private router: Router,
     private adminService: AdminService) {
+    // 订阅消息,组件交互测试
+    adminService.adminTitleSubscription.subscribe(
+      adminTitle => {
+        this.adminTitle = adminTitle;
+      });
+    adminService.msgSubscription.subscribe(msg => {
+        this.id = msg.id;
+        this.msg = msg.id;
+    });
   }
 
   ngOnInit() {
-    this.user.name = sessionStorage.getItem('name');
-    this.user.cover = sessionStorage.getItem('cover');
+    this.user.name = sessionStorage.getItem('name'); // 用户名
+    this.user.cover = sessionStorage.getItem('cover'); // 用户头像
   }
 
 
-  // 隐藏左侧菜单栏
+  // 隐藏、展开左侧菜单栏
   toggle() {
     this.collapsed = !this.collapsed;
     this.width = this.collapsed ? 50 : 250;

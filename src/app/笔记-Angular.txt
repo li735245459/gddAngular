@@ -208,6 +208,5 @@ Observable可观察对象用于在发布者和订阅者之间传递消息
         tap(n => console.log(n)),
         retry(2)
       );
-3)Subject是一类特殊的Observable可观察对象,它可以向多个Observer观察者多路推送消息
 
 

@@ -1,24 +1,31 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs';
 
+/**
+ * 父组件和它的子组件共享同一个服务，利用该服务在家庭内部实现双向通讯
+ * 该服务实例的作用域被限制在父组件和其子组件内。这个组件子树之外的组件将无法访问该服务或者与它们通讯
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  // 声明变量 订阅Observer，下面这个是一个可以实现组件之间通讯必不可少的
-  private missionAnnouncedSource = new Subject<string>();
-  private missionConfirmedSource = new Subject<string>();
-  missionAnnounced$ = this.missionAnnouncedSource.asObservable();
-  missionConfirmed$ = this.missionConfirmedSource.asObservable();
-
-  // 当组件或者服务中的数据有更改的时候调用这个方法即可将更改的数据推送到其他组件
-  announceMission(mission: string) {
-    this.missionAnnouncedSource.next(mission);
+  // Subject是一类特殊的Observable可观察对象,它可以向多个Observer观察者多路推送消息
+  private adminTitleSubject = new Subject<string>();
+  private msgSubject = new Subject<Msg>();
+  // 获取订阅者
+  public adminTitleSubscription = this.adminTitleSubject.asObservable();
+  public msgSubscription = this.msgSubject.asObservable();
+  // 推送消息
+  public modifyAdminTitle(adminTitle: string) {
+    this.adminTitleSubject.next(adminTitle);
   }
-
-  confirmMission(astronaut: string) {
-    this.missionConfirmedSource.next(astronaut);
+  public modifyMsg(msg: Msg) {
+    this.msgSubject.next(msg);
   }
-
-  constructor() { }
 }
+
+export interface Msg {
+  id: string;
+  msg: string;
+}
+
