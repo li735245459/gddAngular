@@ -264,11 +264,11 @@
   </eui-panel-footer>
 </eui-dialog>
 
-<!-- 上传文件弹框 -->
+<!-- 上传文件弹框  -->
 <eui-dialog [title]="upExcelDlgTitle" [closed]="upExcelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'400px'}">
-  <eui-filebutton style="width:100%;" [toggle]="true" [selected]="true" [autoUpload]="false"
-                  (select)="onFileSelect($event)">选择文件(xls或xlsx)
+  <eui-filebutton style="width:100%;" btnCls="c2" [autoUpload]="false" [multiple]="false" (select)="onFileSelect($event)">
+    选择文件(xls或xlsx)
   </eui-filebutton>
 </eui-dialog>
 
