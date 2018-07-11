@@ -1,13 +1,15 @@
-import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {UserService} from '../../../service/user.service';
-import {User} from '../../../globalModel/user';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 import {Router} from '@angular/router';
-
-import {province, hobby} from '../../../globalData/UserData';
 import {Md5} from 'ts-md5';
 import {interval} from 'rxjs';
+import {Subscription} from 'rxjs';
+
+import {province, hobby} from '../../../globalData/UserData';
+import {User} from '../../../globalModel/user';
+import {UserService} from '../../../service/user.service';
+import {AdminService} from '../../../service/admin.service';
 
 @Component({
   selector: 'app-user-info',
@@ -16,7 +18,7 @@ import {interval} from 'rxjs';
   encapsulation: ViewEncapsulation.None
 })
 
-export class UserInfoComponent implements OnInit, AfterViewInit {
+export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   msg: string = null; // 全局提示消息
   // 表格
   title = '用户信息';
@@ -82,12 +84,29 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   levelTwo: any = null; // 二级数据
   levelThree: any = null; // 二级数据
 
+  // 后台标题,组件交互测试
+  adminTitle = 'GDD宠物馆!';
+  adminTitleSubscription: Subscription = null;
+  msgSubscription: Subscription = null;
+
   constructor(
     private service: UserService,
     private formBuilder: FormBuilder,
     private messagerService: MessagerService,
-    private router: Router) {
+    private router: Router,
+    private adminService: AdminService) {
     this.createItemForForm(this.editRow); // 创建表单对象
+    // 订阅消息,组件交互测试
+    adminService.adminTitleSubscription.subscribe(
+      adminTitle => {
+        this.adminTitle = adminTitle;
+      });
+  }
+
+  ngOnDestroy() {
+    // 组件销毁时取消订阅,防止内存泄漏
+    if (this.msgSubscription) { this.msgSubscription.unsubscribe(); }
+    if (this.adminTitleSubscription) { this.adminTitleSubscription.unsubscribe(); }
   }
 
   /**
@@ -147,6 +166,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
    */
   onSearch(): void {
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
+    // 推送消息, 组件交互测试
+    this.adminService.modifyAdminTitle(this.adminTitle);
+    this.adminService.modifyMsg({id: '1', msg: 'msg'});
   }
 
   /**
