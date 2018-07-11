@@ -529,6 +529,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    * 选择文件上传
    */
   onFileSelect(event): void {
+    console.log(document.getElementById('upExcelFile'));
     switch (event.length) {
       case 0:
         this.messagerService.alert({title: '温馨提示', msg: '请选择文件!', ok: '确定'});
@@ -576,6 +577,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         break;
     }
+    document.getElementById('upExcelFile')[0].value = null;
   }
 
   /**
