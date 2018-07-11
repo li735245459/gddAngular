@@ -168,9 +168,10 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
       ngAfterViewInit         组件相应的视图初始化之后调用
       ngAfterViewChecked      组件每次检查视图时调用
   7) 组件之间的交互
-    通过输入型绑定把数据从父组件传到子组件
+    通过@Input、@Output装饰器进行父、子组件间的通信
     父组件监听子组件的事件
-    父组件调用@ViewChild()来创建子组件对象并读取子组件的属性值或调用子组件的方法
+    父组件通过调用@ViewChild()来获取子组件的数据
+    父组件和子组件通过服务来通讯
   8) 动态组件
   9) 动画
     Angular 的动画系统赋予了制作各种动画效果的能力，以构建出与原生 CSS 动画性能相同的动画
@@ -207,6 +208,6 @@ Observable可观察对象用于在发布者和订阅者之间传递消息
         tap(n => console.log(n)),
         retry(2)
       );
-
+3)Subject是一类特殊的Observable可观察对象,它可以向多个Observer观察者多路推送消息
 
 

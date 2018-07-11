@@ -2,12 +2,14 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Router} from '@angular/router';
 import {User} from '../../globalModel/user';
 import {menus} from '../../globalData/MenuData';
+import {AdminService} from '../../service/admin.service';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./admin.component.css']
+  styleUrls: ['./admin.component.css'],
+  providers: [AdminService]
 })
 export class AdminComponent implements OnInit {
   title = 'GDD宠物馆'; // 后台首页标题
@@ -17,13 +19,16 @@ export class AdminComponent implements OnInit {
   menus = menus; // 菜单栏数据
   user: User = new User(); // 用户数据对象
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private adminService: AdminService) {
   }
 
   ngOnInit() {
     this.user.name = sessionStorage.getItem('name');
     this.user.cover = sessionStorage.getItem('cover');
   }
+
 
   // 隐藏左侧菜单栏
   toggle() {
