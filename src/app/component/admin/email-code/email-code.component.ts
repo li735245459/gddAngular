@@ -39,8 +39,7 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
               private router: Router) {
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});

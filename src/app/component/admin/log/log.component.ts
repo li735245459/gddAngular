@@ -40,11 +40,7 @@ export class LogComponent implements OnInit, AfterViewInit {
     private router: Router) {
   }
 
-  /**
-   * 在第一轮 ngOnChanges 完成之后调用,此时所有输入属性都已经有了正确的初始绑定值
-   */
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   /**
    * 分页查询
