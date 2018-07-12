@@ -1,27 +1,21 @@
-import {AfterViewInit, Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {MessagerService} from 'ng-easyui/components/messager/messager.service';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Md5} from 'ts-md5';
-import {interval, Subscription} from 'rxjs';
-import {FileButtonComponent} from 'ng-easyui/components/filebutton/filebutton.component';
-
-import {province, hobby} from '../../../globalData/UserData';
-import {User} from '../../../globalModel/user';
-import {UserService} from '../../../service/user.service';
-import {AdminService} from '../../../service/admin.service';
+import {MessagerService} from 'ng-easyui/components/messager/messager.service';
+import {CoverType} from '../../../globalModel/coverType';
+import {CoverService} from '../../../service/cover.service';
 
 @Component({
-  selector: 'app-user-info',
-  templateUrl: './user-info.component.html',
-  styleUrls: ['./user-info.component.css'],
+  selector: 'app-cover-type',
+  templateUrl: './cover-type.component.html',
+  styleUrls: ['./cover-type.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-
-export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CoverTypeComponent implements OnInit, AfterViewInit {
   msg: string = null; // 全局提示消息
   // 表格
-  title = '用户信息';
+  title = '封面类型信息';
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
   total: Number = 0; // 所有数据条数
@@ -34,10 +28,10 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'refresh', 'sep', 'links', 'info']
   };
   // 分页参数对象,双向数据绑定
-  itemForPage: User = {sex: '0'};
+  itemForPage: CoverType = {};
   // 添加、编辑弹框
   editDlgTitle: String = null;
-  editRow: User = null; // 当前需要编辑的数据
+  editRow: CoverType = null; // 当前需要编辑的数据
   editDlgState = true; // true关闭弹框,false打开弹框
   // 删除弹框
   selectedRow = []; // 当前选中的数据
@@ -45,14 +39,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteState = false; // true删除所有数据,false删除当前选中的数据
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
-  // excel上传文件弹框
-  upExcelDlgState = true; // true关闭弹框,false打开弹框
-  upExcelDlgTitle: String = null;
-  @ViewChild(FileButtonComponent)
-  private fileButtonComponent: FileButtonComponent;
-  // 进度条弹框
-  progressDlgState = true; // true关闭弹框,false打开弹框
-  progressValue = 10;
   // 表单
   itemForForm: FormGroup = null; // 表单对象
   formSubmitState = false; // true禁止表单提交,false启用表单提交
@@ -66,54 +52,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     address: {'title': '详细地址', 'prompt': '(10~20位字符)'},
     introduce: {'title': '自我介绍', 'prompt': ''}
   };
-  /*
-    hobby类型为checkbox:
-      初始化数据为本地数组对象hobby：[{'id':'1','name':'篮球'},{'id':'2','name':'足球'}]
-      存储数据库的值为id字符串：'1,2'
-    添加数据时,创建表单对象时的hobby属性值为：[]
-    编辑数据时,创建表单对象时的hobby属性值为：'1,2'.split(',') => [1,2]
-    当用户点击复选框时触发change回调函数对表单对象hobby属性值以数组的形式进行动态添加或删除
-    当用户提交表单时需将表单对象hobby属性值转化成字符串：[1,2].join(',') => '1,2'
-    当用户提交表单后服务器执行失败需将表单对象hobby属性值转化成数组：'1,2'.split(',') => [1,2]
-   */
-  hobby = hobby;
-  /*
-    省、市、区级联下拉列表:
-      初始化数据为本地数组对象province
-    添加、编辑时,创建表单对象时的province属性值为0。级联操作时没有触发的下拉列表需动态设置其相应表单对象属性值为-1
-   */
-  levelOne: any = null; // 一级数据
-  levelTwo: any = null; // 二级数据
-  levelThree: any = null; // 二级数据
-
-  // 后台标题,组件交互测试
-  adminTitle = 'GDD宠物馆!';
-  adminTitleSubscription: Subscription = null;
-  msgSubscription: Subscription = null;
 
   constructor(
-    private service: UserService,
+    private service: CoverService,
     private formBuilder: FormBuilder,
     private messagerService: MessagerService,
-    private router: Router,
-    private adminService: AdminService) {
+    private router: Router) {
     // 创建表单对象
     this.createItemForForm(this.editRow);
-    // 订阅消息,组件交互测试
-    adminService.adminTitleSubscription.subscribe(
-      adminTitle => {
-        this.adminTitle = adminTitle;
-      });
-  }
-
-  ngOnDestroy() {
-    // 组件销毁时取消订阅,防止内存泄漏
-    if (this.msgSubscription) {
-      this.msgSubscription.unsubscribe();
-    }
-    if (this.adminTitleSubscription) {
-      this.adminTitleSubscription.unsubscribe();
-    }
   }
 
   /**
@@ -126,7 +72,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    * 分页查询
    */
   page() {
-    this.service.page(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
+    this.service.pageByCoverType(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
       switch (responseJson.code) {
         case 0:
           // 成功
@@ -179,9 +125,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   onSearch(): void {
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
-    // 推送消息, 组件交互测试
-    this.adminService.modifyAdminTitle(this.adminTitle);
-    this.adminService.modifyMsg({id: '1', msg: 'msg'});
   }
 
   /**
@@ -462,146 +405,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * 一级下拉列表change事件
-   *  值为'0',置空所有级联下拉列表数据以及表单相关属性对象
-   *  值不为'0',设置二级联下拉列表数据以及表单相关属性对象
-   * @param selectedOption
-   */
-  onChangeLevelOne(selectedOption): void {
-    this.itemForForm.patchValue({'province': selectedOption.value}); // 设置表单对象province属性值为当前选中值
-    if (selectedOption.value !== '0' && this.levelOne[selectedOption.selectedIndex - 1].child) {
-      this.levelTwo = this.levelOne[selectedOption.selectedIndex - 1].child; // 显示二级下拉列表
-      this.itemForForm.patchValue({'city': '0'}); // 设置表单对象city属性值为'0'
-    } else {
-      this.levelTwo = null; // 屏蔽二级下拉列表
-      this.itemForForm.patchValue({'city': '-1'}); // 设置表单对象city属性值为'-1'
-    }
-    this.levelThree = null; // 屏蔽三级下拉列表
-    this.itemForForm.patchValue({'area': '-1'}); // 设置表单对象area属性值为'-1'
-  }
-
-  /**
-   * 二级下拉列表change事件
-   *  值为'0',置空所有级联下拉列表数据以及表单相关属性对象
-   *  值不为'0',设置三级下拉列表数据以及表单相关属性对象
-   * @param selectedOption
-   */
-  onChangeLevelTwo(selectedOption): void {
-    this.itemForForm.patchValue({'city': selectedOption.value});
-    if (selectedOption.value !== '0' && this.levelTwo[selectedOption.selectedIndex - 1].child) {
-      this.levelThree = this.levelTwo[selectedOption.selectedIndex - 1].child;
-      this.itemForForm.patchValue({'area': '0'});
-    } else {
-      this.levelThree = null;
-      this.itemForForm.patchValue({'area': '-1'});
-    }
-  }
-
-  /**
-   * 三级下拉列表change事件
-   * @param selectedOption
-   */
-  onChangeLevelThree(selectedOption): void {
-    this.itemForForm.patchValue({'area': selectedOption.value});
-  }
-
-  /**
-   * excel
-   */
-  excel(param): void {
-    if (param.includes('import')) {
-      // 导入操作---------------------------------------------------------->
-      this.upExcelDlgTitle = '导入Excel表格';
-      this.upExcelDlgState = false;
-    } else {
-      // 导出操作---------------------------------------------------------->
-      this.progressDlgState = false; // 打开进度条弹框
-      const progressSubscribe = interval(500).subscribe(() => {
-        this.progressValue += Math.floor(Math.random() * 20);
-        this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
-      });
-      this.service.export(this.itemForPage).subscribe((responseBlob) => {
-        progressSubscribe.unsubscribe(); // 关闭进度条
-        this.progressValue = 10; // 重置进度条
-        this.progressDlgState = true; // 关闭进度条弹框
-        const blob = new Blob([responseBlob], {'type': 'application/vnd.ms-excel'});
-        const fileName = '用户信息.xls';
-        if (window.navigator.msSaveOrOpenBlob) {
-          navigator.msSaveBlob(blob, fileName); // For IE浏览器
-        } else {
-          const objectUrl = URL.createObjectURL(blob); // For 其他浏览器
-          const a = document.createElement('a');
-          document.body.appendChild(a);
-          a.setAttribute('style', 'display:none');
-          a.setAttribute('href', objectUrl);
-          a.setAttribute('download', fileName);
-          a.click();
-          URL.revokeObjectURL(objectUrl);
-        }
-      });
-    }
-  }
-
-  /**
-   * 选择文件上传
-   */
-  onFileSelect(event): void {
-    switch (event.length) {
-      case 0:
-        this.messagerService.alert({title: '温馨提示', msg: '请选择文件!', ok: '确定'});
-        break;
-      case 1:
-        const file: File = event[0];
-        const fileType = file.type;
-        const fileSize = file.size;
-        if (fileSize < (1024 * 1024 * 5) &&
-          (fileType === 'application/vnd.ms-excel' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-          this.onCloseDlg(); // 关闭上传文件弹框
-          this.progressDlgState = false; // 打开进度条弹框
-          const progressSubscribe = interval(500).subscribe(() => {
-            this.progressValue += Math.floor(Math.random() * 20);
-            this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
-          });
-          const formData: FormData = new FormData();
-          formData.append('file', file);
-          this.service.import(formData).subscribe((responseJson) => {
-            progressSubscribe.unsubscribe(); // 关闭进度条
-            this.progressValue = 10; // 重置进度条
-            this.progressDlgState = true; // 关闭进度条弹框
-            switch (responseJson.code) {
-              case 0:
-                // 导入成功
-                this.messagerService.alert({title: '温馨提示', msg: '导入成功!', ok: '确定'});
-                this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-                break;
-              case 1000:
-                // jwt非法
-                this.messagerService.confirm({
-                  title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
-                  result: (r) => {
-                    if (r) {
-                      setTimeout(() => {
-                        this.router.navigateByUrl('/login');
-                      }, 500);
-                    }
-                  }
-                });
-                break;
-              case -1:
-                // 系统错误
-                this.messagerService.alert({title: '温馨提示', msg: '导入错误!', ok: '确定'});
-                break;
-            }
-          });
-        } else {
-          this.messagerService.alert({title: '温馨提示', msg: '请检查文件格式、大小是否合法!', ok: '确定'});
-        }
-        break;
-    }
-    this.fileButtonComponent.clear(); // 清空选择的文件
-  }
-
-  /**
    * 关闭弹框
    */
   onCloseDlg(): void {
@@ -620,13 +423,8 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.deleteState = false;
     this.deleteDlgState = true;
     this.deleteDlgBtnState = false;
-    this.upExcelDlgState = true;
-    this.upExcelDlgTitle = null;
     this.formSubmitState = false;
     this.formValidStyle = true;
-    this.levelOne = null;
-    this.levelTwo = null;
-    this.levelThree = null;
   }
 
   /**
@@ -644,27 +442,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   onReLoad(): void {
     this.onCleanSearch();
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
-  }
-
-  /**
-   * 样式定义
-   */
-  setRowCss(row) {
-    if (row.email === 'lisi13_java@163.com') {
-      return {background: '#b8eecf', fontSize: '14px', fontStyle: 'italic'};
-    }
-    return null;
-  }
-
-  /**
-   * 样式定义
-   */
-  setSexCellCss(row, value) {
-    if (value === '男') {
-      return {color: 'blue'};
-    } else {
-      return {color: 'red'};
-    }
   }
 
 }

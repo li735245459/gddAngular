@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {LogService} from '../../../service/log.service';
 import {Log} from '../../../globalModel/log';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
@@ -7,7 +7,8 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-log',
   templateUrl: './log.component.html',
-  styleUrls: ['./log.component.css']
+  styleUrls: ['./log.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LogComponent implements OnInit, AfterViewInit {
   msg: string = null; // 全局提示消息
@@ -24,7 +25,7 @@ export class LogComponent implements OnInit, AfterViewInit {
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
     layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'refresh', 'sep', 'links', 'info']
   };
-  // 分页查询条件对象
+  // 分页参数对象,双向数据绑定
   itemForPage: Log = {};
   // 删除弹框
   selectedRow = []; // 当前选中的数据
@@ -59,9 +60,14 @@ export class LogComponent implements OnInit, AfterViewInit {
           break;
         case 1000:
           // jwt非法
-          this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+          this.messagerService.confirm({
+            title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
             result: (r) => {
-              if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+              if (r) {
+                setTimeout(() => {
+                  this.router.navigateByUrl('/login');
+                }, 500);
+              }
             }
           });
           break;
@@ -144,9 +150,14 @@ export class LogComponent implements OnInit, AfterViewInit {
             break;
           case 1000:
             // jwt非法
-            this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+            this.messagerService.confirm({
+              title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
               result: (r) => {
-                if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+                if (r) {
+                  setTimeout(() => {
+                    this.router.navigateByUrl('/login');
+                  }, 500);
+                }
               }
             });
             break;

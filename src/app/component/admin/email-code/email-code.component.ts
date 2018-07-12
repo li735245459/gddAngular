@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {EmailCode} from '../../../globalModel/emailCode';
 import {EmailCodeService} from '../../../service/email-code.service';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
@@ -7,7 +7,8 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-email-code',
   templateUrl: './email-code.component.html',
-  styleUrls: ['./email-code.component.css']
+  styleUrls: ['./email-code.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EmailCodeComponent implements OnInit, AfterViewInit {
   msg: string = null; // 全局提示消息
@@ -24,7 +25,7 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
     layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'refresh', 'sep', 'links', 'info']
   };
-  // 分页查询条件对象
+  // 分页参数对象,双向数据绑定
   itemForPage: EmailCode = {};
   // 删除弹框
   selectedRow = []; // 当前选中的数据

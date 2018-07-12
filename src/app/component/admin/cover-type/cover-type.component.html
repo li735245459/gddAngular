@@ -1,0 +1,206 @@
+<!--表格操作栏-->
+<eui-panel [collapsible]="true" [collapsed]="true"
+           [panelStyle]=""
+           [headerStyle]="{padding: '2px 0px'}"
+           [bodyStyle]="{padding:'10px 0px'}"
+           [footerStyle]="{padding:'5px 0px', marginBottom:'1px', marginTop:'1px'}">
+  <eui-panel-header>
+    <div class="f-row text-center">
+      <div class="f-full"><h3>{{title}}</h3></div>
+    </div>
+  </eui-panel-header>
+  <eui-panel-footer>
+    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onOpenEditDlg('add')">添加</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('delete')">删除</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
+    <div style="display: inline-block;float: right;">
+      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空条件</eui-linkbutton>
+    </div>
+  </eui-panel-footer>
+</eui-panel>
+
+<!--表格-->
+<eui-datagrid [pagination]="true" [data]="data" [total]="total"
+              [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
+              (pageChange)="onPageChange($event)"
+              idField="id" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
+              [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
+  <eui-grid-column-group frozen="true" align="left" width="710">
+    <eui-grid-header-row>
+      <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="80">
+        <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
+      </eui-grid-column>
+      <eui-grid-column field="name" title="姓名" frozen="true" width="80"></eui-grid-column>
+      <eui-grid-column field="sex" title="性别" align="center" frozen="true" width="40">
+        <ng-template euiCellTemplate let-row>
+          <div *ngIf="row.sex=='男'">男</div>
+          <div *ngIf="row.sex=='女'">女</div>
+        </ng-template>
+      </eui-grid-column>
+      <eui-grid-column field="phone" title="手机号码" align="center" frozen="true" width="150"></eui-grid-column>
+      <eui-grid-column field="email" title="邮箱" frozen="true" width="180"></eui-grid-column>
+      <eui-grid-column field="hobby" title="爱好" frozen="true" width="180"></eui-grid-column>
+    </eui-grid-header-row>
+  </eui-grid-column-group>
+  <eui-grid-column-group>
+    <eui-grid-header-row>
+      <eui-grid-column field="province" title="省" frozen="true" width="80"></eui-grid-column>
+      <eui-grid-column field="city" title="市" frozen="true" width="150"></eui-grid-column>
+      <eui-grid-column field="area" title="区/县" frozen="true" width="180">
+        <ng-template euiCellTemplate let-row>
+          <div *ngIf="row.area=='-1'"></div>
+          <div *ngIf="row.area!='-1'">{{row.area}}</div>
+        </ng-template>
+      </eui-grid-column>
+      <eui-grid-column field="address" title="地址" width="400"></eui-grid-column>
+    </eui-grid-header-row>
+  </eui-grid-column-group>
+  <eui-grid-column-group frozen="true" align="right" width="320">
+    <eui-grid-header-row>
+      <eui-grid-column field="loginTime" title="登陆时间" align="center" width="160"></eui-grid-column>
+      <eui-grid-column field="createTime" title="注册时间" align="center" width="160"></eui-grid-column>
+    </eui-grid-header-row>
+  </eui-grid-column-group>
+</eui-datagrid>
+
+<!--添加、编辑弹框-->
+<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+            [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
+            [bodyStyle]="{padding:'5px 2px'}"
+            [footerStyle]="{padding: '10px 0px'}">
+  <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
+  <div class="container user">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
+      <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
+        <!--全局消息-->
+        <div class="form-group">
+          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+        </div>
+        <!--姓名-->
+        <div class="form-group user-field">
+          <i class="fa fa-user fa-lg"></i>
+          <input type="text" class="form-control" formControlName="name"
+                 placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
+        </div>
+        <!--手机号码-->
+        <div class="form-group user-field">
+          <i class="fa fa-phone fa-lg"></i>
+          <input type="text" class="form-control" formControlName="phone"
+                 placeholder="{{placeholder.phone.title}}{{placeholder.phone.prompt}}">
+        </div>
+        <!--邮箱-->
+        <div class="form-group user-field">
+          <i class="fa fa-envelope-o fa-lg"></i>
+          <input type="text" class="form-control" formControlName="email"
+                 placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">
+        </div>
+        <!--密码-->
+        <div class="form-group row" *ngIf="editRow==null">
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="password"
+                     placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-key fa-lg"></i>
+              <input type="password" class="form-control" formControlName="rePassword"
+                     placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">
+            </div>
+          </div>
+        </div>
+        <!--性别-->
+        <div class="form-group text-left">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">性别:</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="sex" value="男">男
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="sex" value="女">女
+            </label>
+          </div>
+        </div>
+        <!--爱好-->
+        <div class="form-group text-left" *ngIf="hobby">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">爱好:</label>
+          </div>
+          <div class="form-check form-check-inline" *ngFor="let item of hobby;let i = index;">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" formControlName="hobby{{i+1}}" value="{{item.name}}"
+                     (change)="onChangeHobby($event.target)">{{item.name}}
+            </label>
+          </div>
+        </div>
+        <!--地址-->
+        <div class="form-group row">
+          <div class="col-2" *ngIf="levelOne">
+            <select class="form-control" formControlName="province" (change)="onChangeLevelOne($event.target)">
+              <option value="0">请选择省</option>
+              <option value="{{item.name}}" *ngFor="let item of levelOne;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-2" *ngIf="levelTwo">
+            <select class="form-control" formControlName="city" (change)="onChangeLevelTwo($event.target)">
+              <option value="0">请选择市</option>
+              <option value="{{item.name}}" *ngFor="let item of levelTwo;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-2" *ngIf="levelThree">
+            <select class="form-control" formControlName="area" (change)="onChangeLevelThree($event.target)">
+              <option value="0">请选择区</option>
+              <option value="{{item.name}}" *ngFor="let item of levelThree;">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <div class="user-field">
+              <i class="fa fa-home fa-lg"></i>
+              <input type="text" class="form-control" formControlName="address"
+                     placeholder="{{placeholder.address.title}}{{placeholder.address.prompt}}">
+            </div>
+          </div>
+        </div>
+        <!--自我介绍-->
+        <div class="form-group">
+        <textarea class="form-control" rows="3" formControlName="introduce"
+                  placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!--提交按钮-->
+  <eui-panel-footer>
+    <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
+            [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">保存
+    </button>&nbsp;&nbsp;
+    <button type="button" class="btn" (click)="onEditCancel()">取消</button>
+    <!--<div>{{itemForForm.controls['hobby'].value==''}}</div>-->
+    <!--<div>{{itemForForm.invalid}}</div>-->
+  </eui-panel-footer>
+</eui-dialog>
+
+<!--删除提示弹框-->
+<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
+            panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
+  <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
+  <div>{{msg}}</div>
+  <eui-panel-footer>
+    <eui-button-group style="width:100%;height:50px">
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteSure()">确定
+      </eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteCancel()">取消
+      </eui-linkbutton>
+    </eui-button-group>
+  </eui-panel-footer>
+</eui-dialog>

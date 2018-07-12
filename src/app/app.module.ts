@@ -24,6 +24,8 @@ import {CoverComponent} from './component/admin/cover/cover.component';
 import {UserInfoComponent} from './component/admin/user-info/user-info.component';
 import {LogComponent} from './component/admin/log/log.component';
 import { EmailCodeComponent } from './component/admin/email-code/email-code.component';
+import { CoverTypeComponent } from './component/admin/cover-type/cover-type.component';
+import { GoodsTypeComponent } from './component/admin/goods-type/goods-type.component';
 
 /**
  * 全局路由配置
@@ -40,8 +42,10 @@ const appRoutes: Routes = [
     path: 'admin', component: AdminComponent, children: [
       {path: '', component: UserInfoComponent},
       {path: 'goods', component: GoodsComponent},
+      {path: 'goodsType', component: GoodsTypeComponent},
       {path: 'user', component: UserInfoComponent},
       {path: 'cover', component: CoverComponent},
+      {path: 'coverType', component: CoverTypeComponent},
       {path: 'log', component: LogComponent},
       {path: 'emailCode', component: EmailCodeComponent},
     ], canActivate: [GlobalRoutingGuard]
@@ -67,6 +71,8 @@ const appRoutes: Routes = [
     UserInfoComponent,
     AdminComponent,
     EmailCodeComponent,
+    CoverTypeComponent,
+    GoodsTypeComponent,
     HomeComponent,
     ForgetPasswordComponent,
     ModifyPasswordComponent,
@@ -93,7 +99,9 @@ const appRoutes: Routes = [
     // easyui模块
     EasyUIModule
   ],
-  providers: [httpInterceptor],
+  providers: [
+    httpInterceptor, // http拦截器
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -17,7 +17,7 @@ export const menus = [
     iconCls: 'fa fa-file-picture-o',
     children: [{
       text: '图片分类',
-      link: 'cover',
+      link: 'coverType',
     }, {
       text: '图片信息',
       link: 'cover',
@@ -27,10 +27,10 @@ export const menus = [
     iconCls: 'fa fa-shopping-bag',
     children: [{
       text: '商品分类',
-      link: 'cover',
+      link: 'goodsType',
     }, {
       text: '商品信息',
-      link: 'cover',
+      link: 'goods',
     }]
   }, {
     text: '销售管理',
