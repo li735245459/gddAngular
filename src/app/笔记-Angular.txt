@@ -52,7 +52,7 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
   npm install jquery --save
   npm install bootstrap --save
   npm install font-awesome --save
-  npm install ng-easyui --save
+  npm install ng-easyui --save | npm update ng-easyui
   npm install @ng-bootstrap/ng-bootstrap --save
     编辑angular.json文件
     "styles": [

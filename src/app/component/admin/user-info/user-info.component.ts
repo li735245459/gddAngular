@@ -1,10 +1,11 @@
-import {AfterViewInit, Component, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 import {Router} from '@angular/router';
 import {Md5} from 'ts-md5';
 import {interval} from 'rxjs';
 import {Subscription} from 'rxjs';
+import {FileButtonComponent} from 'ng-easyui/components/filebutton/filebutton.component';
 
 import {province, hobby} from '../../../globalData/UserData';
 import {User} from '../../../globalModel/user';
@@ -33,8 +34,8 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
     layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'refresh', 'sep', 'links', 'info']
   };
-  // 分页参数对象
-  itemForPage: User = { sex: '0' };
+  // 分页参数对象,双向数据绑定
+  itemForPage: User = {sex: '0'};
   // 添加、编辑弹框
   editDlgTitle: String = null;
   editRow: User = null; // 当前需要编辑的数据
@@ -48,6 +49,8 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   // excel上传文件弹框
   upExcelDlgState = true; // true关闭弹框,false打开弹框
   upExcelDlgTitle: String = null;
+  @ViewChild(FileButtonComponent)
+  private fileButtonComponent: FileButtonComponent;
   // 进度条弹框
   progressDlgState = true; // true关闭弹框,false打开弹框
   progressValue = 10;
@@ -105,14 +108,19 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     // 组件销毁时取消订阅,防止内存泄漏
-    if (this.msgSubscription) { this.msgSubscription.unsubscribe(); }
-    if (this.adminTitleSubscription) { this.adminTitleSubscription.unsubscribe(); }
+    if (this.msgSubscription) {
+      this.msgSubscription.unsubscribe();
+    }
+    if (this.adminTitleSubscription) {
+      this.adminTitleSubscription.unsubscribe();
+    }
   }
 
   /**
    * 在第一轮 ngOnChanges 完成之后调用,此时所有输入属性都已经有了正确的初始绑定值
    */
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   /**
    * 分页查询
@@ -128,9 +136,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
         case 1000:
           // jwt非法
-          this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+          this.messagerService.confirm({
+            title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
             result: (r) => {
-              if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+              if (r) {
+                setTimeout(() => {
+                  this.router.navigateByUrl('/login');
+                }, 500);
+              }
             }
           });
           break;
@@ -226,7 +239,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           case 1000:
             // jwt非法
             this.msg = '登录超时！';
-            setTimeout(() => { this.router.navigateByUrl('/login'); }, 500);
+            setTimeout(() => {
+              this.router.navigateByUrl('/login');
+            }, 500);
             break;
           case -1:
             // 系统错误
@@ -406,7 +421,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           case 1000:
             // jwt非法
             this.msg = '登录超时！';
-            setTimeout(() => { this.router.navigateByUrl('/login'); }, 500);
+            setTimeout(() => {
+              this.router.navigateByUrl('/login');
+            }, 500);
             break;
           case -1:
             // 系统错误
@@ -529,7 +546,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    * 选择文件上传
    */
   onFileSelect(event): void {
-    console.log(document.getElementById('upExcelFile'));
     switch (event.length) {
       case 0:
         this.messagerService.alert({title: '温馨提示', msg: '请选择文件!', ok: '确定'});
@@ -560,9 +576,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
                 break;
               case 1000:
                 // jwt非法
-                this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+                this.messagerService.confirm({
+                  title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
                   result: (r) => {
-                    if (r) { setTimeout(() => { this.router.navigateByUrl('/login'); }, 500); }
+                    if (r) {
+                      setTimeout(() => {
+                        this.router.navigateByUrl('/login');
+                      }, 500);
+                    }
                   }
                 });
                 break;
@@ -573,11 +594,11 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           });
         } else {
-          this.messagerService.alert({title: '温馨提示', msg: '请检查文件格式和文件大小是否合法!', ok: '确定'});
+          this.messagerService.alert({title: '温馨提示', msg: '请检查文件格式、大小是否合法!', ok: '确定'});
         }
         break;
     }
-    document.getElementById('upExcelFile')[0].value = null;
+    this.fileButtonComponent.clear(); // 清空选择的文件
   }
 
   /**
