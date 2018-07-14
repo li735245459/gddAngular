@@ -1,5 +1,5 @@
 <!--表格操作栏-->
-<eui-panel [collapsible]="true" [collapsed]="true"
+<eui-panel [collapsible]="false" [collapsed]="true"
            [panelStyle]=""
            [headerStyle]="{padding: '2px 0px'}"
            [bodyStyle]="{padding:'10px 0px'}"
@@ -10,68 +10,20 @@
     </div>
   </eui-panel-header>
   <eui-panel-footer>
-    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
     <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onOpenEditDlg('add')">添加</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-edit" [plain]="true" (click)="onOpenEditDlg('edit')">编辑</eui-linkbutton>
     <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg()">删除</eui-linkbutton>
-    <eui-linkbutton iconCls="icon-back" [plain]="true" (click)="onUnSelect()">取消选择</eui-linkbutton>
-    <div style="display: inline-block;float: right;">
-      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
-      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空条件</eui-linkbutton>
-    </div>
+    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
   </eui-panel-footer>
 </eui-panel>
 
-<!--表格-->
-<eui-datagrid [pagination]="true" [data]="data" [total]="total"
-              [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
-              (pageChange)="onPageChange($event)"
-              idField="id" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
-              [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
-  <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="80">
-    <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
-  </eui-grid-column>
-  <eui-grid-column field="id" title="编号" frozen="true" width="80"></eui-grid-column>
-  <eui-grid-column field="pId" title="父级编号" align="center" frozen="true" width="150"></eui-grid-column>
-  <eui-grid-column field="name" title="封面类型名称" frozen="true" width="180"></eui-grid-column>
-  <eui-grid-column field="createTime" title="注册时间" frozen="true" width="180"></eui-grid-column>
-</eui-datagrid>
-
-<!--添加、编辑弹框-->
-<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
-            [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
-            [bodyStyle]="{padding:'5px 2px'}"
-            [footerStyle]="{padding: '10px 0px'}">
-  <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
-  <div class="container user">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
-      <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
-        <!--全局消息-->
-        <div class="form-group">
-          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
-        </div>
-        <!--下拉列表-->
-        <div class="form-group user-field">
-          <i class="fa fa-user fa-lg"></i>
-          <input type="text" class="form-control" formControlName="name"
-                 placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
-        </div>
-        <!--名称-->
-        <div class="form-group user-field">
-          <i class="fa fa-user fa-lg"></i>
-          <input type="text" class="form-control" formControlName="name"
-                 placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
-        </div>
-      </form>
-    </div>
-  </div>
-  <!--提交按钮-->
-  <eui-panel-footer>
-    <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">保存
-    </button>&nbsp;&nbsp;
-    <button type="button" class="btn" (click)="onEditCancel()">取消</button>
-  </eui-panel-footer>
-</eui-dialog>
+<!--Tree表格-->
+<eui-treegrid [data]="data" idField="id" treeField="name" [loading]="loading" [loadMsg]="loadMsg"
+              [checkbox]="true" [cascadeCheck]="true" (rowClick)="onRowClick($event)">
+  <eui-grid-column field="name" title="Name"></eui-grid-column>
+  <eui-grid-column field="size" title="Size"></eui-grid-column>
+  <eui-grid-column field="date" title="Date"></eui-grid-column>
+</eui-treegrid>
 
 <!--删除提示弹框-->
 <eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
@@ -87,5 +39,36 @@
                       (click)="onDeleteCancel()">取消
       </eui-linkbutton>
     </eui-button-group>
+  </eui-panel-footer>
+</eui-dialog>
+
+<!--添加、编辑弹框-->
+<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+            [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
+            [bodyStyle]="{padding:'5px 2px'}"
+            [footerStyle]="{padding: '10px 0px'}">
+  <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
+  <div class="container user">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
+      <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
+        <!--全局消息-->
+        <div class="form-group">
+          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+        </div>
+        <!--名称-->
+        <div class="form-group user-field">
+          <i class="fa fa-leaf fa-lg"></i>
+          <input type="text" class="form-control" formControlName="name"
+                 placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
+        </div>
+      </form>
+    </div>
+  </div>
+  <!--提交按钮-->
+  <eui-panel-footer>
+    <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
+            [disabled]="formSubmitState||itemForForm.invalid">保存
+    </button>&nbsp;&nbsp;
+    <button type="button" class="btn" (click)="onEditCancel()">取消</button>
   </eui-panel-footer>
 </eui-dialog>

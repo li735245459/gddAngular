@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {Md5} from 'ts-md5';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 import {CoverType} from '../../../globalModel/coverType';
 import {CoverService} from '../../../service/cover.service';
+import {TreeGridComponent} from 'ng-easyui/components/treegrid/treegrid.component';
 
 @Component({
   selector: 'app-cover-type',
@@ -12,29 +12,25 @@ import {CoverService} from '../../../service/cover.service';
   styleUrls: ['./cover-type.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CoverTypeComponent implements OnInit, AfterViewInit {
+export class CoverTypeComponent implements OnInit {
   msg: string = null; // 全局提示消息
   // 表格
   title = '封面类型信息';
-  loading = true; // 开启datagrid加载提示
+  loading = true; // 开启grid加载提示
   loadMsg = '正在加载..';
-  total: Number = 0; // 所有数据条数
   data = []; // 分页数据
-  pageNumber = 1; // 当前分页号
-  pageSize = 20; // 默认分页大小
-  pageOptions = { // 分页导航条参数设置
-    pageList: [10, 20, 30, 40, 50],
-    displayMsg: '当前 {from} 到 {to} , 共 {total} 条',
-    layout: ['list', 'sep', 'first', 'prev', 'sep', 'tpl', 'sep', 'next', 'last', 'sep', 'refresh', 'sep', 'links', 'info']
-  };
-  // 分页参数对象,双向数据绑定
-  itemForPage: CoverType = {};
+  //
+  @ViewChild(TreeGridComponent)
+  private treeGridComponent: TreeGridComponent;
+  //
+  selectedRow = null; // 点击后选中的行,单条
+  checkedRow = []; // 点击复选框选中的行,多条
+  coverType: number;
   // 添加、编辑弹框
   editDlgTitle: String = null;
-  editRow: CoverType = null; // 当前需要编辑的数据
+  editRow: CoverType = {}; // 当前需要编辑的数据
   editDlgState = true; // true关闭弹框,false打开弹框
   // 删除弹框
-  selectedRow = []; // 当前选中的数据
   deleteDlgTitle: String = null;
   deleteDlgState = true; // true关闭弹框,false打开弹框
   deleteDlgBtnState = false; // true表示禁用,false表示可用
@@ -43,7 +39,7 @@ export class CoverTypeComponent implements OnInit, AfterViewInit {
   formSubmitState = false; // true禁止表单提交,false启用表单提交
   formValidStyle = true; // true表单校验成功样式, false表单校验失败样式
   placeholder = { // 表单字段说明
-    name: {'title': '封面类型', 'prompt': '(2~10位汉子)'}
+    name: {'title': '封面类型名称', 'prompt': '(2~10位汉子)'}
   };
 
   constructor(
@@ -56,18 +52,93 @@ export class CoverTypeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.find();
   }
 
   /**
-   * 分页查询
+   * 查询
    */
-  page() {
-    this.service.pageByCoverType(this.itemForPage, this.pageNumber, this.pageSize).subscribe(responseJson => {
+  find() {
+    this.service.findCoverType().subscribe(responseJson => {
       switch (responseJson.code) {
         case 0:
           // 成功
-          this.data = responseJson.data.list;
-          this.total = responseJson.data.total;
+          // this.data = responseJson.data.list;
+          // this.total = responseJson.data.total;
+          // node_level=0打开,其他默认关闭
+          this.data = [{
+            'id': 1,
+            'name': 'C',
+            'size': '',
+            'date': '02/19/2010',
+            'children': [{
+              'id': 2,
+              'name': 'Program Files',
+              'size': '120 MB',
+              'date': '03/20/2010',
+              'children': [{
+                'id': 21,
+                'name': 'Java',
+                'size': '',
+                'date': '01/13/2010',
+                'state': 'closed',
+                'children': [{
+                  'id': 211,
+                  'name': 'java.exe',
+                  'size': '142 KB',
+                  'date': '01/13/2010'
+                }, {
+                  'id': 212,
+                  'name': 'jawt.dll',
+                  'size': '5 KB',
+                  'date': '01/13/2010'
+                }]
+              }, {
+                'id': 22,
+                'name': 'MySQL',
+                'size': '',
+                'date': '01/13/2010',
+                'state': 'closed',
+                'children': [{
+                  'id': 221,
+                  'name': 'my.ini',
+                  'size': '10 KB',
+                  'date': '02/26/2009'
+                }, {
+                  'id': 222,
+                  'name': 'my-huge.ini',
+                  'size': '5 KB',
+                  'date': '02/26/2009'
+                }, {
+                  'id': 223,
+                  'name': 'my-large.ini',
+                  'size': '5 KB',
+                  'date': '02/26/2009'
+                }]
+              }]
+            }, {
+              'id': 3,
+              'name': 'eclipse',
+              'size': '',
+              'date': '01/20/2010',
+              'children': [{
+                'id': 31,
+                'name': 'eclipse.exe',
+                'size': '56 KB',
+                'date': '05/19/2009'
+              }, {
+                'id': 32,
+                'name': 'eclipse.ini',
+                'size': '1 KB',
+                'date': '04/20/2010'
+              }, {
+                'id': 33,
+                'name': 'notice.html',
+                'size': '7 KB',
+                'date': '03/17/2005'
+              }]
+            }]
+          }];
           this.loading = false;
           break;
         case 1000:
@@ -92,42 +163,17 @@ export class CoverTypeComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 在组件相应的视图初始化之后调用
-   */
-  ngAfterViewInit() {
-    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
-  }
-
-  /**
-   * 分页插件
-   * @param event
-   */
-  onPageChange(event) {
-    if (event.pageNumber > 0) {
-      this.pageNumber = event.pageNumber;
-      this.pageSize = event.pageSize;
-      this.page();
-    }
-  }
-
-  /**
-   * 查询按钮触发分页查询
-   */
-  onSearch(): void {
-    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
-  }
-
-  /**
-   * 打开删除弹框
+   * 点击删除按钮打开删除弹框
    */
   onOpenDeleteDlg(): void {
-    this.deleteDlgTitle = '删除数据';
-    if (this.selectedRow.length === 1) {
+    this.checkedRow = this.treeGridComponent.getCheckedRows();
+    if (this.checkedRow.length > 0) {
       this.msg = '确定要删除所选数据!';
     } else {
-      this.deleteDlgBtnState = true; // 禁用弹框(确认、取消)按钮
       this.msg = '请先选中一条需要删除的数据';
+      this.deleteDlgBtnState = true; // 禁用弹框(确认、取消)按钮
     }
+    this.deleteDlgTitle = '删除数据'; // 设置弹框标题
     this.deleteDlgState = false; // 打开弹框
   }
 
@@ -135,177 +181,150 @@ export class CoverTypeComponent implements OnInit, AfterViewInit {
    * 确认删除
    */
   onDeleteSure(): void {
-    this.deleteDlgBtnState = true; // 禁用删除弹框按钮
-    let id = null;
-    if (this.selectedRow) {
-      id = this.selectedRow.map(row => row.id).join(',');
-    } else {
-      id = null;
-    }
-    if (id) {
-      this.service.deleteByCoverType(id).subscribe(responseJson => {
-        switch (responseJson.code) {
-          case 0:
-            // 成功
-            this.deleteDlgBtnState = true; // 禁用弹框按钮
-            this.msg = '删除成功！';
-            setTimeout(() => {
-              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
-              this.deleteDlgState = true; // 关闭弹框
-            }, 2000);
-            break;
-          case 1000:
-            // jwt非法
-            this.msg = '登录超时！';
-            setTimeout(() => {
-              this.router.navigateByUrl('/login');
-            }, 500);
-            break;
-          case -1:
-            // 系统错误
-            this.msg = '删除失败！';
-            break;
-        }
-      });
-    }
+    this.deleteDlgBtnState = true; // 禁用弹框(确认、取消)按钮
+    const id = this.checkedRow.map(row => row.id).join(',');
+    this.service.deleteCoverType(id).subscribe(responseJson => {
+      switch (responseJson.code) {
+        case 0:
+          // 成功
+          this.deleteDlgBtnState = true; // 禁用弹框按钮
+          this.msg = '删除成功！';
+          setTimeout(() => {
+            this.find();
+            this.deleteDlgState = true; // 关闭弹框
+          }, 2000);
+          break;
+        case 1000:
+          // jwt非法
+          this.msg = '登录超时！';
+          setTimeout(() => {
+            this.router.navigateByUrl('/login');
+          }, 500);
+          break;
+        case -1:
+          // 系统错误
+          this.msg = '删除失败！';
+          break;
+      }
+    });
+    // }
   }
 
   /**
    * 取消删除
    */
   onDeleteCancel(): void {
-    this.onCloseDlg();
+    this.onCloseDlg(); // 关闭弹框
   }
 
   /**
-   * 取消已选择数据
+   * 点击行
+   * @param event
    */
-  onUnSelect(): void {
-    this.selectedRow = [];
+  onRowClick(event) {
+    this.selectedRow = event;
   }
 
   /**
-   * 1)点击添加按钮打开添加弹框
-   * 2)双击行打开编辑弹框
+   * 点击添加、编辑按钮打开弹框
    * @param param
    */
   onOpenEditDlg(param): void {
-    this.selectedRow = []; // 取消选中的数据
-    if (param === 'add') {
-      this.editDlgTitle = '添加封面类型信息';
-      this.editRow = null;
+    // 初始化添加没有节点可选
+
+    if (this.selectedRow) {
+      if (param === 'add') {
+        // 添加状态下---------------------------------------------------------->
+        this.editDlgTitle = '添加封面类型信息';
+        this.editRow = new CoverType();
+      } else {
+        // 编辑状态下---------------------------------------------------------->
+        this.editDlgTitle = '编辑封面类型信息';
+        this.editRow = this.selectedRow;
+      }
+      this.createItemForForm(this.editRow); // 创建表单对象
+      this.editDlgState = false; // 打开弹框
     } else {
-      this.editDlgTitle = '编辑封面类型信息';
-      this.editRow = param;
+      this.messagerService.alert({title: '温馨提示', msg: '请先选择一条数据!', ok: '确定'});
     }
-    this.createItemForForm(this.editRow); // 创建表单对象
-    this.editDlgState = false; // 打开弹框
   }
 
   /**
    * 创建表单对象
    */
   createItemForForm(editRow): void {
-    this.msg = '';
-    /*获取已有封面类型信息*/
-    //
-    /*创建表单对象*/
     this.itemForForm = this.formBuilder.group({
-      'name': [editRow.name, [
-        Validators.required,
-        Validators.pattern('^[\u4e00-\u9fa5]{2,10}$')]],
-      'pId': [editRow.pId, Validators.pattern('^[^"0"].*$')]
+      'name': [editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5]{2,10}$')]]
     });
-    /*动态添加表单对象属性*/
-    if (this.editRow) {
-      // 编辑状态下---------------------------------------------------------->
-    } else {
-      // 添加状态下---------------------------------------------------------->
-    }
-    // console.log(this.itemForForm.value);
   }
 
   /**
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    if (itemForForm.value.password === itemForForm.value.rePassword) {
-      if (this.editRow) {
-        // 编辑状态下---------------------------------------------------------->
-        if (this.editRow.id) {
-          itemForForm.value.id = this.editRow.id; // 设置ID作为后台修改的凭证
-        }
-      }
-      this.service.modifyByCoverType(itemForForm.value).subscribe(responseJson => {
-        switch (responseJson.code) {
-          case 0:
-            // 成功
-            this.formSubmitState = true; // 禁用表单提交
-            this.formValidStyle = true; // 设置全局消息样式为成功
-            this.msg = '操作成功!';
-            setTimeout(() => {
-              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
-              this.editDlgState = true; // 关闭弹框
-            }, 1000);
-            break;
-          case 1000:
-            // jwt非法
-            this.msg = '登录超时！';
-            setTimeout(() => {
-              this.router.navigateByUrl('/login');
-            }, 500);
-            break;
-          case -1:
-            // 系统错误
-            this.formSubmitState = false; // 激活表单提交按钮
-            this.formValidStyle = false; // 设置全局消息样式为失败
-            this.msg = responseJson.msg;
-            break;
-        }
-      });
+    if (this.editRow && this.editRow.id) {
+      // 编辑状态下---------------------------------------------------------->
+      itemForForm.value.id = this.editRow.id; // 设置ID作为后台修改的凭证
     } else {
-      this.msg = '密码不一致';
-      this.formValidStyle = false;
-      this.formSubmitState = false;
+      // 添加状态下---------------------------------------------------------->
+      itemForForm.value.pId = this.selectedRow.id;
+      itemForForm.value.nodeLevel = this.selectedRow.nodeLevel + 1;
     }
+    this.service.modifyCoverType(itemForForm.value).subscribe(responseJson => {
+      switch (responseJson.code) {
+        case 0:
+          // 成功
+          this.formSubmitState = true; // 禁用表单提交
+          this.formValidStyle = true; // 设置全局消息样式为成功
+          this.msg = '操作成功!';
+          setTimeout(() => {
+            // this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+            this.editDlgState = true; // 关闭弹框
+          }, 1000);
+          break;
+        case 1000:
+          // jwt非法
+          this.msg = '登录超时！';
+          setTimeout(() => {
+            this.router.navigateByUrl('/login');
+          }, 500);
+          break;
+        case -1:
+          // 系统错误
+          this.formSubmitState = false; // 激活表单提交按钮
+          this.formValidStyle = false; // 设置全局消息样式为失败
+          this.msg = responseJson.msg;
+          break;
+      }
+    });
   }
 
   /**
    * 取消添加、编辑
    */
   onEditCancel(): void {
-    this.onCloseDlg();
-  }
-
-  /**
-   * 复选框点击事件
-   * @param checkbox
-   */
-  onChangeHobby(checkbox) {
-    const index = this.itemForForm.value.hobby.indexOf(checkbox.value);
-    if (index === -1) {
-      this.itemForForm.value.hobby.push(checkbox.value);
-    } else {
-      this.itemForForm.value.hobby.splice(index, 1);
-    }
+    this.onCloseDlg(); // 关闭弹框
   }
 
   /**
    * 关闭弹框
    */
   onCloseDlg(): void {
-    this.clean();
+    this.clean(); // 重置全局变量
   }
 
   /**
    * 重置全局参数
    */
   clean(): void {
+    this.msg = null;
     this.editDlgTitle = null;
-    this.editRow = null;
+    this.editRow = {};
     this.editDlgState = true;
     this.deleteDlgTitle = null;
-    this.selectedRow = [];
+    this.treeGridComponent.unselectRow(this.selectedRow);
+    this.selectedRow = null;
+    this.checkedRow = [];
     this.deleteDlgState = true;
     this.deleteDlgBtnState = false;
     this.formSubmitState = false;
@@ -313,18 +332,10 @@ export class CoverTypeComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 清空分页查询条件
-   */
-  onCleanSearch(): void {
-    this.itemForPage = {};
-  }
-
-  /**
    * 刷新数据
    */
   onReLoad(): void {
-    this.onCleanSearch();
-    this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
+    this.find();
   }
-
 }
+

@@ -10,50 +10,50 @@ export class CoverService {
   constructor(private http: HttpClient) { }
 
   /**
-   * 分页查询封面类别信息
+   * 查询封面类别信息
    * @returns {Observable<any>}
    */
-  pageByCoverType(coverType, pageNumber, pageSize): Observable<any> {
-    return this.http.post<any>(`/gdd/cover/pageByCoverType/${pageNumber}/${pageSize}`, coverType);
-  }
-
-  /**
-   * 分页查询封面信息
-   * @returns {Observable<any>}
-   */
-  pageByCover(cover, pageNumber, pageSize): Observable<any> {
-    return this.http.post<any>(`/gdd/cover/pageByCover/${pageNumber}/${pageSize}`, cover);
+  findCoverType(): Observable<any> {
+    return this.http.get<any>(`/gdd/cover/findCoverType`);
   }
 
   /**
    * 修改封面类别信息
    * @param coverTypeFormValue
    */
-  modifyByCoverType(coverTypeFormValue): Observable<any> {
-    return this.http.post<any>(`/gdd/cover/modifyByCoverType`, coverTypeFormValue);
-  }
-
-  /**
-   * 修改封面信息
-   * @param coverFormValue
-   */
-  modifyByCover(coverFormValue): Observable<any> {
-    return this.http.post<any>(`/gdd/cover/modifyByCover`, coverFormValue);
+  modifyCoverType(coverTypeFormValue): Observable<any> {
+    return this.http.post<any>(`/gdd/cover/modifyCoverType`, coverTypeFormValue);
   }
 
   /**
    * 删除封面类别信息
    * @param id
    */
-  deleteByCoverType(id): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/deleteByGoodsType`, id);
+  deleteCoverType(id): Observable<any> {
+    return this.http.post<any>(`/gdd/cover/deleteCoverType`, id);
+  }
+
+  /**
+   * 分页查询封面信息
+   * @returns {Observable<any>}
+   */
+  pageCover(cover, pageNumber, pageSize): Observable<any> {
+    return this.http.post<any>(`/gdd/cover/pageCover/${pageNumber}/${pageSize}`, cover);
+  }
+
+  /**
+   * 修改封面信息
+   * @param coverFormValue
+   */
+  modifyCover(coverFormValue): Observable<any> {
+    return this.http.post<any>(`/gdd/cover/modifyCover`, coverFormValue);
   }
 
   /**
    * 删除封面信息
    * @param id
    */
-  deleteByCover(id): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/deleteByGoods`, id);
+  deleteCover(id): Observable<any> {
+    return this.http.post<any>(`/gdd/cover/deleteCover`, id);
   }
 }

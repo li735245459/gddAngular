@@ -26,7 +26,7 @@
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
-    "ng-easyui": "^1.1.13",
+    "ng-easyui": "^1.1.14",
     "rxjs": "^6.0.0",
     "ts-md5": "^1.2.4",
     "zone.js": "^0.8.26"

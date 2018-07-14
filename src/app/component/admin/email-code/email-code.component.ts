@@ -39,7 +39,8 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
               private router: Router) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ngAfterViewInit() {
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
@@ -63,7 +64,9 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
             title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
             result: (r) => {
               if (r) {
-                setTimeout(() => { this.router.navigateByUrl('/login'); }, 500);
+                setTimeout(() => {
+                  this.router.navigateByUrl('/login');
+                }, 500);
               }
             }
           });
@@ -93,7 +96,7 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
    * 打开删除弹框
    */
   onOpenDeleteDlg(param): void {
-    if (param === 'delete') {
+    if (param === 'deleteMore') {
       // ----------------删除所选
       this.deleteState = false; // 删除所选
       this.deleteDlgTitle = '删除数据';
@@ -123,41 +126,38 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
       id = 'all';
     } else {
       // ----------------删除所选
-      if (this.selectedRow) {
-        id = this.selectedRow.map(row => row.id).join(',');
-      } else {
-        id = null;
-      }
+      id = this.selectedRow.map(row => row.id).join(',');
     }
-    if (id) {
-      this.service.delete(id).subscribe(responseJson => {
-        switch (responseJson.code) {
-          case 0:
-            // 成功
-            this.deleteDlgBtnState = true;
-            this.msg = '删除成功！';
-            setTimeout(() => {
-              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
-              this.deleteDlgState = true; // 关闭弹框
-            }, 2000);
-            break;
-          case 1000:
-            // jwt非法
-            this.messagerService.confirm({title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
-              result: (r) => {
-                if (r) {
-                  setTimeout(() => { this.router.navigateByUrl('/login'); }, 500);
-                }
+    this.service.delete(id).subscribe(responseJson => {
+      switch (responseJson.code) {
+        case 0:
+          // 成功
+          this.deleteDlgBtnState = true;
+          this.msg = '删除成功！';
+          setTimeout(() => {
+            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+            this.deleteDlgState = true; // 关闭弹框
+          }, 2000);
+          break;
+        case 1000:
+          // jwt非法
+          this.messagerService.confirm({
+            title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+            result: (r) => {
+              if (r) {
+                setTimeout(() => {
+                  this.router.navigateByUrl('/login');
+                }, 500);
               }
-            });
-            break;
-          case -1:
-            // 系统错误
-            this.msg = '删除失败！';
-            break;
-        }
-      });
-    }
+            }
+          });
+          break;
+        case -1:
+          // 系统错误
+          this.msg = '删除失败！';
+          break;
+      }
+    });
   }
 
   /**
@@ -185,6 +185,7 @@ export class EmailCodeComponent implements OnInit, AfterViewInit {
    * 重置全局参数
    */
   clean(): void {
+    this.msg = null;
     this.deleteDlgTitle = null;
     this.selectedRow = [];
     this.deleteState = false;
