@@ -20,9 +20,8 @@
 <!--Tree表格-->
 <eui-treegrid [data]="data" idField="id" treeField="name" [loading]="loading" [loadMsg]="loadMsg"
               [checkbox]="true" [cascadeCheck]="true" (rowClick)="onRowClick($event)">
-  <eui-grid-column field="name" title="Name"></eui-grid-column>
-  <eui-grid-column field="size" title="Size"></eui-grid-column>
-  <eui-grid-column field="date" title="Date"></eui-grid-column>
+  <eui-grid-column field="name" title="封面类型名称"></eui-grid-column>
+  <eui-grid-column field="createTime" title="创建时间"></eui-grid-column>
 </eui-treegrid>
 
 <!--删除提示弹框-->

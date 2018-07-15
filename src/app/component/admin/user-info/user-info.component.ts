@@ -132,7 +132,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           // 成功
           this.data = responseJson.data.list;
           this.total = responseJson.data.total;
-          this.loading = false;
           break;
         case 1000:
           // jwt非法
@@ -152,6 +151,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
           break;
       }
+      this.loading = false; // 关闭加载提示
     });
   }
 
@@ -268,9 +268,11 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   onOpenEditDlg(param): void {
     this.selectedRow = []; // 取消选中的数据
     if (param === 'add') {
+      // 添加状态下---------------------------------------------------------->
       this.editDlgTitle = '添加用户信息';
       this.editRow = null;
     } else {
+      // 编辑状态下---------------------------------------------------------->
       this.editDlgTitle = '编辑用户信息';
       this.editRow = param;
     }
@@ -317,10 +319,10 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       // 添加状态下---------------------------------------------------------->
       editRow = new User();
-      this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree由用户选择生成
       editRow.province = '0'; // 设置一级下拉列表初始值为'0'
       editRow.city = '-1'; // 设置二级下拉列表值为'-1',表示该项地址不存在
       editRow.area = '-1'; // 设置三级下拉列表值为'-1',表示该项地址不存在
+      this.levelOne = province; // 初始化levelOne数据,levelTwo和levelThree由用户选择生成
     }
     /*创建表单对象*/
     this.itemForForm = this.formBuilder.group({
@@ -382,11 +384,9 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   onSubmitForm(itemForForm): void {
     if (itemForForm.value.password === itemForForm.value.rePassword) {
-      if (this.editRow) {
+      if (this.editRow && this.editRow.id) {
         // 编辑状态下---------------------------------------------------------->
-        if (this.editRow.id) {
-          itemForForm.value.id = this.editRow.id; // 设置ID作为后台修改的凭证
-        }
+        itemForForm.value.id = this.editRow.id; // 设置ID作为后台修改的凭证
         if (this.editRow.email === this.itemForForm.value.email) {
           this.itemForForm.value.email = null; // 邮箱没有发生改变时设置为null
         }

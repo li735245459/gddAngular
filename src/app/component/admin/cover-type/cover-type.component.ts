@@ -63,83 +63,94 @@ export class CoverTypeComponent implements OnInit {
       switch (responseJson.code) {
         case 0:
           // 成功
-          // this.data = responseJson.data.list;
-          // this.total = responseJson.data.total;
-          // node_level=0打开,其他默认关闭
-          this.data = [{
-            'id': 1,
-            'name': 'C',
-            'size': '',
-            'date': '02/19/2010',
-            'children': [{
-              'id': 2,
-              'name': 'Program Files',
-              'size': '120 MB',
-              'date': '03/20/2010',
-              'children': [{
-                'id': 21,
-                'name': 'Java',
-                'size': '',
-                'date': '01/13/2010',
-                'state': 'closed',
-                'children': [{
-                  'id': 211,
-                  'name': 'java.exe',
-                  'size': '142 KB',
-                  'date': '01/13/2010'
-                }, {
-                  'id': 212,
-                  'name': 'jawt.dll',
-                  'size': '5 KB',
-                  'date': '01/13/2010'
-                }]
-              }, {
-                'id': 22,
-                'name': 'MySQL',
-                'size': '',
-                'date': '01/13/2010',
-                'state': 'closed',
-                'children': [{
-                  'id': 221,
-                  'name': 'my.ini',
-                  'size': '10 KB',
-                  'date': '02/26/2009'
-                }, {
-                  'id': 222,
-                  'name': 'my-huge.ini',
-                  'size': '5 KB',
-                  'date': '02/26/2009'
-                }, {
-                  'id': 223,
-                  'name': 'my-large.ini',
-                  'size': '5 KB',
-                  'date': '02/26/2009'
-                }]
-              }]
-            }, {
-              'id': 3,
-              'name': 'eclipse',
-              'size': '',
-              'date': '01/20/2010',
-              'children': [{
-                'id': 31,
-                'name': 'eclipse.exe',
-                'size': '56 KB',
-                'date': '05/19/2009'
-              }, {
-                'id': 32,
-                'name': 'eclipse.ini',
-                'size': '1 KB',
-                'date': '04/20/2010'
-              }, {
-                'id': 33,
-                'name': 'notice.html',
-                'size': '7 KB',
-                'date': '03/17/2005'
-              }]
-            }]
-          }];
-          this.loading = false;
+          // this.data = responseJson.data;
+          const root = [];
+          const leaf = [];
+          responseJson.data.filter(item => {
+            if (item.nodeLevel === 0) {
+              root.push(item);
+            } else {
+              leaf.push(item);
+            }
+          });
+          for (let i = 0 ; i < root.length ; i ++) {
+            //
+          }
+
+
+          // this.data = [{
+          //   'id': 1,
+          //   'name': 'C',
+          //   'size': '',
+          //   'date': '02/19/2010',
+          //   'children': [{
+          //     'id': 2,
+          //     'name': 'Program Files',
+          //     'size': '120 MB',
+          //     'date': '03/20/2010',
+          //     'children': [{
+          //       'id': 21,
+          //       'name': 'Java',
+          //       'size': '',
+          //       'date': '01/13/2010',
+          //       'state': 'closed',
+          //       'children': [{
+          //         'id': 211,
+          //         'name': 'java.exe',
+          //         'size': '142 KB',
+          //         'date': '01/13/2010'
+          //       }, {
+          //         'id': 212,
+          //         'name': 'jawt.dll',
+          //         'size': '5 KB',
+          //         'date': '01/13/2010'
+          //       }]
+          //     }, {
+          //       'id': 22,
+          //       'name': 'MySQL',
+          //       'size': '',
+          //       'date': '01/13/2010',
+          //       'state': 'closed',
+          //       'children': [{
+          //         'id': 221,
+          //         'name': 'my.ini',
+          //         'size': '10 KB',
+          //         'date': '02/26/2009'
+          //       }, {
+          //         'id': 222,
+          //         'name': 'my-huge.ini',
+          //         'size': '5 KB',
+          //         'date': '02/26/2009'
+          //       }, {
+          //         'id': 223,
+          //         'name': 'my-large.ini',
+          //         'size': '5 KB',
+          //         'date': '02/26/2009'
+          //       }]
+          //     }]
+          //   }, {
+          //     'id': 3,
+          //     'name': 'eclipse',
+          //     'size': '',
+          //     'date': '01/20/2010',
+          //     'children': [{
+          //       'id': 31,
+          //       'name': 'eclipse.exe',
+          //       'size': '56 KB',
+          //       'date': '05/19/2009'
+          //     }, {
+          //       'id': 32,
+          //       'name': 'eclipse.ini',
+          //       'size': '1 KB',
+          //       'date': '04/20/2010'
+          //     }, {
+          //       'id': 33,
+          //       'name': 'notice.html',
+          //       'size': '7 KB',
+          //       'date': '03/17/2005'
+          //     }]
+          //   }]
+          // }];
           break;
         case 1000:
           // jwt非法
@@ -159,6 +170,7 @@ export class CoverTypeComponent implements OnInit {
           this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
           break;
       }
+      this.loading = false; // 关闭加载提示
     });
   }
 
@@ -170,7 +182,7 @@ export class CoverTypeComponent implements OnInit {
     if (this.checkedRow.length > 0) {
       this.msg = '确定要删除所选数据!';
     } else {
-      this.msg = '请先选中一条需要删除的数据';
+      this.msg = '请先选择数据';
       this.deleteDlgBtnState = true; // 禁用弹框(确认、取消)按钮
     }
     this.deleteDlgTitle = '删除数据'; // 设置弹框标题
@@ -230,22 +242,22 @@ export class CoverTypeComponent implements OnInit {
    * @param param
    */
   onOpenEditDlg(param): void {
-    // 初始化添加没有节点可选
-
-    if (this.selectedRow) {
-      if (param === 'add') {
-        // 添加状态下---------------------------------------------------------->
-        this.editDlgTitle = '添加封面类型信息';
-        this.editRow = new CoverType();
-      } else {
-        // 编辑状态下---------------------------------------------------------->
-        this.editDlgTitle = '编辑封面类型信息';
-        this.editRow = this.selectedRow;
-      }
+    if (param === 'add') {
+      // 添加状态下---------------------------------------------------------->
+      this.editDlgTitle = '添加封面类型信息';
+      this.editRow = new CoverType();
       this.createItemForForm(this.editRow); // 创建表单对象
       this.editDlgState = false; // 打开弹框
     } else {
-      this.messagerService.alert({title: '温馨提示', msg: '请先选择一条数据!', ok: '确定'});
+      // 编辑状态下---------------------------------------------------------->
+      if (this.selectedRow) {
+        this.editDlgTitle = '编辑封面类型信息';
+        this.editRow = this.selectedRow;
+        this.createItemForForm(this.editRow); // 创建表单对象
+        this.editDlgState = false; // 打开弹框
+      } else {
+        this.messagerService.alert({title: '温馨提示', msg: '您还没有选择数据!', ok: '确定'});
+      }
     }
   }
 
@@ -254,8 +266,9 @@ export class CoverTypeComponent implements OnInit {
    */
   createItemForForm(editRow): void {
     this.itemForForm = this.formBuilder.group({
-      'name': [editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5]{2,10}$')]]
+      'name': [editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5_a-zA-Z0-9]{2,10}$')]]
     });
+    //
   }
 
   /**
@@ -267,8 +280,15 @@ export class CoverTypeComponent implements OnInit {
       itemForForm.value.id = this.editRow.id; // 设置ID作为后台修改的凭证
     } else {
       // 添加状态下---------------------------------------------------------->
-      itemForForm.value.pId = this.selectedRow.id;
-      itemForForm.value.nodeLevel = this.selectedRow.nodeLevel + 1;
+      if (this.selectedRow) {
+        // 添加子节点---->
+        itemForForm.value.pId = this.selectedRow.id;
+        itemForForm.value.nodeLevel = this.selectedRow.nodeLevel + 1;
+      } else {
+        // 添加根节点---->
+        itemForForm.value.pId = '0';
+        itemForForm.value.nodeLevel = 0;
+      }
     }
     this.service.modifyCoverType(itemForForm.value).subscribe(responseJson => {
       switch (responseJson.code) {
@@ -277,8 +297,9 @@ export class CoverTypeComponent implements OnInit {
           this.formSubmitState = true; // 禁用表单提交
           this.formValidStyle = true; // 设置全局消息样式为成功
           this.msg = '操作成功!';
+          this.clean();
           setTimeout(() => {
-            // this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+            this.find();
             this.editDlgState = true; // 关闭弹框
           }, 1000);
           break;
@@ -314,6 +335,14 @@ export class CoverTypeComponent implements OnInit {
   }
 
   /**
+   * 刷新数据
+   */
+  onReLoad(): void {
+    this.find();
+    this.clean();
+  }
+
+  /**
    * 重置全局参数
    */
   clean(): void {
@@ -331,11 +360,5 @@ export class CoverTypeComponent implements OnInit {
     this.formValidStyle = true;
   }
 
-  /**
-   * 刷新数据
-   */
-  onReLoad(): void {
-    this.find();
-  }
 }
 
