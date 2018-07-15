@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnInit, ViewEncapsulation, OnDestroy, ViewChil
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 import {Router} from '@angular/router';
-import {Md5} from 'ts-md5';
 import {interval, Subscription} from 'rxjs';
 import {FileButtonComponent} from 'ng-easyui/components/filebutton/filebutton.component';
 
@@ -118,7 +117,8 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * 在第一轮 ngOnChanges 完成之后调用,此时所有输入属性都已经有了正确的初始绑定值
    */
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   /**
    * 在组件相应的视图初始化之后调用
@@ -151,7 +151,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           });
           break;
-        case -1:
+        default:
           // 系统错误
           this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
           break;
@@ -227,7 +227,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           setTimeout(() => {
             this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
             this.deleteDlgState = true; // 关闭弹框
-          }, 2000);
+          }, 1000);
           break;
         case 1000:
           // jwt非法
@@ -236,7 +236,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
             this.router.navigateByUrl('/login');
           }, 500);
           break;
-        case -1:
+        default:
           // 系统错误
           this.msg = '删除失败！';
           break;
@@ -333,87 +333,65 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       ]],
       'introduce': [this.editRow.introduce, Validators.pattern('^.{0,50}$')],
       'sex': [this.editRow.sex, [Validators.required, Validators.pattern('^["男"|"女"].*$')]], // 单选按钮
-      'hobby': [this.editRow.hobby ? this.editRow.hobby.split(',') : []], // 复选框
+      'hobby': [this.editRow.hobby ? this.editRow.hobby.split(',') : []], // 存储选中的复选框的值
       'province': [this.editRow.province, Validators.pattern('^[^"0"].*$')],
       'city': [this.editRow.city, Validators.pattern('^[^"0"].*$')],
       'area': [this.editRow.area, Validators.pattern('^[^"0"].*$')]
     });
     // 动态添加表单对象属性
-    if (this.editRow && this.editRow.id) {
-      // 编辑状态下---------------------------------------------------------->
-      // 添加hobby复选框属性对象,值为本地hobby数据对象的值
-      for (let i = 0; i < this.hobby.length; i++) {
-        const hobbyName = `hobby${i + 1}`;
-        if (this.editRow.hobby && this.editRow.hobby.includes(this.hobby[i].name)) {
-          this.itemForForm.addControl(hobbyName, new FormControl(this.hobby[i].name));
-        } else {
-          this.itemForForm.addControl(hobbyName, new FormControl(null));
-        }
-      }
-    } else {
-      // 添加状态下---------------------------------------------------------->
-      // 添加hobby复选框属性对象,值为null
-      for (let i = 0; i < this.hobby.length; i++) {
-        const hobbyName = `hobby${i + 1}`;
-        this.itemForForm.addControl(hobbyName, new FormControl(null));
+    for (let i = 0; i < this.hobby.length; i++) {
+      const hobbyName = `hobby${i + 1}`;
+      if (this.editRow && this.editRow.hobby && this.editRow.hobby.includes(this.hobby[i].name)) {
+        this.itemForForm.addControl(hobbyName, new FormControl(this.hobby[i].name)); // 编辑状态下设置hobbyName属性对象的值
+      } else {
+        this.itemForForm.addControl(hobbyName, new FormControl(null)); // 添加状态下设置hobbyName属性对象的值为null
       }
     }
-    // console.log(this.itemForForm.value);
   }
 
   /**
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    if (itemForForm.value.password === itemForForm.value.rePassword) {
-      if (this.editRow && this.editRow.id) {
-        // 编辑状态下---------------------------------------------------------->
-        itemForForm.value.id = this.editRow.id; // 设置ID作为后台修改的凭证
-        if (this.editRow.email === this.itemForForm.value.email) {
-          this.itemForForm.value.email = null; // 邮箱没有发生改变时设置为null
-        }
-        if (this.editRow.phone === this.itemForForm.value.phone) {
-          this.itemForForm.value.phone = null; // 手机号码没有发生改变时设置为null
-        }
-      } else {
-        // 添加状态下---------------------------------------------------------->
-        itemForForm.value.password = Md5.hashStr(itemForForm.value.password); // 密码加密
-        itemForForm.value.rePassword = itemForForm.value.password;
+    if (this.editRow && this.editRow.id) {
+      // 编辑状态下---------------------------------------------------------->
+      itemForForm.value.id = this.editRow.id; // 设置ID作为后台修改的凭证
+      if (this.editRow.email === this.itemForForm.value.email) {
+        this.itemForForm.value.email = null; // 邮箱没有发生改变时设置为null
       }
-      itemForForm.value.hobby = itemForForm.value.hobby.join(','); // 将hobby数组转化成字符串
-      this.service.modify(itemForForm.value).subscribe(responseJson => {
-        switch (responseJson.code) {
-          case 0:
-            // 成功
-            this.formSubmitState = true; // 禁用表单提交
-            this.formValidStyle = true; // 设置全局消息样式为成功
-            this.msg = '操作成功!';
-            setTimeout(() => {
-              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
-              this.editDlgState = true; // 关闭弹框
-            }, 1000);
-            break;
-          case 1000:
-            // jwt非法
-            this.msg = '登录超时！';
-            setTimeout(() => {
-              this.router.navigateByUrl('/login');
-            }, 500);
-            break;
-          case -1:
-            // 系统错误
-            this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(','); // 将hobby字符串转化成数组
-            this.formSubmitState = false; // 激活表单提交按钮
-            this.formValidStyle = false; // 设置全局消息样式为失败
-            this.msg = responseJson.msg;
-            break;
-        }
-      });
-    } else {
-      this.msg = '密码不一致';
-      this.formValidStyle = false;
-      this.formSubmitState = false;
+      if (this.editRow.phone === this.itemForForm.value.phone) {
+        this.itemForForm.value.phone = null; // 手机号码没有发生改变时设置为null
+      }
     }
+    itemForForm.value.hobby = itemForForm.value.hobby.join(','); // 将hobby数组转化成字符串
+    this.service.modify(itemForForm.value).subscribe(responseJson => {
+      switch (responseJson.code) {
+        case 0:
+          // 成功
+          this.formSubmitState = true; // 禁用表单提交
+          this.formValidStyle = true; // 设置全局消息样式为成功
+          this.msg = '操作成功!';
+          setTimeout(() => {
+            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+            this.editDlgState = true; // 关闭弹框
+          }, 1000);
+          break;
+        case 1000:
+          // jwt非法
+          this.msg = '登录超时！';
+          setTimeout(() => {
+            this.router.navigateByUrl('/login');
+          }, 500);
+          break;
+        default:
+          // 系统错误、手机号码已被使用、邮箱已被使用
+          this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(','); // 将hobby字符串转化成数组
+          this.formSubmitState = false; // 激活表单提交按钮
+          this.formValidStyle = false; // 设置全局消息样式为失败
+          this.msg = responseJson.msg;
+          break;
+      }
+    });
   }
 
   /**
@@ -562,7 +540,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
                   }
                 });
                 break;
-              case -1:
+              default:
                 // 系统错误
                 this.messagerService.alert({title: '温馨提示', msg: '导入错误!', ok: '确定'});
                 break;

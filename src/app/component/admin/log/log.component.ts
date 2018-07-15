@@ -68,7 +68,7 @@ export class LogComponent implements OnInit, AfterViewInit {
             }
           });
           break;
-        case -1:
+        default:
           // 系统错误
           this.messagerService.alert({title: '温馨提示', msg: '系统错误!', ok: '确定'});
           break;
@@ -153,7 +153,7 @@ export class LogComponent implements OnInit, AfterViewInit {
             }
           });
           break;
-        case -1:
+        default:
           // 系统错误
           this.msg = '删除失败！';
           break;
