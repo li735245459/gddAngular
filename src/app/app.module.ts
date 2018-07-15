@@ -7,10 +7,10 @@ import {EasyUIModule} from 'ng-easyui/components/easyui/easyui.module';
 import {HttpClientModule} from '@angular/common/http';
 import {Routes, RouterModule} from '@angular/router';
 import {AppComponent} from './app.component';
-import {LoginComponent} from './component/user/login/login.component';
-import {RegisterComponent} from './component/user/register/register.component';
-import {ForgetPasswordComponent} from './component/user/forget-password/forget-password.component';
-import {ModifyPasswordComponent} from './component/user/modify-password/modify-password.component';
+import {LoginComponent} from './component/admin/login/login.component';
+import {RegisterComponent} from './component/admin/register/register.component';
+import {ForgetPasswordComponent} from './component/admin/forget-password/forget-password.component';
+import {ModifyPasswordComponent} from './component/admin/modify-password/modify-password.component';
 import {UserComponent} from './component/user/user.component';
 import {ErrorComponent} from './component/error/error.component';
 import {GlobalRoutingGuard} from './globalRouter/global.routing.guard';
@@ -23,9 +23,9 @@ import {GoodsComponent} from './component/admin/goods/goods.component';
 import {CoverComponent} from './component/admin/cover/cover.component';
 import {UserInfoComponent} from './component/admin/user-info/user-info.component';
 import {LogComponent} from './component/admin/log/log.component';
-import { EmailCodeComponent } from './component/admin/email-code/email-code.component';
-import { CoverTypeComponent } from './component/admin/cover-type/cover-type.component';
-import { GoodsTypeComponent } from './component/admin/goods-type/goods-type.component';
+import {EmailCodeComponent} from './component/admin/email-code/email-code.component';
+import {CoverTypeComponent} from './component/admin/cover-type/cover-type.component';
+import {GoodsTypeComponent} from './component/admin/goods-type/goods-type.component';
 
 /**
  * 全局路由配置
