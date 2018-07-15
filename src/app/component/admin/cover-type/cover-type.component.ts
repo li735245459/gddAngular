@@ -64,7 +64,10 @@ export class CoverTypeComponent implements OnInit {
       switch (responseJson.code) {
         case 0:
           // 成功
-          // this.data = responseJson.data;
+          this.data = responseJson.data;
+
+
+
           // console.log(this.toTreeData(responseJson.data));
           // const root = [];
           // const leaf = [];
@@ -270,7 +273,6 @@ export class CoverTypeComponent implements OnInit {
     this.itemForForm = this.formBuilder.group({
       'name': [editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5_a-zA-Z0-9]{2,10}$')]]
     });
-    //
   }
 
   /**

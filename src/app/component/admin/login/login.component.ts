@@ -35,19 +35,11 @@ export class LoginComponent implements OnInit {
    * 创建表单对象
    */
   createItemForForm(): void {
-    // itemForForm = new FormGroup({
-    //   email: new FormControl('', [
-    //     Validators.required,
-    //     Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]),
-    //   password: new FormControl('', [
-    //     Validators.required,
-    //     Validators.pattern('^[a-zA-Z]\\w{5,9}$')])
-    // });
     this.itemForForm = this.formBuilder.group({
       email: ['lixing_java@163.com', [
         Validators.required,
         Validators.pattern('^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$')]],
-      password: ['li12345', [
+      password: ['gdd1234', [
         Validators.required,
         Validators.pattern('^[a-zA-Z]\\w{5,9}$')
       ]]

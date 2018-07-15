@@ -11,7 +11,6 @@ import {LoginComponent} from './component/admin/login/login.component';
 import {RegisterComponent} from './component/admin/register/register.component';
 import {ForgetPasswordComponent} from './component/admin/forget-password/forget-password.component';
 import {ModifyPasswordComponent} from './component/admin/modify-password/modify-password.component';
-import {UserComponent} from './component/user/user.component';
 import {ErrorComponent} from './component/error/error.component';
 import {GlobalRoutingGuard} from './globalRouter/global.routing.guard';
 import {httpInterceptor} from './globalInterceptor/interpectors';
@@ -76,7 +75,6 @@ const appRoutes: Routes = [
     HomeComponent,
     ForgetPasswordComponent,
     ModifyPasswordComponent,
-    UserComponent,
     ErrorComponent,
     LogComponent
   ],
