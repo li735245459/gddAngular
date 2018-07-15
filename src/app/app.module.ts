@@ -31,6 +31,7 @@ import { GoodsTypeComponent } from './component/admin/goods-type/goods-type.comp
  * 全局路由配置
  */
 const appRoutes: Routes = [
+  {path: '', redirectTo: '/index', pathMatch: 'full'}, // URL为空时重定向到index(IndexComponent)
   {
     path: 'index', component: IndexComponent, children: [
       {path: '', component: HomeComponent},
@@ -38,6 +39,10 @@ const appRoutes: Routes = [
       {path: 'pets', component: PetsComponent}
     ]
   },
+  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'forgetPassword', component: ForgetPasswordComponent},
+  {path: 'modifyPassword/:email', component: ModifyPasswordComponent},
   {
     path: 'admin', component: AdminComponent, children: [
       {path: '', component: UserInfoComponent},
@@ -50,12 +55,7 @@ const appRoutes: Routes = [
       {path: 'emailCode', component: EmailCodeComponent},
     ], canActivate: [GlobalRoutingGuard]
   },
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'forgetPassword', component: ForgetPasswordComponent},
-  {path: 'modifyPassword/:email', component: ModifyPasswordComponent},
   {path: 'error', component: ErrorComponent, canActivate: [GlobalRoutingGuard]},
-  {path: '', redirectTo: '/index', pathMatch: 'full'}, // URL为空时就会访问这里因此它通常作为起点.这个默认路由会重定向到/login并显示LoginComponent
   {path: '**', component: ErrorComponent}, // 当所请求的URL不匹配前面定义的路由表中的任何路径时路由器就会选择此路由
 ];
 
