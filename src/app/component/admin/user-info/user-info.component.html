@@ -156,22 +156,22 @@
                  placeholder="{{placeholder.email.title}}{{placeholder.email.prompt}}">
         </div>
         <!--密码-->
-        <div class="form-group row" *ngIf="editRow==null">
-          <div class="col-6">
-            <div class="user-field">
-              <i class="fa fa-key fa-lg"></i>
-              <input type="password" class="form-control" formControlName="password"
-                     placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="user-field">
-              <i class="fa fa-key fa-lg"></i>
-              <input type="password" class="form-control" formControlName="rePassword"
-                     placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">
-            </div>
-          </div>
-        </div>
+        <!--<div class="form-group row" *ngIf="editRow==null">-->
+          <!--<div class="col-6">-->
+            <!--<div class="user-field">-->
+              <!--<i class="fa fa-key fa-lg"></i>-->
+              <!--<input type="password" class="form-control" formControlName="password"-->
+                     <!--placeholder="{{placeholder.password.title}}{{placeholder.password.prompt}}">-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="col-6">-->
+            <!--<div class="user-field">-->
+              <!--<i class="fa fa-key fa-lg"></i>-->
+              <!--<input type="password" class="form-control" formControlName="rePassword"-->
+                     <!--placeholder="{{placeholder.rePassword.title}}{{placeholder.rePassword.prompt}}">-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
         <!--性别-->
         <div class="form-group text-left">
           <div class="form-check form-check-inline">
@@ -242,8 +242,20 @@
             [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
-    <!--<div>{{itemForForm.controls['hobby'].value==''}}</div>-->
-    <!--<div>{{itemForForm.invalid}}</div>-->
+    <!--<div>{{formSubmitState}}</div>-->
+    <!--<div>校验结果:{{itemForForm.invalid}}</div>-->
+    <!--<div>name: {{itemForForm.controls['name'].invalid}}</div>-->
+    <!--<div>phone: {{itemForForm.controls['phone'].invalid}}</div>-->
+    <!--<div>email: {{itemForForm.controls['email'].invalid}}</div>-->
+    <!--<div>sex: {{itemForForm.controls['sex'].invalid}}</div>-->
+    <!--<div>password: {{itemForForm.controls['password'].invalid}}</div>-->
+    <!--<div>rePassword: {{itemForForm.controls['rePassword'].invalid}}</div>-->
+    <!--<div>hobby:{{itemForForm.controls['hobby'].value==''}}</div>-->
+    <!--<div>province: {{itemForForm.controls['province'].invalid}}</div>-->
+    <!--<div>city: {{itemForForm.controls['city'].invalid}}</div>-->
+    <!--<div>area: {{itemForForm.controls['area'].invalid}}</div>-->
+    <!--<div>address: {{itemForForm.controls['address'].invalid}}</div>-->
+    <!--<div>introduce: {{itemForForm.controls['introduce'].invalid}}</div>-->
   </eui-panel-footer>
 </eui-dialog>
 

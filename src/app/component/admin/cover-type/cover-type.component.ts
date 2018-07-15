@@ -55,6 +55,7 @@ export class CoverTypeComponent implements OnInit {
     this.find();
   }
 
+
   /**
    * 查询
    */
@@ -64,18 +65,19 @@ export class CoverTypeComponent implements OnInit {
         case 0:
           // 成功
           // this.data = responseJson.data;
-          const root = [];
-          const leaf = [];
-          responseJson.data.filter(item => {
-            if (item.nodeLevel === 0) {
-              root.push(item);
-            } else {
-              leaf.push(item);
-            }
-          });
-          for (let i = 0 ; i < root.length ; i ++) {
-            //
-          }
+          // console.log(this.toTreeData(responseJson.data));
+          // const root = [];
+          // const leaf = [];
+          // responseJson.data.filter(item => {
+          //   if (item.nodeLevel === 0) {
+          //     root.push(item);
+          //   } else {
+          //     leaf.push(item);
+          //   }
+          // });
+          // for (let i = 0; i < root.length; i++) {
+          //   //
+          // }
 
 
           // this.data = [{
