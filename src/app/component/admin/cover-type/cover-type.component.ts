@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 import {CoverType} from '../../../globalModel/coverType';
 import {CoverService} from '../../../service/cover.service';
 import {TreeGridComponent} from 'ng-easyui/components/treegrid/treegrid.component';
-import {C} from '@angular/core/src/render3';
+import {TreeUtil} from '../../../globalUtil/treeUtil';
 
 @Component({
   selector: 'app-cover-type',
@@ -64,30 +64,7 @@ export class CoverTypeComponent implements OnInit {
         switch (responseJson.code) {
           case 0:
             // 成功
-            const items = responseJson.data;
-            for (let i = 0; i < items.length - 1; i++) {
-              for (let j = 0; j < items.length - 1 - i; j++) {
-                if (items[i].parentId === items[j + 1 + i].id) {
-                  if (items[j + 1 + i].children == null) {
-                    items[j + 1 + i].children = [];
-                  }
-                  const temp = items[i];
-                  items[j + 1 + i].children.push(temp);
-                  responseJson.data[i] = null;
-                  break;
-                }
-              }
-            }
-            this.data = items.filter(item => {
-              if (item) {
-                if (item.parentId === 'root' && item.children) {
-                  item.state = 'closed';
-                }
-                return true;
-              } else {
-                return false;
-              }
-            });
+            this.data = TreeUtil.prototype.getJsonForTreeGrid(responseJson.data);
             break;
           case 1000:
             // jwt非法
