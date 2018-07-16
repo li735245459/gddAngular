@@ -1,7 +1,8 @@
 export class CoverType {
-  public pId?: string;
   public id?: string;
+  public createTime?: string;
+  public parent?: string;
   public name?: string;
   public nodeLevel?: number;
-  public createTime?: string;
+  public children?: any;
 }
