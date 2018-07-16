@@ -252,13 +252,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * 取消已选择数据
-   */
-  onUnSelect(): void {
-    this.selectedRow = [];
-  }
-
-  /**
    * 点击添加按钮打开添加弹框
    * 双击行打开编辑弹框
    * @param param
@@ -576,6 +569,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.deleteDlgBtnState = false;
     this.upExcelDlgState = true;
     this.upExcelDlgTitle = null;
+    this.itemForPage = {sex: '0'};
     this.formSubmitState = false;
     this.formValidStyle = true;
     this.levelOne = null;
@@ -587,16 +581,14 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    * 清空分页查询条件
    */
   onCleanSearch(): void {
-    this.itemForPage = {
-      sex: '0'
-    };
+    this.clean();
   }
 
   /**
    * 刷新数据
    */
   onReLoad(): void {
-    this.onCleanSearch();
+    this.clean();
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
 

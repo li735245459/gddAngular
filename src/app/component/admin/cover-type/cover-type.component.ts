@@ -56,7 +56,6 @@ export class CoverTypeComponent implements OnInit {
     this.find();
   }
 
-
   /**
    * 查询
    */
@@ -68,97 +67,27 @@ export class CoverTypeComponent implements OnInit {
             const items = responseJson.data;
             for (let i = 0; i < items.length - 1; i++) {
               for (let j = 0; j < items.length - 1 - i; j++) {
-                if (items[i].parent === items[j + 1 + i].id) {
+                if (items[i].parentId === items[j + 1 + i].id) {
                   if (items[j + 1 + i].children == null) {
                     items[j + 1 + i].children = [];
                   }
                   const temp = items[i];
                   items[j + 1 + i].children.push(temp);
-                  items[j + 1 + i].state = 'closed';
                   responseJson.data[i] = null;
                   break;
                 }
               }
             }
-            this.data = items.filter(item => item).filter(item => {
-              return true;
+            this.data = items.filter(item => {
+              if (item) {
+                if (item.parentId === 'root' && item.children) {
+                  item.state = 'closed';
+                }
+                return true;
+              } else {
+                return false;
+              }
             });
-            console.log(this.data);
-
-
-            // this.data = [{
-            //   'id': 1,
-            //   'name': 'C',
-            //   'size': '',
-            //   'date': '02/19/2010',
-            //   'children': [{
-            //     'id': 2,
-            //     'name': 'Program Files',
-            //     'size': '120 MB',
-            //     'date': '03/20/2010',
-            //     'children': [{
-            //       'id': 21,
-            //       'name': 'Java',
-            //       'size': '',
-            //       'date': '01/13/2010',
-            //       'state': 'closed',
-            //       'children': [{
-            //         'id': 211,
-            //         'name': 'java.exe',
-            //         'size': '142 KB',
-            //         'date': '01/13/2010'
-            //       }, {
-            //         'id': 212,
-            //         'name': 'jawt.dll',
-            //         'size': '5 KB',
-            //         'date': '01/13/2010'
-            //       }]
-            //     }, {
-            //       'id': 22,
-            //       'name': 'MySQL',
-            //       'size': '',
-            //       'date': '01/13/2010',
-            //       'state': 'closed',
-            //       'children': [{
-            //         'id': 221,
-            //         'name': 'my.ini',
-            //         'size': '10 KB',
-            //         'date': '02/26/2009'
-            //       }, {
-            //         'id': 222,
-            //         'name': 'my-huge.ini',
-            //         'size': '5 KB',
-            //         'date': '02/26/2009'
-            //       }, {
-            //         'id': 223,
-            //         'name': 'my-large.ini',
-            //         'size': '5 KB',
-            //         'date': '02/26/2009'
-            //       }]
-            //     }]
-            //   }, {
-            //     'id': 3,
-            //     'name': 'eclipse',
-            //     'size': '',
-            //     'date': '01/20/2010',
-            //     'children': [{
-            //       'id': 31,
-            //       'name': 'eclipse.exe',
-            //       'size': '56 KB',
-            //       'date': '05/19/2009'
-            //     }, {
-            //       'id': 32,
-            //       'name': 'eclipse.ini',
-            //       'size': '1 KB',
-            //       'date': '04/20/2010'
-            //     }, {
-            //       'id': 33,
-            //       'name': 'notice.html',
-            //       'size': '7 KB',
-            //       'date': '03/17/2005'
-            //     }]
-            //   }]
-            // }];
             break;
           case 1000:
             // jwt非法
@@ -290,11 +219,11 @@ export class CoverTypeComponent implements OnInit {
       // 添加状态下---------------------------------------------------------->
       if (this.selectedRow) {
         // 添加子节点---->
-        itemForForm.value.parent = this.selectedRow.id;
+        itemForForm.value.parentId = this.selectedRow.id;
         itemForForm.value.nodeLevel = this.selectedRow.nodeLevel + 1;
       } else {
         // 添加根节点---->
-        itemForForm.value.parent = 'root';
+        itemForForm.value.parentId = 'root';
         itemForForm.value.nodeLevel = 0;
       }
     }
