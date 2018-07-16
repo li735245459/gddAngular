@@ -74,13 +74,16 @@ export class CoverTypeComponent implements OnInit {
                   }
                   const temp = items[i];
                   items[j + 1 + i].children.push(temp);
-                  responseJson.data[i] = {};
+                  items[j + 1 + i].state = 'closed';
+                  responseJson.data[i] = null;
                   break;
                 }
               }
             }
-            // this.data = items.filter(item => item.nodeLevel === 0);
-            console.log(items);
+            this.data = items.filter(item => item).filter(item => {
+              return true;
+            });
+            console.log(this.data);
 
 
             // this.data = [{
@@ -291,7 +294,7 @@ export class CoverTypeComponent implements OnInit {
         itemForForm.value.nodeLevel = this.selectedRow.nodeLevel + 1;
       } else {
         // 添加根节点---->
-        itemForForm.value.parent = '0';
+        itemForForm.value.parent = 'root';
         itemForForm.value.nodeLevel = 0;
       }
     }

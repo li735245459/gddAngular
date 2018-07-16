@@ -5,4 +5,5 @@ export class CoverType {
   public name?: string;
   public nodeLevel?: number;
   public children?: any;
+  public state?: string;
 }
