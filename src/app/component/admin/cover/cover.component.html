@@ -1,3 +1,162 @@
-<p>
-  cover works!
-</p>
+<!--表格操作栏-->
+<eui-panel [collapsible]="true" [collapsed]="true"
+           [panelStyle]=""
+           [headerStyle]="{padding: '2px 0px'}"
+           [bodyStyle]="{padding:'10px 0px'}"
+           [footerStyle]="{padding:'5px 0px', marginBottom:'1px', marginTop:'1px'}">
+  <eui-panel-header>
+    <div class="f-row text-center">
+      <div class="f-full"><h3>{{title}}</h3></div>
+    </div>
+  </eui-panel-header>
+  <!--<div class="container-fluid">-->
+  <!--<div class="row">-->
+  <!--<div class="col-3 form-inline">-->
+  <!--<label for="name">封面名称：</label>-->
+  <!--<input type="text" class="form-control" id="name" name="name" [(ngModel)]="itemForPage.name">-->
+  <!--</div>-->
+  <!--&lt;!&ndash;改成tree&ndash;&gt;-->
+  <!--<div class="col-3 form-inline">-->
+  <!--<label for="covertTypeName">封面类型名称：</label>-->
+  <!--<input type="text" class="form-control" id="covertTypeName" name="covertTypeName"-->
+  <!--[(ngModel)]="itemForPage.covertTypeName">-->
+  <!--</div>-->
+  <!--<div class="col-3 form-inline">-->
+  <!--<label for="isActive">是否激活：</label>-->
+  <!--<select class="form-control" id="isActive" name="sex" [(ngModel)]="itemForPage.isActive">-->
+  <!--<option value="0">所有</option>-->
+  <!--<option value="{{item.value}}" *ngFor="let item of [{value:1,name:'激活'},{value:0,name:'屏蔽'}];">-->
+  <!--{{item.name}}-->
+  <!--</option>-->
+  <!--</select>-->
+  <!--</div>-->
+  <!--</div>-->
+  <!--</div>-->
+  <eui-panel-footer>
+    <eui-linkbutton iconCls="icon-add" [plain]="true" (click)="onOpenEditDlg('add')">添加</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-remove" [plain]="true" (click)="onOpenDeleteDlg('deleteMore')">删除</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('deleteAll')">清空数据</eui-linkbutton>
+    <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
+    <div style="display: inline-block;float: right;">
+      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空条件</eui-linkbutton>
+    </div>
+  </eui-panel-footer>
+</eui-panel>
+
+<!--表格-->
+<eui-datagrid [pagination]="true" [data]="data" [total]="total"
+              [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
+              (pageChange)="onPageChange($event)"
+              idField="id" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
+              [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
+  <!--1-->
+  <eui-grid-column-group frozen="true" align="left" width="710">
+    <eui-grid-header-row>
+      <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="80">
+        <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
+      </eui-grid-column>
+      <eui-grid-column field="name" title="名称" frozen="true" width="150"></eui-grid-column>
+      <eui-grid-column field="isActive" title="状态" [cellCss]="setIsActiveCellCss" align="center" frozen="true"
+                       width="40">
+        <ng-template euiCellTemplate let-row>
+          <div *ngIf="row.isActive==0">屏蔽</div>
+          <div *ngIf="row.isActive==1">激活</div>
+        </ng-template>
+      </eui-grid-column>
+    </eui-grid-header-row>
+  </eui-grid-column-group>
+  <!--2-->
+  <eui-grid-column-group>
+    <eui-grid-header-row>
+      <eui-grid-column field="introduce" title="说明" frozen="true" width="200"></eui-grid-column>
+      <eui-grid-column field="src" title="下载地址" frozen="true" width="100"></eui-grid-column>
+      <eui-grid-column field="link" title="外链" frozen="true" width="100"></eui-grid-column>
+    </eui-grid-header-row>
+  </eui-grid-column-group>
+</eui-datagrid>
+
+<!--添加、编辑弹框-->
+<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+            [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
+            [bodyStyle]="{padding:'5px 2px'}"
+            [footerStyle]="{padding: '10px 0px'}">
+  <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
+  <div class="container user">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
+      <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
+        <!--全局消息-->
+        <div class="form-group">
+          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+        </div>
+        <!--名称-->
+        <div class="form-group user-field">
+          <i class="fa fa-file-image-o fa-lg"></i>
+          <input type="text" class="form-control" formControlName="name"
+                 placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
+        </div>
+        <!--外链地址-->
+        <div class="form-group user-field">
+          <i class="fa fa-cloud-download fa-lg"></i>
+          <input type="text" class="form-control" formControlName="href"
+                 placeholder="{{placeholder.href.title}}{{placeholder.href.prompt}}">
+        </div>
+        <!--说明-->
+        <div class="form-group">
+        <textarea class="form-control" rows="3" formControlName="introduce"
+                  placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>
+        </div>
+        <!--是否激活-->
+        <div class="form-group text-left">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">状态:</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="isActive" value=1>激活
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input type="radio" formControlName="isActive" value=0>屏蔽
+            </label>
+          </div>
+        </div>
+        <!--文件-->
+        <div class="form-group text-left">
+          <input type="file" name="src">
+        </div>
+      </form>
+      <!--封面类型comboTree-->
+      <div class="form-group text-left">
+        <eui-combotree [(ngModel)]="itemForForm.controls['covertTypeName'].value" valueField="text" textField="text" text="text" [data]="coverTypeData" placeholder="请选择封面类型">
+          <eui-tree></eui-tree>
+        </eui-combotree>
+      </div>
+    </div>
+  </div>
+  <!--提交按钮-->
+  <eui-panel-footer>
+    <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
+            [disabled]="formSubmitState||itemForForm.invalid">保存
+    </button>&nbsp;&nbsp;
+    <button type="button" class="btn" (click)="onEditCancel()">取消</button>
+  </eui-panel-footer>
+</eui-dialog>
+
+<!--删除提示弹框-->
+<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
+            panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
+  <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
+  <div>{{msg}}</div>
+  <eui-panel-footer>
+    <eui-button-group style="width:100%;height:50px">
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteSure()">确定
+      </eui-linkbutton>
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+                      (click)="onDeleteCancel()">取消
+      </eui-linkbutton>
+    </eui-button-group>
+  </eui-panel-footer>
+</eui-dialog>

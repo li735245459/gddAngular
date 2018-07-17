@@ -309,7 +309,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    * 创建表单对象
    */
   createItemForForm(): void {
-    // 创建表单对象
     this.itemForForm = this.formBuilder.group({
       'name': [this.editRow.name, [
         Validators.required,

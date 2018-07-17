@@ -13,8 +13,8 @@ export class CoverService {
    * 查询封面类别信息
    * @returns {Observable<any>}
    */
-  findCoverType(): Observable<any> {
-    return this.http.get<any>(`/gdd/cover/findCoverType`);
+  selectCoverType(): Observable<any> {
+    return this.http.get<any>(`/gdd/cover/selectCoverType`);
   }
 
   /**

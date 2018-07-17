@@ -60,7 +60,7 @@ export class GoodsTypeComponent implements OnInit {
    * 查询
    */
   find() {
-    this.service.findGoodsType().subscribe(responseJson => {
+    this.service.selectGoodsType().subscribe(responseJson => {
         switch (responseJson.code) {
           case 0:
             // 成功

@@ -13,8 +13,8 @@ export class GoodsService {
    * 查询商品类别信息
    * @returns {Observable<any>}
    */
-  findGoodsType(): Observable<any> {
-    return this.http.get<any>(`/gdd/goods/findGoodsType`);
+  selectGoodsType(): Observable<any> {
+    return this.http.get<any>(`/gdd/goods/selectGoodsType`);
   }
 
   /**

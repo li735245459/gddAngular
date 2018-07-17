@@ -49,7 +49,7 @@ export class CoverTypeComponent implements OnInit {
     private messagerService: MessagerService,
     private router: Router) {
     // 创建表单对象
-    this.createItemForForm(this.editRow);
+    this.createItemForForm();
   }
 
   ngOnInit() {
@@ -60,7 +60,7 @@ export class CoverTypeComponent implements OnInit {
    * 查询
    */
   find() {
-    this.service.findCoverType().subscribe(responseJson => {
+    this.service.selectCoverType().subscribe(responseJson => {
         switch (responseJson.code) {
           case 0:
             // 成功
@@ -161,14 +161,14 @@ export class CoverTypeComponent implements OnInit {
       // 添加状态下---------------------------------------------------------->
       this.editDlgTitle = '添加封面类型信息';
       this.editRow = new CoverType();
-      this.createItemForForm(this.editRow); // 创建表单对象
+      this.createItemForForm(); // 创建表单对象
       this.editDlgState = false; // 打开弹框
     } else {
       // 编辑状态下---------------------------------------------------------->
       if (this.selectedRow) {
         this.editDlgTitle = '编辑封面类型信息';
         this.editRow = this.selectedRow;
-        this.createItemForForm(this.editRow); // 创建表单对象
+        this.createItemForForm(); // 创建表单对象
         this.editDlgState = false; // 打开弹框
       } else {
         this.messagerService.alert({title: '温馨提示', msg: '您还没有选择数据!', ok: '确定'});
@@ -179,9 +179,9 @@ export class CoverTypeComponent implements OnInit {
   /**
    * 创建表单对象
    */
-  createItemForForm(editRow): void {
+  createItemForForm(): void {
     this.itemForForm = this.formBuilder.group({
-      'name': [editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5_a-zA-Z0-9]{2,10}$')]]
+      'name': [this.editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5_a-zA-Z0-9]{2,20}$')]]
     });
   }
 
