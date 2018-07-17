@@ -36,7 +36,7 @@ export const menus = [
     text: '销售管理',
     iconCls: 'fa fa-pie-chart',
     children: [{
-      text: '销售记录'
+      text: '销售信息'
     }, {
       text: '销售统计'
     }]

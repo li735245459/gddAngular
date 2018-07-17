@@ -10,51 +10,26 @@ export class GoodsService {
   constructor(private http: HttpClient) { }
 
   /**
-   * 分页查询商品类别信息
+   * 查询封面类别信息
    * @returns {Observable<any>}
    */
-  pageByGoodsType(goodsType, pageNumber, pageSize): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/pageByGoodsType/${pageNumber}/${pageSize}`, goodsType);
+  findGoodsType(): Observable<any> {
+    return this.http.get<any>(`/gdd/goods/findGoodsType`);
   }
 
   /**
-   * 分页查询商品信息
-   * @returns {Observable<any>}
+   * 修改封面类别信息
+   * @param coverTypeFormValue
    */
-  pageByGoods(goods, pageNumber, pageSize): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/pageByGoods/${pageNumber}/${pageSize}`, goods);
-  }
-
-
-  /**
-   * 修改商品类别信息
-   * @param goodsTypeFormValue
-   */
-  modifyByGoodsType(goodsTypeFormValue): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/modifyByGoodsType`, goodsTypeFormValue);
+  modifyGoodsType(coverTypeFormValue): Observable<any> {
+    return this.http.post<any>(`/gdd/goods/modifyGoodsType`, coverTypeFormValue);
   }
 
   /**
-   * 修改商品信息
-   * @param goodsFormValue
-   */
-  modifyByGoods(goodsFormValue): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/modifyByGoods`, goodsFormValue);
-  }
-
-  /**
-   * 删除商品类别信息
+   * 删除封面类别信息
    * @param id
    */
-  deleteByGoodsType(id): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/deleteByGoodsType`, id);
-  }
-
-  /**
-   * 删除商品信息
-   * @param id
-   */
-  deleteByGoods(id): Observable<any> {
-    return this.http.post<any>(`/gdd/goods/deleteByGoods`, id);
+  deleteGoodsType(id): Observable<any> {
+    return this.http.post<any>(`/gdd/goods/deleteGoodsType`, id);
   }
 }
