@@ -133,7 +133,7 @@
         <!--文件上传按钮-->
         <div class="form-group text-left" *ngIf="editRow.id == null">
           <input type="file" class="form-control" accept="image/jpeg" id="file" name="file" multiple="multiple"
-                 (change)="onChangeSelectImg($event)">
+                 (change)="onSelectImg($event)">
         </div>
       </form>
       <!--封面类型comboTree-->
@@ -148,7 +148,7 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null">保存
+            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null||(editRow.id==null && upFiles==null)">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
     <!--<div>{{itemForForm.invalid}}</div>-->

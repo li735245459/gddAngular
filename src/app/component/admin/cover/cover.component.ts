@@ -53,6 +53,8 @@ export class CoverComponent implements OnInit, AfterViewInit {
   // 封面类型comboTree
   coverTypeData = [];
   coverTypeName = null;
+  // 上传文件
+  upFiles: any = null;
 
   constructor(
     private service: CoverService,
@@ -244,7 +246,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
    */
   createItemForForm(): void {
     this.itemForForm = this.formBuilder.group({
-      // 'covertTypeName': [this.editRow.covertTypeName]
+      // 'file': [this.editRow.covertTypeName]
     });
     /*动态添加表单对象属性*/
     if (this.editRow && this.editRow.id) {
@@ -261,52 +263,53 @@ export class CoverComponent implements OnInit, AfterViewInit {
     } else {
       // 添加状态下---------------------------------------------------------->
     }
-    console.log(this.itemForForm.value);
+    // console.log(this.itemForForm.value);
   }
 
   /**
-   * 选择本地图片文件
+   * 选择本地文件
    * @param event
    */
-  onChangeSelectImg(event) {
-    console.log(event.target.files.name);
+  onSelectImg(event) {
+    this.upFiles = event.target.files;
   }
 
   /**
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    console.log(document.getElementById('file').dataset);
     itemForForm.value.coverTypeName = this.coverTypeName;
+    const formData: FormData = new FormData();
+    formData.append('files', this.upFiles);
+    itemForForm.value.files = formData;
     console.log(itemForForm.value);
-    return;
-    // this.service.modifyCover(itemForForm.value).subscribe(responseJson => {
-    //   switch (responseJson.code) {
-    //     case 0:
-    //       // 成功
-    //       this.formSubmitState = true; // 禁用表单提交
-    //       this.formValidStyle = true; // 设置全局消息样式为成功
-    //       this.msg = '操作成功!';
-    //       setTimeout(() => {
-    //         this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
-    //         this.editDlgState = true; // 关闭弹框
-    //       }, 1000);
-    //       break;
-    //     case 1000:
-    //       // jwt非法
-    //       this.msg = '登录超时！';
-    //       setTimeout(() => {
-    //         this.router.navigateByUrl('/login');
-    //       }, 500);
-    //       break;
-    //     default:
-    //       // 系统错误
-    //       this.formSubmitState = false; // 激活表单提交按钮
-    //       this.formValidStyle = false; // 设置全局消息样式为失败
-    //       this.msg = responseJson.msg;
-    //       break;
-    //   }
-    // });
+    this.service.modifyCover(itemForForm.value).subscribe(responseJson => {
+      switch (responseJson.code) {
+        case 0:
+          // 成功
+          this.formSubmitState = true; // 禁用表单提交
+          this.formValidStyle = true; // 设置全局消息样式为成功
+          this.msg = '添加成功!';
+          setTimeout(() => {
+            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+            this.editDlgState = true; // 关闭弹框
+          }, 1000);
+          break;
+        case 1000:
+          // jwt非法
+          this.msg = '登录超时！';
+          setTimeout(() => {
+            this.router.navigateByUrl('/login');
+          }, 500);
+          break;
+        default:
+          // 系统错误
+          this.formSubmitState = false; // 激活表单提交按钮
+          this.formValidStyle = false; // 设置全局消息样式为失败
+          this.msg = responseJson.msg;
+          break;
+      }
+    });
   }
 
   /**
@@ -340,6 +343,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
     this.formSubmitState = false;
     this.formValidStyle = true;
     this.coverTypeName = null;
+    this.upFiles = null;
   }
 
   /**
