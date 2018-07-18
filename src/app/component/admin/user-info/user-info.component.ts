@@ -330,7 +330,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       'city': [this.editRow.city, Validators.pattern('^[^"0"].*$')],
       'area': [this.editRow.area, Validators.pattern('^[^"0"].*$')]
     });
-    // 动态添加表单对象属性
+    /*动态添加表单对象属性*/
     for (let i = 0; i < this.hobby.length; i++) {
       const hobbyName = `hobby${i + 1}`;
       if (this.editRow && this.editRow.hobby && this.editRow.hobby.includes(this.hobby[i].name)) {

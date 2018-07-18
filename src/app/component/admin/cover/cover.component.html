@@ -89,47 +89,57 @@
         <div class="form-group">
           <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
         </div>
+        <!--是否激活-->
+        <div class="form-group text-left" *ngIf="editRow.id">
+          <div class="form-control">
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">状态:</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input type="radio" formControlName="isActive" value=1>激活
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input type="radio" formControlName="isActive" value=0>屏蔽
+              </label>
+            </div>
+          </div>
+        </div>
         <!--名称-->
-        <div class="form-group user-field">
+        <div class="form-group user-field" *ngIf="editRow.id">
           <i class="fa fa-file-image-o fa-lg"></i>
           <input type="text" class="form-control" formControlName="name"
                  placeholder="{{placeholder.name.title}}{{placeholder.name.prompt}}">
         </div>
         <!--外链地址-->
-        <div class="form-group user-field">
+        <div class="form-group user-field" *ngIf="editRow.id">
           <i class="fa fa-cloud-download fa-lg"></i>
           <input type="text" class="form-control" formControlName="href"
                  placeholder="{{placeholder.href.title}}{{placeholder.href.prompt}}">
         </div>
         <!--说明-->
-        <div class="form-group">
+        <div class="form-group" *ngIf="editRow.id">
         <textarea class="form-control" rows="3" formControlName="introduce"
                   placeholder="{{placeholder.introduce.title}}{{placeholder.introduce.prompt}}"></textarea>
         </div>
-        <!--是否激活-->
-        <div class="form-group text-left">
-          <div class="form-check form-check-inline">
-            <label class="form-check-label">状态:</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label">
-              <input type="radio" formControlName="isActive" value=1>激活
-            </label>
-          </div>
-          <div class="form-check form-check-inline">
-            <label class="form-check-label">
-              <input type="radio" formControlName="isActive" value=0>屏蔽
-            </label>
-          </div>
+        <!--下载地址-->
+        <div class="form-group user-field" *ngIf="editRow.id">
+          <i class="fa fa-cloud-download fa-lg"></i>
+          <input type="text" class="form-control" formControlName="src" disabled="true"
+                 placeholder="{{placeholder.src.title}}{{placeholder.src.prompt}}">
         </div>
-        <!--文件-->
-        <div class="form-group text-left">
-          <input type="file" name="src">
+        <!--文件上传按钮-->
+        <div class="form-group text-left" *ngIf="editRow.id == null">
+          <input type="file" class="form-control" accept="image/jpeg" id="file" name="file" multiple="multiple"
+                 (change)="onChangeSelectImg($event)">
         </div>
       </form>
       <!--封面类型comboTree-->
       <div class="form-group text-left">
-        <eui-combotree [(ngModel)]="itemForForm.controls['covertTypeName'].value" valueField="text" textField="text" text="text" [data]="coverTypeData" placeholder="请选择封面类型">
+        <eui-combotree [(ngModel)]="coverTypeName" valueField="text" textField="text"
+                       [data]="coverTypeData" placeholder="请选择封面类型" style="width:100%;height:38px;">
           <eui-tree></eui-tree>
         </eui-combotree>
       </div>
@@ -138,9 +148,14 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.invalid">保存
+            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
+    <!--<div>{{itemForForm.invalid}}</div>-->
+    <!--<div>{{itemForForm.controls['isActive'].invalid}}:{{itemForForm.controls['isActive'].value}}</div>-->
+    <!--<div>{{itemForForm.controls['name'].invalid}}:{{itemForForm.controls['name'].value}}</div>-->
+    <!--<div>{{itemForForm.controls['href'].invalid}}:{{itemForForm.controls['href'].value}}</div>-->
+    <!--<div>{{itemForForm.controls['introduce'].invalid}}:{{itemForForm.controls['introduce'].value}}</div>-->
   </eui-panel-footer>
 </eui-dialog>
 

@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {Cover} from '../../../globalModel/Cover';
 import {CoverService} from '../../../service/cover.service';
@@ -47,11 +47,12 @@ export class CoverComponent implements OnInit, AfterViewInit {
   placeholder = { // 表单字段说明
     name: {'title': '封面名称', 'prompt': '(2~20位有效字符)'},
     introduce: {'title': '封面说明', 'prompt': '(0~50位有效字符)'},
-    src: {'title': '下载地址', 'prompt': '(1~500位有效字符)'},
-    href: {'title': '外链地址', 'prompt': '(1~100位有效字符)'}
+    href: {'title': '外链地址', 'prompt': '(0~100位有效字符)'},
+    src: {'title': '下载地址', 'prompt': '(1~500位有效字符)'}
   };
   // 封面类型comboTree
   coverTypeData = [];
+  coverTypeName = null;
 
   constructor(
     private service: CoverService,
@@ -243,48 +244,69 @@ export class CoverComponent implements OnInit, AfterViewInit {
    */
   createItemForForm(): void {
     this.itemForForm = this.formBuilder.group({
-      'name': [this.editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5_a-zA-Z0-9]{2,20}$')]],
-      'isActive': [this.editRow.isActive, [Validators.required, Validators.pattern('^[0|1].*$')]],
-      'introduce': [this.editRow.introduce, [Validators.required, Validators.pattern('^.{0,50}$')]],
-      'href': [this.editRow.href, [Validators.required, Validators.pattern('^.{0,100}$')]],
-      'covertTypeName': [this.editRow.covertTypeName, [Validators.required]]
+      // 'covertTypeName': [this.editRow.covertTypeName]
     });
-    // console.log(this.itemForForm.value);
+    /*动态添加表单对象属性*/
+    if (this.editRow && this.editRow.id) {
+      // 编辑状态下---------------------------------------------------------->
+      this.itemForForm.addControl('isActive',
+        new FormControl(this.editRow.isActive, [Validators.required, Validators.pattern('^[0|1].*$')])); // 添加isActive属性对象
+      this.itemForForm.addControl('name',
+        new FormControl(this.editRow.name, [Validators.required, Validators.pattern('^[\u4e00-\u9fa5_a-zA-Z0-9]{2,20}$')])); // 添加name属性对象
+      this.itemForForm.addControl('href',
+        new FormControl(this.editRow.href, [Validators.pattern('^.{0,100}$')])); // 添加href属性对象
+      this.itemForForm.addControl('introduce',
+        new FormControl(this.editRow.src, [Validators.pattern('^.{0,50}$')])); // 添加introduce属性对象
+      this.itemForForm.addControl('src', new FormControl(this.editRow.src)); // 添加src属性对象
+    } else {
+      // 添加状态下---------------------------------------------------------->
+    }
+    console.log(this.itemForForm.value);
+  }
+
+  /**
+   * 选择本地图片文件
+   * @param event
+   */
+  onChangeSelectImg(event) {
+    console.log(event.target.files.name);
   }
 
   /**
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    itemForForm.value.hobby = itemForForm.value.hobby.join(','); // 将hobby数组转化成字符串
-    this.service.modifyCover(itemForForm.value).subscribe(responseJson => {
-      switch (responseJson.code) {
-        case 0:
-          // 成功
-          this.formSubmitState = true; // 禁用表单提交
-          this.formValidStyle = true; // 设置全局消息样式为成功
-          this.msg = '操作成功!';
-          setTimeout(() => {
-            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
-            this.editDlgState = true; // 关闭弹框
-          }, 1000);
-          break;
-        case 1000:
-          // jwt非法
-          this.msg = '登录超时！';
-          setTimeout(() => {
-            this.router.navigateByUrl('/login');
-          }, 500);
-          break;
-        default:
-          // 系统错误、手机号码已被使用、邮箱已被使用
-          this.itemForForm.value.hobby = this.itemForForm.value.hobby.split(','); // 将hobby字符串转化成数组
-          this.formSubmitState = false; // 激活表单提交按钮
-          this.formValidStyle = false; // 设置全局消息样式为失败
-          this.msg = responseJson.msg;
-          break;
-      }
-    });
+    console.log(document.getElementById('file').dataset);
+    itemForForm.value.coverTypeName = this.coverTypeName;
+    console.log(itemForForm.value);
+    return;
+    // this.service.modifyCover(itemForForm.value).subscribe(responseJson => {
+    //   switch (responseJson.code) {
+    //     case 0:
+    //       // 成功
+    //       this.formSubmitState = true; // 禁用表单提交
+    //       this.formValidStyle = true; // 设置全局消息样式为成功
+    //       this.msg = '操作成功!';
+    //       setTimeout(() => {
+    //         this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+    //         this.editDlgState = true; // 关闭弹框
+    //       }, 1000);
+    //       break;
+    //     case 1000:
+    //       // jwt非法
+    //       this.msg = '登录超时！';
+    //       setTimeout(() => {
+    //         this.router.navigateByUrl('/login');
+    //       }, 500);
+    //       break;
+    //     default:
+    //       // 系统错误
+    //       this.formSubmitState = false; // 激活表单提交按钮
+    //       this.formValidStyle = false; // 设置全局消息样式为失败
+    //       this.msg = responseJson.msg;
+    //       break;
+    //   }
+    // });
   }
 
   /**
@@ -317,6 +339,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
     this.itemForPage = {};
     this.formSubmitState = false;
     this.formValidStyle = true;
+    this.coverTypeName = null;
   }
 
   /**
