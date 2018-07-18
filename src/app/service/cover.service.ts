@@ -48,13 +48,6 @@ export class CoverService {
    * @param coverFormValue
    */
   modifyCover(coverFormValue): Observable<any> {
-    // let headers: HttpHeaders = new HttpHeaders();
-    // let params: HttpParams = new HttpParams();
-    // headers = headers.set('Cache-Control', 'no-cache');
-    // params = params.append('a', 'a');
-    // const req = new HttpRequest('POST', '/gdd/cover/modifyCover', coverFormValue.files, {
-    //   reportProgress: true, headers: headers, params: params
-    // });
     return this.http.post<any>(`/gdd/cover/modifyCover`, coverFormValue.files, {params: {'coverTypeName': coverFormValue.coverTypeName}});
   }
 
