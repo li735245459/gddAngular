@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
-import {GoodsType} from '../../../globalModel/goodsType';
+import {GoodsType} from '../../../globalModel/GoodsType';
 import {GoodsService} from '../../../service/goods.service';
 import {TreeGridComponent} from 'ng-easyui/components/treegrid/treegrid.component';
 import {TreeUtil} from '../../../globalUtil/treeUtil';

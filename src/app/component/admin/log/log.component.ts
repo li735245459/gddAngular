@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {LogService} from '../../../service/log.service';
-import {Log} from '../../../globalModel/log';
+import {Log} from '../../../globalModel/Log';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 import {Router} from '@angular/router';
 

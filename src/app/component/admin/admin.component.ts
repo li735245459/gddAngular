@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Router} from '@angular/router';
-import {User} from '../../globalModel/user';
+import {User} from '../../globalModel/User';
 import {menus} from '../../globalData/MenuData';
 import {AdminService} from '../../service/admin.service';
 

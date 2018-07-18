@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {EmailCode} from '../../../globalModel/emailCode';
+import {EmailCode} from '../../../globalModel/EmailCode';
 import {EmailCodeService} from '../../../service/email-code.service';
 import {MessagerService} from 'ng-easyui/components/messager/messager.service';
 import {Router} from '@angular/router';

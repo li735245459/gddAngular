@@ -6,7 +6,7 @@ import {interval, Subscription} from 'rxjs';
 import {FileButtonComponent} from 'ng-easyui/components/filebutton/filebutton.component';
 
 import {province, hobby} from '../../../globalData/UserData';
-import {User} from '../../../globalModel/user';
+import {User} from '../../../globalModel/User';
 import {UserService} from '../../../service/user.service';
 import {AdminService} from '../../../service/admin.service';
 
