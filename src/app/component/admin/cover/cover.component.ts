@@ -32,8 +32,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
   itemForPage: Cover = {};
   // 添加、编辑弹框
   editDlgTitle: String = null;
-  // editRow: Cover = new Cover(); // 当前需要编辑的数据
-  editRow: Cover = {}; // 当前需要编辑的数据
+  editRow: Cover = new Cover(); // 当前需要编辑的数据
   editDlgState = true; // true关闭弹框,false打开弹框
   // 删除弹框
   selectedRow = []; // 当前选中的数据

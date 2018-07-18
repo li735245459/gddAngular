@@ -29,7 +29,7 @@ export class CoverTypeComponent implements OnInit {
   coverType: number;
   // 添加、编辑弹框
   editDlgTitle: String = null;
-  editRow: CoverType = {}; // 当前需要编辑的数据
+  editRow: CoverType = new CoverType(); // 当前需要编辑的数据
   editDlgState = true; // true关闭弹框,false打开弹框
   // 删除弹框
   deleteDlgTitle: String = null;
@@ -160,7 +160,6 @@ export class CoverTypeComponent implements OnInit {
     if (param === 'add') {
       // 添加状态下---------------------------------------------------------->
       this.editDlgTitle = '添加封面类型信息';
-      this.editRow = new CoverType();
       this.createItemForForm(); // 创建表单对象
       this.editDlgState = false; // 打开弹框
     } else {
@@ -262,7 +261,7 @@ export class CoverTypeComponent implements OnInit {
   clean(): void {
     this.msg = null;
     this.editDlgTitle = null;
-    this.editRow = {};
+    this.editRow = new CoverType();
     this.editDlgState = true;
     this.deleteDlgTitle = null;
     this.treeGridComponent.unselectRow(this.selectedRow);
