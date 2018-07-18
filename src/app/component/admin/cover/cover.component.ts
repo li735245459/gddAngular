@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {DomSanitizer} from '@angular/platform-browser';
 
 import {Cover} from '../../../globalModel/Cover';
 import {CoverService} from '../../../service/cover.service';
@@ -54,13 +55,16 @@ export class CoverComponent implements OnInit, AfterViewInit {
   coverTypeData = [];
   coverTypeName = null;
   // 上传文件
-  upFiles: any = null;
+  files: FileList = null;
+  fileSizeIllegal = false;
+  imgUrls = [];
 
   constructor(
     private service: CoverService,
     private formBuilder: FormBuilder,
     private messagerService: MessagerService,
-    private router: Router) {
+    private router: Router,
+    private sanitizer: DomSanitizer) {
     // 创建表单对象
     this.createItemForForm();
   }
@@ -262,6 +266,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
       this.itemForForm.addControl('src', new FormControl(this.editRow.src)); // 添加src属性对象
     } else {
       // 添加状态下---------------------------------------------------------->
+      // this.itemForForm.addControl('files', new FormControl(null)); // 添加files属性对象
     }
     // console.log(this.itemForForm.value);
   }
@@ -270,18 +275,36 @@ export class CoverComponent implements OnInit, AfterViewInit {
    * 选择本地文件
    * @param event
    */
-  onSelectImg(event) {
-    this.upFiles = event.target.files;
+  onChangeSelectImg(event) {
+    this.files = null;
+    this.imgUrls = [];
+    this.files = event.target.files;
+    for (let index = 0; index < this.files.length; index++) {
+      const file = this.files.item(index);
+      this.imgUrls.push(this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file)));
+      if (file.size > 1024 * 1024) {
+        this.fileSizeIllegal = true;
+      }
+    }
   }
 
   /**
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    itemForForm.value.coverTypeName = this.coverTypeName;
     const formData: FormData = new FormData();
-    formData.append('files', this.upFiles);
-    itemForForm.value.files = formData;
+    if (this.editRow && this.editRow.id) {
+        // 编辑状态下---------------------------------------------------------->
+    } else {
+        // 添加状态下---------------------------------------------------------->
+      for (let index = 0; index < this.files.length; index++) {
+        const singleFile = this.files.item(index);
+        formData.append('files', singleFile);
+      }
+      itemForForm.value.files = formData; // 设置上传文件
+    }
+    itemForForm.value.coverTypeName = this.coverTypeName; // 设置封面类型名称
+    console.log('---');
     console.log(itemForForm.value);
     this.service.modifyCover(itemForForm.value).subscribe(responseJson => {
       switch (responseJson.code) {
@@ -343,7 +366,9 @@ export class CoverComponent implements OnInit, AfterViewInit {
     this.formSubmitState = false;
     this.formValidStyle = true;
     this.coverTypeName = null;
-    this.upFiles = null;
+    this.files = null;
+    this.fileSizeIllegal = false;
+    this.imgUrls = [];
   }
 
   /**

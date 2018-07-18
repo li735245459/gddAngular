@@ -78,8 +78,8 @@
 
 <!--添加、编辑弹框-->
 <eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
-            [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
-            [bodyStyle]="{padding:'5px 2px'}"
+            [panelStyle]="{width:'30%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
+            [bodyStyle]="{padding:'5px 2px',maxHeight:'300px'}"
             [footerStyle]="{padding: '10px 0px'}">
   <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
   <div class="container user">
@@ -88,6 +88,14 @@
         <!--全局消息-->
         <div class="form-group">
           <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+        </div>
+        <!--封面类型comboTree-->
+        <div class="form-group text-left">
+          <eui-combotree [data]="coverTypeData" valueField="text" textField="text" [(ngModel)]="coverTypeName"
+                         [ngModelOptions]="{standalone: true}"
+                         placeholder="请选择封面类型" style="width:100%;height:38px;">
+            <eui-tree></eui-tree>
+          </eui-combotree>
         </div>
         <!--是否激活-->
         <div class="form-group text-left" *ngIf="editRow.id">
@@ -132,23 +140,22 @@
         </div>
         <!--文件上传按钮-->
         <div class="form-group text-left" *ngIf="editRow.id == null">
-          <input type="file" class="form-control" accept="image/jpeg" id="file" name="file" multiple="multiple"
-                 (change)="onSelectImg($event)">
+          <input type="file" class="form-control" accept="image/jpeg" multiple="multiple" placeholder="上传图片"
+                 (change)="onChangeSelectImg($event)">
+        </div>
+        <!--文件预览-->
+        <div class="row" *ngIf="imgUrls">
+          <div class="col-4" *ngFor="let item of imgUrls;">
+            <img [src]="item" style="width:100%;height:auto;padding:2px 0px;">
+          </div>
         </div>
       </form>
-      <!--封面类型comboTree-->
-      <div class="form-group text-left">
-        <eui-combotree [(ngModel)]="coverTypeName" valueField="text" textField="text"
-                       [data]="coverTypeData" placeholder="请选择封面类型" style="width:100%;height:38px;">
-          <eui-tree></eui-tree>
-        </eui-combotree>
-      </div>
     </div>
   </div>
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null||(editRow.id==null && upFiles==null)">保存
+            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null||(editRow.id==null && files==null)||fileSizeIllegal">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
     <!--<div>{{itemForForm.invalid}}</div>-->

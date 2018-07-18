@@ -42,7 +42,8 @@ export class HomeComponent implements OnInit {
   service = [
     {name: '宠物洗澡', img: '../../../assets/img/s2.png'},
     {name: '宠物美容', img: '../../../assets/img/s3.png'},
-    {name: '健康检查', img: '../../../assets/img/s4.png'}
+    {name: '健康检查', img: '../../../assets/img/s4.png'},
+    {name: '健康检查', img: '../../../assets/img/s5.png'}
   ];
 
   constructor() {

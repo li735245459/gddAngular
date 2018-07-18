@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
+import {interpolateParams} from '@angular/animations/browser/src/util';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoverService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   /**
    * 查询封面类别信息
@@ -46,7 +48,14 @@ export class CoverService {
    * @param coverFormValue
    */
   modifyCover(coverFormValue): Observable<any> {
-    return this.http.post<any>(`/gdd/cover/modifyCover`, coverFormValue);
+    // let headers: HttpHeaders = new HttpHeaders();
+    // let params: HttpParams = new HttpParams();
+    // headers = headers.set('Cache-Control', 'no-cache');
+    // params = params.append('a', 'a');
+    // const req = new HttpRequest('POST', '/gdd/cover/modifyCover', coverFormValue.files, {
+    //   reportProgress: true, headers: headers, params: params
+    // });
+    return this.http.post<any>(`/gdd/cover/modifyCover`, coverFormValue.files, {params: {'coverTypeName': coverFormValue.coverTypeName}});
   }
 
   /**
