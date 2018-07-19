@@ -27,30 +27,30 @@ export class GlobalHttpIntercept implements HttpInterceptor {
       req.url.includes('gdd/user/modifyPassword')
     ) {
       // 服务器无需校验jwt---------------------------------------------------------->
-      globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
     } else {
       // 服务器需要校验jwt---------------------------------------------------------->
-      const jwt = sessionStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt'); // 获取本地jwt
       if (jwt) {
-        globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + jwt}});
-        /*全局【导出】请求拦截*/
-        if (req.url.includes('gdd/excel/export')) {
-          globalReq = globalReq.clone({setHeaders: {'Content-Type': 'application/json'}});
-          globalReq = globalReq.clone({responseType: 'blob'});
+        globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + jwt}}); // 设置请求头内容-jwt
+        /*全局【导出文件】请求拦截*/
+        if (req.url.includes('gdd/file/export')) {
+          globalReq = globalReq.clone({responseType: 'blob'}); // 指定服务器响应的类型(arraybuffer,blob,document,json,text)
+          globalReq = globalReq.clone({reportProgress: true}); // 跟踪文件下载进度
         }
-        /*全局【导入】请求拦截*/
+        /*全局【导入文件】请求拦截*/
+        if (req.url.includes('gdd/file/import')) {
+          globalReq = globalReq.clone({reportProgress: true}); // 跟踪文件上传进度
+        }
       }
     }
     /*next.handle(globalReq)把 HTTP 请求转换成 HttpEvents 组成的 Observable,它最终包含的是来自服务器的响应*/
     return next.handle(globalReq).pipe(
-      /*错误处理*/
-      catchError(this.logService.handleError<any>(`${globalReq.url}请求发生错误`)),
-      /*查看响应数据*/
+      catchError(this.logService.handleError<any>(`${globalReq.url}请求发生错误`)), // 错误处理
       tap(event => {
         if (event instanceof HttpResponse) {
           // this.logService.print(`全局HTTP拦截器响应请求${globalReq.url}--状态:${event.statusText},信息:${event.body.msg}`);
         }
-      })
+      }) // 查看响应数据
     );
   }
 }

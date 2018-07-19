@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Md5} from 'ts-md5';
 
 import {UserService} from '../../../service/user.service';
-import {hobby, province} from '../../../globalData/UserData';
-import {Md5} from 'ts-md5';
+import {hobby, province} from '../../../globalModel/JsonLocalData';
 
 @Component({
   selector: 'app-register',

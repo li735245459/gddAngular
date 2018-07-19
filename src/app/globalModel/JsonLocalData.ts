@@ -1,3 +1,60 @@
+/*后台管理-全局菜单*/
+export const menus = [
+  {
+    text: '用户管理',
+    iconCls: 'fa fa-user-o',
+    state: 'open',
+    children: [{
+      text: '用户信息',
+      link: 'user'
+      // children: [{
+      //   text: '基本信息',
+      //   selected: true,
+      //   link: 'user'
+      // }]
+    }]
+  }, {
+    text: '图片管理',
+    iconCls: 'fa fa-file-picture-o',
+    children: [{
+      text: '图片分类',
+      link: 'coverType',
+    }, {
+      text: '图片信息',
+      link: 'cover',
+    }]
+  }, {
+    text: '商品管理',
+    iconCls: 'fa fa-shopping-bag',
+    children: [{
+      text: '商品分类',
+      link: 'goodsType',
+    }, {
+      text: '商品信息',
+      link: 'goods',
+    }]
+  }, {
+    text: '销售管理',
+    iconCls: 'fa fa-pie-chart',
+    children: [{
+      text: '销售信息'
+    }, {
+      text: '销售统计'
+    }]
+  }, {
+    text: '系统管理',
+    iconCls: 'fa fa-print',
+    children: [{
+      text: '日志',
+      link: 'log',
+    },
+      {
+        text: '验证码',
+        link: 'emailCode',
+      }]
+  }];
+
+/*用户模块: hobby*/
 export const hobby = [
   {'id': '1', 'name': '篮球'},
   {'id': '2', 'name': '足球'},
@@ -5,6 +62,7 @@ export const hobby = [
   {'id': '4', 'name': '皮球'},
 ];
 
+/*用户模块: province*/
 export const province = [
   {
     'id': '100',
@@ -236,7 +294,8 @@ export const province = [
           {'id': '1040612', 'name': '饶阳县'}
         ]
       },
-      {'id': '10407', 'name': '沧州市', 'child': [
+      {
+        'id': '10407', 'name': '沧州市', 'child': [
           {'id': '1040700', 'name': '新华区'},
           {'id': '1040701', 'name': '运河区'},
           {'id': '1040702', 'name': '开发区'},
@@ -254,7 +313,8 @@ export const province = [
           {'id': '1040714', 'name': '吴桥县'},
           {'id': '1040715', 'name': '献县和孟村回族自治县'}
 
-        ]},
+        ]
+      },
       {'id': '10408', 'name': '廊坊市', 'child': null},
       {'id': '10409', 'name': '唐山市', 'child': null},
       {'id': '104010', 'name': '秦皇岛市', 'child': null},

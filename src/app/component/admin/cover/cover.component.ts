@@ -57,7 +57,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
   // 上传文件
   files: FileList = null;
   fileSizeIllegal = false;
-  imgUrls = [];
+  fileUrls = [];
 
   constructor(
     private service: CoverService,
@@ -276,13 +276,12 @@ export class CoverComponent implements OnInit, AfterViewInit {
    * @param event
    */
   onChangeSelectImg(event) {
-    this.files = null;
-    this.imgUrls = [];
-    this.files = event.target.files;
-    for (let index = 0; index < this.files.length; index++) {
-      const file = this.files.item(index);
-      this.imgUrls.push(this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file)));
-      if (file.size > 1024 * 1024) {
+    this.files = null; // 清空已选择的文件
+    this.fileUrls = []; // 清空已选择的文件地址
+    this.files = event.target.files; // 获取选择的文件
+    for (const file of event.target.files) {
+      this.fileUrls.push(this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file)));
+      if (file.size > 1024 * 1024 * 1) {
         this.fileSizeIllegal = true;
       }
     }
@@ -292,47 +291,45 @@ export class CoverComponent implements OnInit, AfterViewInit {
    * 保存添加、编辑-提交表单
    */
   onSubmitForm(itemForForm): void {
-    const formData: FormData = new FormData();
     if (this.editRow && this.editRow.id) {
-        // 编辑状态下---------------------------------------------------------->
+      // 编辑状态下---------------------------------------------------------->
     } else {
-        // 添加状态下---------------------------------------------------------->
+      // 添加状态下---------------------------------------------------------->
+      const formData: FormData = new FormData();
       for (let index = 0; index < this.files.length; index++) {
-        const singleFile = this.files.item(index);
-        formData.append('files', singleFile);
+        const file = this.files.item(index);
+        /*set和append的区别在于,如果键已经存在set会使用新值覆盖已有的值而append会把新值添加到已有值集合的后面*/
+        formData.append('files', file); // 设置上传文件
       }
-      itemForForm.value.files = formData; // 设置上传文件
+      formData.set('coverTypeName', this.coverTypeName); // 设置封面类型名称
+      this.service.insertCover(formData).subscribe(responseJson => {
+        switch (responseJson.code) {
+          case 0:
+            // 成功
+            this.formSubmitState = true; // 禁用表单提交
+            this.formValidStyle = true; // 设置全局消息样式为成功
+            this.msg = '添加成功!';
+            setTimeout(() => {
+              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
+              this.editDlgState = true; // 关闭弹框
+            }, 1000);
+            break;
+          case 1000:
+            // jwt非法
+            this.msg = '登录超时！';
+            setTimeout(() => {
+              this.router.navigateByUrl('/login');
+            }, 500);
+            break;
+          default:
+            // 系统错误
+            this.formSubmitState = false; // 激活表单提交按钮
+            this.formValidStyle = false; // 设置全局消息样式为失败
+            this.msg = responseJson.msg;
+            break;
+        }
+      });
     }
-    itemForForm.value.coverTypeName = this.coverTypeName; // 设置封面类型名称
-    console.log('---');
-    console.log(itemForForm.value);
-    this.service.modifyCover(itemForForm.value).subscribe(responseJson => {
-      switch (responseJson.code) {
-        case 0:
-          // 成功
-          this.formSubmitState = true; // 禁用表单提交
-          this.formValidStyle = true; // 设置全局消息样式为成功
-          this.msg = '添加成功!';
-          setTimeout(() => {
-            this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize}); // 重置当前页数据
-            this.editDlgState = true; // 关闭弹框
-          }, 1000);
-          break;
-        case 1000:
-          // jwt非法
-          this.msg = '登录超时！';
-          setTimeout(() => {
-            this.router.navigateByUrl('/login');
-          }, 500);
-          break;
-        default:
-          // 系统错误
-          this.formSubmitState = false; // 激活表单提交按钮
-          this.formValidStyle = false; // 设置全局消息样式为失败
-          this.msg = responseJson.msg;
-          break;
-      }
-    });
   }
 
   /**
@@ -368,7 +365,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
     this.coverTypeName = null;
     this.files = null;
     this.fileSizeIllegal = false;
-    this.imgUrls = [];
+    this.fileUrls = [];
   }
 
   /**

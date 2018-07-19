@@ -140,12 +140,12 @@
         </div>
         <!--文件上传按钮-->
         <div class="form-group text-left" *ngIf="editRow.id == null">
-          <input type="file" class="form-control" accept="image/jpeg" multiple="multiple" placeholder="上传图片"
+          <input type="file" class="form-control" accept="image/jpeg" multiple="multiple" id="files" placeholder="上传图片"
                  (change)="onChangeSelectImg($event)">
         </div>
         <!--文件预览-->
-        <div class="row" *ngIf="imgUrls">
-          <div class="col-4" *ngFor="let item of imgUrls;">
+        <div class="row" *ngIf="fileUrls">
+          <div class="col-4" *ngFor="let item of fileUrls;">
             <img [src]="item" style="width:100%;height:auto;padding:2px 0px;">
           </div>
         </div>

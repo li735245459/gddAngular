@@ -265,6 +265,7 @@
 <eui-dialog [title]="upExcelDlgTitle" [closed]="upExcelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'400px'}">
   <eui-filebutton style="width:100%;" btnCls="c2" [autoUpload]="false" [multiple]="false"
+                  accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                   [fileId]="'upExcelFile'"
                   (select)="onFileSelect($event)">选择文件(xls或xlsx)
   </eui-filebutton>

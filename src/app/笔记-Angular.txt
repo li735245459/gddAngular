@@ -210,3 +210,18 @@ Observable可观察对象用于在发布者和订阅者之间传递消息
       );
 
 
+
+======Content-Type(表示请求中的媒体类型信息)======
+1、spring boot响应头中的Content-Type默认为application/json;charset=UTF-8
+2、angular POST请求头中的Content-Type默认为application/json
+  2.1、当POST请求内容为FormData时,Content-Type会自动转化成multipart/form-data; boundary=----WebKitFormBoundaryWUvRNXBPnEMpBKw7
+  3.1、FormData对象用以将数据编译成键值对,以便用XMLHttpRequest来发送数据。其主要用于发送表单数据,但亦可用于发送带键数据而独立于表单使用
+  4.1、FormData对象的字段类型可以是 Blob, File, 或者 string: 如果它的字段类型不是Blob也不是File，则会被转换成字符串类型
+======Mime Types By File Extension======
+text/html：HTML格式、text/plain：纯文本格式、text/xml：ML格式
+image/gif、image/jpeg、image/png
+application/json: JSON数据格式
+application/octet-stream: 二进制流数据（如常见的文件下载）
+application/x-www-form-urlencoded：表单数据被编码为key/value格式发送到服务器(默认)。表单中涉及到文件上传时需设置encType='multipart/form-data'
+application/vnd.ms-excel： Office2003(.xls)
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet: Office2007(.xlsx)

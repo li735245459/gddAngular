@@ -69,8 +69,8 @@ export class UserService {
    * 分页查询用户信息
    * @returns {Observable<any>}
    */
-  page(user, pageNumber, pageSize): Observable<any> {
-    return this.http.post<any>(`/gdd/user/page/${pageNumber}/${pageSize}`, user);
+  page(itemForPage, pageNumber, pageSize): Observable<any> {
+    return this.http.post<any>(`/gdd/user/page/${pageNumber}/${pageSize}`, itemForPage);
   }
 
   /**
@@ -97,7 +97,7 @@ export class UserService {
    * @returns {Observable<any>}
    */
   export(itemForPage): Observable<any> {
-    return this.http.post<any>(`/gdd/excel/exportUser`, itemForPage);
+    return this.http.post<any>(`/gdd/file/exportUser`, itemForPage);
   }
 
   /**
@@ -106,7 +106,7 @@ export class UserService {
    * @returns {Observable<any>}
    */
   import(formData: FormData): Observable<any> {
-    return this.http.post<any>(`/gdd/excel/importUser`, formData);
+    return this.http.post<any>(`/gdd/file/importUser`, formData);
   }
 
 

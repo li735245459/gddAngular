@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Router} from '@angular/router';
 import {User} from '../../globalModel/User';
-import {menus} from '../../globalData/MenuData';
 import {AdminService} from '../../service/admin.service';
+import {menus} from '../../globalModel/JsonLocalData';
 
 @Component({
   selector: 'app-admin',

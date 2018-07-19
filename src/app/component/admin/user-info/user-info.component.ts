@@ -5,10 +5,10 @@ import {Router} from '@angular/router';
 import {interval, Subscription} from 'rxjs';
 import {FileButtonComponent} from 'ng-easyui/components/filebutton/filebutton.component';
 
-import {province, hobby} from '../../../globalData/UserData';
 import {User} from '../../../globalModel/User';
 import {UserService} from '../../../service/user.service';
 import {AdminService} from '../../../service/admin.service';
+import {hobby, province} from '../../../globalModel/JsonLocalData';
 
 @Component({
   selector: 'app-user-info',
@@ -451,7 +451,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * excel
+   * excel操作栏
    */
   excel(param): void {
     if (param.includes('import')) {
@@ -469,7 +469,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
         progressSubscribe.unsubscribe(); // 关闭进度条
         this.progressValue = 10; // 重置进度条
         this.progressDlgState = true; // 关闭进度条弹框
-        const blob = new Blob([responseBlob], {'type': 'application/vnd.ms-excel'});
+        const blob = new Blob([responseBlob], {'type': 'application/vnd.ms-excel'}); // Office2003
         const fileName = '用户信息.xls';
         if (window.navigator.msSaveOrOpenBlob) {
           navigator.msSaveBlob(blob, fileName); // For IE浏览器
@@ -508,7 +508,8 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
             this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
           });
           const formData: FormData = new FormData();
-          formData.append('file', file);
+          formData.set('file', file);
+          /*上传文件*/
           this.service.import(formData).subscribe((responseJson) => {
             progressSubscribe.unsubscribe(); // 关闭进度条
             this.progressValue = 10; // 重置进度条
