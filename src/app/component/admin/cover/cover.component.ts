@@ -285,6 +285,7 @@ export class CoverComponent implements OnInit, AfterViewInit {
         this.fileSizeIllegal = true;
       }
     }
+    event.currentTarget.value = null; // 清空文件
   }
 
   /**
