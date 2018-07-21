@@ -47,7 +47,7 @@ export class CoverService {
    * {params: {'coverTypeName': coverFormValue.coverTypeName}}
    * @param coverFormValue
    */
-  insertCover(formData: FormData): Observable<any> {
+  importCover(formData: FormData): Observable<any> {
     return this.http.post<any>(`/gdd/file/importCover`, formData);
   }
 

@@ -140,7 +140,7 @@
         </div>
         <!--文件上传按钮-->
         <div class="form-group text-left" *ngIf="editRow.id == null">
-          <input type="file" class="form-control" accept="image/jpeg" multiple="multiple" id="files" placeholder="上传图片"
+          <input type="file" class="form-control" id="files" accept="image/jpeg" multiple="multiple" placeholder="上传图片"
                  (change)="onChangeSelectImg($event)">
         </div>
         <!--文件预览-->
@@ -155,7 +155,7 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null||(editRow.id==null && files==null)||fileSizeIllegal">保存
+            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null||(editRow.id==null && filesLength == 0)">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
     <!--<div>{{itemForForm.invalid}}</div>-->

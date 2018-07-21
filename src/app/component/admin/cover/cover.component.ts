@@ -55,9 +55,9 @@ export class CoverComponent implements OnInit, AfterViewInit {
   coverTypeData = [];
   coverTypeName = null;
   // 上传文件
-  files: FileList = null;
-  fileSizeIllegal = false;
-  fileUrls = [];
+  formData: FormData = new FormData(); // 存储上传的文件和封面类型
+  fileUrls = []; // 上传文件的url地址
+  filesLength = 0; // 上传文件的个数,至少一个
 
   constructor(
     private service: CoverService,
@@ -276,16 +276,29 @@ export class CoverComponent implements OnInit, AfterViewInit {
    * @param event
    */
   onChangeSelectImg(event) {
-    this.files = null; // 清空已选择的文件
-    this.fileUrls = []; // 清空已选择的文件地址
-    this.files = event.target.files; // 获取选择的文件
-    for (const file of event.target.files) {
-      this.fileUrls.push(this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file)));
-      if (file.size > 1024 * 1024 * 1) {
-        this.fileSizeIllegal = true;
+    this.formData = new FormData();
+    this.fileUrls = [];
+    const files: FileList = event.target.files; // 上传的文件
+    this.filesLength = files.length; // 上传文件的个数,至少为1个文件
+    for (let index = 0; index < this.filesLength; index++) {
+      const file = files.item(index);
+      const fileType = file.type;
+      if (fileType !== 'image/jpeg') {
+        this.messagerService.alert({title: '温馨提示', msg: '请选择格式为jpg类型的图片文件', ok: '确定'});
+        event.currentTarget.value = null; // 清空选择的文件
+        return;
       }
+      const fileSize = file.size;
+      if (fileSize > 1 * 1024 * 1024) {
+        this.messagerService.alert({title: '温馨提示', msg: '请选择大小在1M以内的图片文件', ok: '确定'});
+        event.currentTarget.value = null; // 清空选择的文件
+        return;
+      }
+      /*set和append的区别在于,如果键已经存在set会使用新值覆盖已有的值而append会把新值添加到已有值集合的后面*/
+      this.formData.append('files', file); // 追加上传的文件
+      this.fileUrls.push(this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file))); // 获取上传文件的地址
     }
-    event.currentTarget.value = null; // 清空文件
+
   }
 
   /**
@@ -296,14 +309,8 @@ export class CoverComponent implements OnInit, AfterViewInit {
       // 编辑状态下---------------------------------------------------------->
     } else {
       // 添加状态下---------------------------------------------------------->
-      const formData: FormData = new FormData();
-      for (let index = 0; index < this.files.length; index++) {
-        const file = this.files.item(index);
-        /*set和append的区别在于,如果键已经存在set会使用新值覆盖已有的值而append会把新值添加到已有值集合的后面*/
-        formData.append('files', file); // 设置上传文件
-      }
-      formData.set('coverTypeName', this.coverTypeName); // 设置封面类型名称
-      this.service.insertCover(formData).subscribe(responseJson => {
+      this.formData.set('coverTypeName', this.coverTypeName); // 设置封面类型名称
+      this.service.importCover(this.formData).subscribe(responseJson => {
         switch (responseJson.code) {
           case 0:
             // 成功
@@ -364,9 +371,12 @@ export class CoverComponent implements OnInit, AfterViewInit {
     this.formSubmitState = false;
     this.formValidStyle = true;
     this.coverTypeName = null;
-    this.files = null;
-    this.fileSizeIllegal = false;
     this.fileUrls = [];
+    this.formData = new FormData();
+    this.filesLength = 0;
+    /*清空选择的文件*/
+    document.getElementById('files').setAttribute('type', 'text');
+    document.getElementById('files').setAttribute('type', 'file');
   }
 
   /**
