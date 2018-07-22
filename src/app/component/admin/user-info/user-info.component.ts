@@ -491,57 +491,63 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    * 选择文件上传
    */
   onFileSelect(event): void {
-    switch (event.length) {
+    switch (event && event.length) {
       case 0:
         this.messagerService.alert({title: '温馨提示', msg: '请选择文件!', ok: '确定'});
         break;
       case 1:
         const file: File = event[0];
-        const fileType = file.type;
-        const fileSize = file.size;
-        if (fileSize < (1024 * 1024 * 5) &&
-          (fileType === 'application/vnd.ms-excel' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-          this.onCloseDlg(); // 关闭上传文件弹框
-          this.progressDlgState = false; // 打开进度条弹框
-          const progressSubscribe = interval(500).subscribe(() => {
-            this.progressValue += Math.floor(Math.random() * 20);
-            this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
-          });
-          const formData: FormData = new FormData();
-          formData.set('file', file);
-          /*上传文件*/
-          this.service.import(formData).subscribe((responseJson) => {
-            progressSubscribe.unsubscribe(); // 关闭进度条
-            this.progressValue = 10; // 重置进度条
-            this.progressDlgState = true; // 关闭进度条弹框
-            switch (responseJson.code) {
-              case 0:
-                // 导入成功
-                this.messagerService.alert({title: '温馨提示', msg: '导入成功!', ok: '确定'});
-                this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
-                break;
-              case 1000:
-                // jwt非法
-                this.messagerService.confirm({
-                  title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
-                  result: (r) => {
-                    if (r) {
-                      setTimeout(() => {
-                        this.router.navigateByUrl('/login');
-                      }, 500);
-                    }
-                  }
-                });
-                break;
-              default:
-                // 系统错误
-                this.messagerService.alert({title: '温馨提示', msg: '导入错误!', ok: '确定'});
-                break;
-            }
-          });
-        } else {
-          this.messagerService.alert({title: '温馨提示', msg: '请检查文件格式、大小是否合法!', ok: '确定'});
+        const fileType = file.type; // 文件类型
+        /*判断文件类型*/
+        if (fileType !== 'application/vnd.ms-excel' && fileType !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+          this.messagerService.alert({title: '温馨提示', msg: '请选择格式为xls或xlsx的Excel文件', ok: '确定'});
+          return;
         }
+        /*判断文件大小*/
+        const fileSize = file.size; // 文件大小
+        if (fileSize > (5 * 1024 * 1024)) {
+          this.messagerService.alert({title: '温馨提示', msg: '请选择5M以内的Excel文件', ok: '确定'});
+          return;
+        }
+        /*关闭上传弹框并打开精度条弹框*/
+        this.onCloseDlg(); // 关闭上传文件弹框
+        this.progressDlgState = false; // 打开进度条弹框
+        const progressSubscribe = interval(500).subscribe(() => {
+          this.progressValue += Math.floor(Math.random() * 20);
+          this.progressValue = this.progressValue > 100 ? 10 : this.progressValue;
+        });
+        const formData: FormData = new FormData();
+        formData.set('file', file);
+        /*上传文件*/
+        this.service.import(formData).subscribe((responseJson) => {
+          progressSubscribe.unsubscribe(); // 关闭进度条
+          this.progressValue = 10; // 重置进度条
+          this.progressDlgState = true; // 关闭进度条弹框
+          switch (responseJson.code) {
+            case 0:
+              // 导入成功
+              this.messagerService.alert({title: '温馨提示', msg: '导入成功!', ok: '确定'});
+              this.onPageChange({pageNumber: this.pageNumber, pageSize: this.pageSize});
+              break;
+            case 1000:
+              // jwt非法
+              this.messagerService.confirm({
+                title: '温馨提示', msg: '登录超时,是否重新登录!', ok: '确定', cancel: '取消',
+                result: (r) => {
+                  if (r) {
+                    setTimeout(() => {
+                      this.router.navigateByUrl('/login');
+                    }, 500);
+                  }
+                }
+              });
+              break;
+            default:
+              // 系统错误
+              this.messagerService.alert({title: '温馨提示', msg: '导入错误!', ok: '确定'});
+              break;
+          }
+        });
         break;
     }
     this.fileButtonComponent.clear(); // 清空选择的文件
