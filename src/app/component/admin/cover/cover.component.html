@@ -51,27 +51,27 @@
               idField="id" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
               [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
   <!--1-->
-  <eui-grid-column-group frozen="true" align="left" width="710">
+  <eui-grid-column-group frozen="true" align="left" width="600">
     <eui-grid-header-row>
-      <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="80">
+      <eui-grid-column cellCss="datagrid-td-rownumber" title="序号" align="center" frozen="true" width="100">
         <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
       </eui-grid-column>
-      <eui-grid-column field="name" title="名称" frozen="true" width="150"></eui-grid-column>
-      <eui-grid-column field="isActive" title="状态" [cellCss]="setIsActiveCellCss" align="center" frozen="true"
-                       width="40">
+      <eui-grid-column field="name" title="名称" frozen="true" width="200"></eui-grid-column>
+      <eui-grid-column field="isActive" title="状态" [cellCss]="setIsActiveCellCss" frozen="true" width="100">
         <ng-template euiCellTemplate let-row>
-          <div *ngIf="row.isActive==0">屏蔽</div>
-          <div *ngIf="row.isActive==1">激活</div>
+          <div *ngIf="row.isActive==false">屏蔽</div>
+          <div *ngIf="row.isActive==true">激活</div>
         </ng-template>
       </eui-grid-column>
+      <eui-grid-column field="coverTypeName" title="类别" frozen="true" width="200"></eui-grid-column>
     </eui-grid-header-row>
   </eui-grid-column-group>
   <!--2-->
   <eui-grid-column-group>
     <eui-grid-header-row>
-      <eui-grid-column field="introduce" title="说明" frozen="true" width="200"></eui-grid-column>
-      <eui-grid-column field="src" title="下载地址" frozen="true" width="100"></eui-grid-column>
-      <eui-grid-column field="link" title="外链" frozen="true" width="100"></eui-grid-column>
+      <eui-grid-column field="src" title="下载地址" width="500"></eui-grid-column>
+      <eui-grid-column field="link" title="外链" width="500"></eui-grid-column>
+      <eui-grid-column field="introduce" title="说明" width="500"></eui-grid-column>
     </eui-grid-header-row>
   </eui-grid-column-group>
 </eui-datagrid>

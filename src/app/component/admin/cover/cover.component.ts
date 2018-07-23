@@ -298,7 +298,6 @@ export class CoverComponent implements OnInit, AfterViewInit {
       this.formData.append('files', file); // 追加上传的文件
       this.fileUrls.push(this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file))); // 获取上传文件的地址
     }
-
   }
 
   /**

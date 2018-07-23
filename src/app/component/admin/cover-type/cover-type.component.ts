@@ -48,12 +48,11 @@ export class CoverTypeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private messagerService: MessagerService,
     private router: Router) {
-    // 创建表单对象
-    this.createItemForForm();
+    this.createItemForForm(); // 创建表单对象
   }
 
   ngOnInit() {
-    this.find();
+    this.find(); // 查询封面类型
   }
 
   /**
@@ -93,7 +92,7 @@ export class CoverTypeComponent implements OnInit {
    * 点击删除按钮打开删除弹框
    */
   onOpenDeleteDlg(): void {
-    this.checkedRow = this.treeGridComponent.getCheckedRows();
+    this.checkedRow = this.treeGridComponent.getCheckedRows(); // 获取checked的数据
     if (this.checkedRow.length > 0) {
       this.msg = '确定要删除所选数据!';
     } else {
@@ -109,7 +108,7 @@ export class CoverTypeComponent implements OnInit {
    */
   onDeleteSure(): void {
     this.deleteDlgBtnState = true; // 禁用弹框(确认、取消)按钮
-    const id = this.checkedRow.map(row => row.id).join(',');
+    const id = this.checkedRow.map(row => row.id).join(','); // 过滤数组中的id并转化成以,号分割的字符串
     this.service.deleteCoverType(id).subscribe(responseJson => {
       switch (responseJson.code) {
         case 0:
@@ -134,7 +133,6 @@ export class CoverTypeComponent implements OnInit {
           break;
       }
     });
-    // }
   }
 
   /**
