@@ -19,22 +19,22 @@
 
 <!--Tree表格-->
 <eui-treegrid [data]="data" idField="id" treeField="name" [loading]="loading" [loadMsg]="loadMsg"
-              [checkbox]="true" [cascadeCheck]="true" (rowClick)="onRowClick($event)">
+              [checkbox]="true" [cascadeCheck]="true" [(selection)]="selectRow">
   <eui-grid-column field="name" title="封面类型名称"></eui-grid-column>
   <eui-grid-column field="createTime" title="创建时间"></eui-grid-column>
 </eui-treegrid>
 
 <!--删除提示弹框-->
-<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
+<eui-dialog [closed]="deleteDlgClosed" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
   <div>{{msg}}</div>
   <eui-panel-footer>
     <eui-button-group style="width:100%;height:50px">
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnDisabled"
                       (click)="onDeleteSure()">确定
       </eui-linkbutton>
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnDisabled"
                       (click)="onDeleteCancel()">取消
       </eui-linkbutton>
     </eui-button-group>
@@ -42,7 +42,7 @@
 </eui-dialog>
 
 <!--添加、编辑弹框-->
-<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+<eui-dialog [closed]="editDlgClosed" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'30%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
             [bodyStyle]="{padding:'5px 2px'}"
             [footerStyle]="{padding: '10px 0px'}">
@@ -52,7 +52,7 @@
       <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
         <!--全局消息-->
         <div class="form-group">
-          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+          <div class="alert" [ngClass]="formValidSuccess?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
         </div>
         <!--名称-->
         <div class="form-group user-field">
@@ -66,7 +66,7 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.invalid">保存
+            [disabled]="formBtnDisabled||itemForForm.invalid">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
   </eui-panel-footer>

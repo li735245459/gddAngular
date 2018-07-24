@@ -71,8 +71,8 @@
 <eui-datagrid [pagination]="true" [data]="data" [total]="total"
               [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
               (pageChange)="onPageChange($event)"
-              idField="id" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
-              [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
+              idField="id" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg"
+              selectionMode="multiple" [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
   <!--1-->
   <eui-grid-column-group frozen="true" align="left" width="710">
     <eui-grid-header-row>

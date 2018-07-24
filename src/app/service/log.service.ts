@@ -35,22 +35,6 @@ export class LogService {
       // console.error(`url:${error.url}`);
       // console.error(`ok:${error.ok}`);
       // console.error(`message:${error.message}`);
-      switch (error.status) {
-        case 0:
-          this.msg = `服务器连接断开`;
-          break;
-        case 403:
-          this.msg = `服务器拒绝访问`;
-          break;
-        case 404:
-          this.msg = `访问的页面不存在`;
-          break;
-        case 500:
-          this.msg = `服务器系统错误`;
-          break;
-        default:
-          this.msg = `未知错误`;
-      }
       this.print(`${operation}--状态码:${error.status},错误信息:${error.message}`);
       this.router.navigateByUrl(`error`);
       return of(result as T);

@@ -38,8 +38,8 @@
     <eui-linkbutton iconCls="icon-cancel" [plain]="true" (click)="onOpenDeleteDlg('deleteAll')">清空数据</eui-linkbutton>
     <eui-linkbutton iconCls="icon-reload" [plain]="true" (click)="onReLoad()">刷新</eui-linkbutton>
     <div style="display: inline-block;float: right;">
-      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
-      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空条件</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onScreening()">筛选</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanScreening()">清空条件</eui-linkbutton>
     </div>
   </eui-panel-footer>
 </eui-panel>
@@ -48,8 +48,8 @@
 <eui-datagrid [pagination]="true" [data]="data" [total]="total"
               [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
               (pageChange)="onPageChange($event)"
-              idField="id" [loading]="loading" [loadMsg]="loadMsg" selectionMode="multiple"
-              [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
+              idField="id" [loading]="loading" [loadMsg]="loadMsg"
+              selectionMode="multiple" [(selection)]="selectRow" (rowDblClick)="onOpenEditDlg($event)">
   <!--1-->
   <eui-grid-column-group frozen="true" align="left" width="600">
     <eui-grid-header-row>
@@ -57,13 +57,13 @@
         <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
       </eui-grid-column>
       <eui-grid-column field="name" title="名称" frozen="true" width="200"></eui-grid-column>
-      <eui-grid-column field="isActive" title="状态" [cellCss]="setIsActiveCellCss" frozen="true" width="100">
+      <eui-grid-column field="isActive" title="状态" [cellCss]="setIsActiveCellCss" frozen="true" width="100"></eui-grid-column>
+      <eui-grid-column field="coverTypeName" title="类别" frozen="true" width="200">
         <ng-template euiCellTemplate let-row>
-          <div *ngIf="row.isActive==false">屏蔽</div>
-          <div *ngIf="row.isActive==true">激活</div>
+          <div *ngIf="row.coverTypeName==''">该封面类别已被删除</div>
+          <div *ngIf="row.coverTypeName!=''">{{row.coverTypeName}}</div>
         </ng-template>
       </eui-grid-column>
-      <eui-grid-column field="coverTypeName" title="类别" frozen="true" width="200"></eui-grid-column>
     </eui-grid-header-row>
   </eui-grid-column-group>
   <!--2-->
@@ -77,9 +77,9 @@
 </eui-datagrid>
 
 <!--添加、编辑弹框-->
-<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+<eui-dialog [closed]="editDlgClosed" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'30%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
-            [bodyStyle]="{padding:'5px 2px',maxHeight:'300px'}"
+            [bodyStyle]="{padding:'5px 2px',maxHeight:'500px'}"
             [footerStyle]="{padding: '10px 0px'}">
   <eui-panel-header><h4>{{editDlgTitle}}</h4></eui-panel-header>
   <div class="container user">
@@ -87,7 +87,7 @@
       <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
         <!--全局消息-->
         <div class="form-group">
-          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+          <div class="alert" [ngClass]="formValidSuccess?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
         </div>
         <!--封面类型comboTree-->
         <div class="form-group text-left">
@@ -101,16 +101,13 @@
         <div class="form-group text-left" *ngIf="editRow.id">
           <div class="form-control">
             <div class="form-check form-check-inline">
-              <label class="form-check-label">状态:</label>
-            </div>
-            <div class="form-check form-check-inline">
               <label class="form-check-label">
-                <input type="radio" formControlName="isActive" value=1>激活
+                <input type="radio" formControlName="isActive" value="激活">激活
               </label>
             </div>
             <div class="form-check form-check-inline">
               <label class="form-check-label">
-                <input type="radio" formControlName="isActive" value=0>屏蔽
+                <input type="radio" formControlName="isActive" value="屏蔽">屏蔽
               </label>
             </div>
           </div>
@@ -123,7 +120,7 @@
         </div>
         <!--外链地址-->
         <div class="form-group user-field" *ngIf="editRow.id">
-          <i class="fa fa-cloud-download fa-lg"></i>
+          <i class="fa fa-internet-explorer fa-lg"></i>
           <input type="text" class="form-control" formControlName="href"
                  placeholder="{{placeholder.href.title}}{{placeholder.href.prompt}}">
         </div>
@@ -135,7 +132,7 @@
         <!--下载地址-->
         <div class="form-group user-field" *ngIf="editRow.id">
           <i class="fa fa-cloud-download fa-lg"></i>
-          <input type="text" class="form-control" formControlName="src" disabled="true"
+          <input type="text" class="form-control" formControlName="src"
                  placeholder="{{placeholder.src.title}}{{placeholder.src.prompt}}">
         </div>
         <!--文件上传按钮-->
@@ -155,28 +152,23 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.invalid||coverTypeName==null||(editRow.id==null && filesLength == 0)">保存
+            [disabled]="formBtnDisabled||itemForForm.invalid||coverTypeName==null||coverTypeName==''||(editRow.id==null && filesLength == 0)">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
-    <!--<div>{{itemForForm.invalid}}</div>-->
-    <!--<div>{{itemForForm.controls['isActive'].invalid}}:{{itemForForm.controls['isActive'].value}}</div>-->
-    <!--<div>{{itemForForm.controls['name'].invalid}}:{{itemForForm.controls['name'].value}}</div>-->
-    <!--<div>{{itemForForm.controls['href'].invalid}}:{{itemForForm.controls['href'].value}}</div>-->
-    <!--<div>{{itemForForm.controls['introduce'].invalid}}:{{itemForForm.controls['introduce'].value}}</div>-->
   </eui-panel-footer>
 </eui-dialog>
 
 <!--删除提示弹框-->
-<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
+<eui-dialog [closed]="deleteDlgClosed" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
   <div>{{msg}}</div>
   <eui-panel-footer>
     <eui-button-group style="width:100%;height:50px">
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnDisabled"
                       (click)="onDeleteSure()">确定
       </eui-linkbutton>
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnDisabled"
                       (click)="onDeleteCancel()">取消
       </eui-linkbutton>
     </eui-button-group>

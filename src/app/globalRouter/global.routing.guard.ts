@@ -3,7 +3,7 @@ import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular
 import {Router} from '@angular/router';
 
 /**
- * 全局路由卫士
+ * 全局路由请求拦截
  */
 @Injectable({
   providedIn: 'root'
@@ -15,29 +15,28 @@ export class GlobalRoutingGuard implements CanActivate {
   }
 
   /**
-   * true:跳转到当前路由
-   * false:不跳转到当前路由
+   * true: 放行
+   * false: 拦截路由请求
    */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const routePath = route.routeConfig.path;
-    // this.logService.print(`全局路由卫士访问页面: ${routePath}`);
     if (
-      routePath.includes('register') ||
-      routePath.includes('login') ||
-      routePath.includes('forgetPassword') ||
-      routePath.includes('email/send') ||
-      routePath.includes('email/checkEmailCode') ||
-      routePath.includes('modifyPassword') ||
-      routePath.includes('error')) {
-      // console.log(`本地无需校验jwt`);
+      routePath.includes('register') || // 注册页面路由请求
+      routePath.includes('login') || // 登陆页面路由请求
+      routePath.includes('forgetPassword') || // 忘记密码页面路由请求
+      routePath.includes('modifyPassword') || // 修改密码页面路由请求
+      routePath.includes('index') // 门户网站首页路由请求
+    ) {
+      // 无需登陆即可访问---------------------------------------------------------->
       return true;
     } else {
-      // console.log(`本地需要校验jwt`);
+      // 登陆后才可以访问---------------------------------------------------------->
       const jwt = sessionStorage.getItem('jwt');
       if (jwt) {
         return true;
       } else {
         this.router.navigateByUrl('login');
+        return false;
       }
     }
   }

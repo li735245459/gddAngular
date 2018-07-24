@@ -6,7 +6,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {LogService} from '../service/log.service';
 
 /**
- * 全局http拦截器: 监视和转换从应用发送到服务器的 HTTP 请求
+ * 全局http请求拦截器: 监视和转换从应用发送到服务器的 HTTP 请求
  */
 @Injectable()
 export class GlobalHttpIntercept implements HttpInterceptor {
@@ -19,16 +19,17 @@ export class GlobalHttpIntercept implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let globalReq = req;
     if (
-      req.url.includes('gdd/user/register') ||
-      req.url.includes('gdd/user/login') ||
-      req.url.includes('gdd/user/forgetPassword') ||
-      req.url.includes('gdd/email/send') ||
-      req.url.includes('gdd/email/checkEmailCode') ||
-      req.url.includes('gdd/user/modifyPassword')
+      req.url.includes('gdd/user/register') || // 注册请求
+      req.url.includes('gdd/user/login') || // 登陆请求
+      req.url.includes('gdd/user/forgetPassword') || // 忘记密码请求
+      req.url.includes('gdd/email/send') || // 发送验证码请求
+      req.url.includes('gdd/email/checkEmailCode') || // 校验验证码请求
+      req.url.includes('gdd/user/modifyPassword') || // 修改密码请求
+      req.url.includes('gdd/index') // 门户网站首页请求
     ) {
-      // 服务器无需校验jwt---------------------------------------------------------->
+      // 无需登陆即可访问---------------------------------------------------------->
     } else {
-      // 服务器需要校验jwt---------------------------------------------------------->
+      // 登陆后才可以访问---------------------------------------------------------->
       const jwt = sessionStorage.getItem('jwt'); // 获取本地jwt
       if (jwt) {
         globalReq = globalReq.clone({setHeaders: {'Authorization': 'Bearer' + jwt}}); // 设置请求头内容-jwt
@@ -45,12 +46,12 @@ export class GlobalHttpIntercept implements HttpInterceptor {
     }
     /*next.handle(globalReq)把 HTTP 请求转换成 HttpEvents 组成的 Observable,它最终包含的是来自服务器的响应*/
     return next.handle(globalReq).pipe(
-      catchError(this.logService.handleError<any>(`${globalReq.url}请求发生错误`)), // 错误处理
-      tap(event => {
+      catchError(this.logService.handleError<any>(`${globalReq.url}请求出错: `)), // 错误处理
+      tap(event => { // 请求成功后响应数据
         if (event instanceof HttpResponse) {
-          // this.logService.print(`全局HTTP拦截器响应请求${globalReq.url}--状态:${event.statusText},信息:${event.body.msg}`);
+          // this.logService.print(`${globalReq.url}请求成功: ${event.statusText},信息: ${event.body.msg}`);
         }
-      }) // 查看响应数据
+      })
     );
   }
 }

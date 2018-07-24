@@ -64,7 +64,7 @@ export class GoodsTypeComponent implements OnInit {
         switch (responseJson.code) {
           case 0:
             // 成功
-            this.data = TreeUtil.prototype.getJsonForTreeGrid(responseJson.data);
+            this.data = TreeUtil.prototype.getTreeGridData(responseJson.data);
             break;
           case 1000:
             // jwt非法

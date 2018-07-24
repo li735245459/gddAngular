@@ -19,8 +19,9 @@ import {hobby, province} from '../../../globalModel/JsonLocalData';
 
 export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   msg: string = null; // 全局提示消息
+  title = '用户信息'; // 组建标题
+  adminSelectedMenuSubscription: Subscription = null; // 父子组将通讯的订阅对象
   // 表格
-  title = '用户信息';
   loading = true; // 开启datagrid加载提示
   loadMsg = '正在加载..';
   total: Number = 0; // 所有数据条数
@@ -85,44 +86,35 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   levelTwo: any = null; // 二级数据
   levelThree: any = null; // 二级数据
 
-  // 后台标题,组件交互测试
-  adminTitle = 'GDD宠物馆!';
-  adminTitleSubscription: Subscription = null;
-  msgSubscription: Subscription = null;
-
+  /*构造函数*/
   constructor(
     private service: UserService,
     private formBuilder: FormBuilder,
     private messagerService: MessagerService,
     private router: Router,
     private adminService: AdminService) {
-    // 创建表单对象
-    this.createItemForForm();
-    // 订阅消息,组件交互测试
-    adminService.adminTitleSubscription.subscribe(adminTitle => {
-      this.adminTitle = adminTitle;
-    });
+    this.createItemForForm(); // 创建表单对象
   }
 
-  ngOnDestroy() {
-    // 组件销毁时取消订阅,防止内存泄漏
-    if (this.msgSubscription) {
-      this.msgSubscription.unsubscribe();
-    }
-    if (this.adminTitleSubscription) {
-      this.adminTitleSubscription.unsubscribe();
-    }
-  }
-
-  /**
-   * 在第一轮 ngOnChanges 完成之后调用,此时所有输入属性都已经有了正确的初始绑定值
-   */
+  /*在第一轮 ngOnChanges 完成之后调用,此时所有输入属性都已经有了正确的初始绑定值*/
   ngOnInit() {
+    this.adminService.pushAdminSelectedMenu({
+      iconCls: 'sidemenu-default-icon',
+      link: 'user',
+      parent: null,
+      text: '用户信息'
+    }); // 发布订阅
   }
 
-  /**
-   * 在组件相应的视图初始化之后调用
-   */
+  /*组建销毁*/
+  ngOnDestroy() {
+    /*取消订阅,防止内存泄漏*/
+    if (this.adminSelectedMenuSubscription) {
+      this.adminSelectedMenuSubscription.unsubscribe();
+    }
+  }
+
+  /*在组件相应的视图初始化之后调用*/
   ngAfterViewInit() {
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
   }
@@ -177,9 +169,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   onSearch(): void {
     this.onPageChange({pageNumber: 1, pageSize: this.pageSize});
-    // 推送消息, 组件交互测试
-    this.adminService.modifyAdminTitle(this.adminTitle);
-    this.adminService.modifyMsg({id: '1', msg: 'msg'});
   }
 
   /**
@@ -614,8 +603,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   setSexCellCss(row, value) {
     if (value === '男') {
       return {color: 'blue'};
-    } else {
-      return {color: 'red'};
     }
   }
 

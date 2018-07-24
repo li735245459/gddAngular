@@ -14,13 +14,13 @@ export const menus = [
       // }]
     }]
   }, {
-    text: '图片管理',
+    text: '封面管理',
     iconCls: 'fa fa-file-picture-o',
     children: [{
-      text: '图片分类',
+      text: '封面分类',
       link: 'coverType',
     }, {
-      text: '图片信息',
+      text: '封面信息',
       link: 'cover',
     }]
   }, {
