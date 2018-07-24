@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 
-import {UserService} from '../../../service/user.service';
+import {UserService} from '../../service/user.service';
 import {Md5} from 'ts-md5';
 
 @Component({

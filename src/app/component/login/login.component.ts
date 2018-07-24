@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {UserService} from '../../../service/user.service';
+import {UserService} from '../../service/user.service';
 import {Md5} from 'ts-md5';
 
 @Component({

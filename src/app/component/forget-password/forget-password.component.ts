@@ -3,8 +3,8 @@ import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {interval} from 'rxjs';
 
-import {UserService} from '../../../service/user.service';
-import {SendEmail} from '../../../globalEnums/send-email.enum';
+import {UserService} from '../../service/user.service';
+import {SendEmail} from '../../globalEnums/send-email.enum';
 
 @Component({
   selector: 'app-forget-password',
