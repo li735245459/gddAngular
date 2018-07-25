@@ -57,7 +57,8 @@
         <ng-template euiCellTemplate let-rowIndex="rowIndex">{{rowIndex + 1}}</ng-template>
       </eui-grid-column>
       <eui-grid-column field="name" title="名称" frozen="true" width="200"></eui-grid-column>
-      <eui-grid-column field="isActive" title="状态" [cellCss]="setIsActiveCellCss" frozen="true" width="100"></eui-grid-column>
+      <eui-grid-column field="isActive" title="状态" [cellCss]="setIsActiveCellCss" frozen="true"
+                       width="100"></eui-grid-column>
       <eui-grid-column field="coverTypeName" title="类别" frozen="true" width="200">
         <ng-template euiCellTemplate let-row>
           <div *ngIf="row.coverTypeName==''">该封面类别已被删除</div>
@@ -137,8 +138,11 @@
         </div>
         <!--文件上传按钮-->
         <div class="form-group text-left" *ngIf="editRow.id == null">
-          <input type="file" class="form-control" id="files" accept="image/jpeg" multiple="multiple" placeholder="上传图片"
-                 (change)="onChangeSelectImg($event)">
+          <div class="custom-upFile">
+            <label for="files">请选择.jpg格式的图片,大小在1M以内</label>
+            <input type="file" class="form-control" id="files" accept="image/jpeg" multiple="multiple"
+                   (change)="onChangeSelectImg($event)" [hidden]="true">
+          </div>
         </div>
         <!--文件预览-->
         <div class="row" *ngIf="fileUrls">
@@ -152,7 +156,8 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formBtnDisabled||itemForForm.invalid||coverTypeName==null||coverTypeName==''||(editRow.id==null && filesLength == 0)">保存
+            [disabled]="formBtnDisabled||itemForForm.invalid||coverTypeName==null||coverTypeName==''||(editRow.id==null && filesLength == 0)">
+      保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
   </eui-panel-footer>

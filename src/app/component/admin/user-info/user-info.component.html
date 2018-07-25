@@ -164,12 +164,12 @@
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" formControlName="sex" value="男">男
+              <input type="radio" class="form-check-input mgr mgr-sm" formControlName="sex" value="男" /> 男
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" formControlName="sex" value="女">女
+              <input type="radio" class="form-check-input mgr mgr-sm" formControlName="sex" value="女" /> 女
             </label>
           </div>
         </div>
@@ -180,8 +180,8 @@
           </div>
           <div class="form-check form-check-inline" *ngFor="let item of hobby;let i = index;">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input" formControlName="hobby{{i+1}}" value="{{item.name}}"
-                     (change)="onChangeHobby($event.target)">{{item.name}}
+              <input type="checkbox" class="form-check-input mgc mgr-sm" formControlName="hobby{{i+1}}" value="{{item.name}}"
+                     (change)="onChangeHobby($event.target)"> {{item.name}}
             </label>
           </div>
         </div>

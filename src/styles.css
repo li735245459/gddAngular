@@ -1,7 +1,7 @@
-/*@import "assets/bootstrap-4.1.1/css/bootstrap.min.css";*/
-/*@import "assets/font-awesome-4.7.0/css/font-awesome.min.css";*/
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.min.css";
+@import "~magic-input/dist/magic-input.min.css";
 
-/*全局*/
 a:hover {
   text-decoration: none;
 }
@@ -12,17 +12,6 @@ ul {
 
 li {
   list-style: none;
-}
-
-/**
-表单校验
- */
-input.ng-dirty.ng-invalid, select.ng-dirty.ng-invalid, textarea.ng-dirty.ng-invalid {
-  border: 2px solid #ff0000;
-}
-
-input.ng-dirty.ng-valid, select.ng-dirty.ng-valid, textarea.ng-dirty.ng-valid {
-  border: 2px solid #6bc502;
 }
 
 
