@@ -50,11 +50,12 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
 
 6、集成第三方模块,项目根目录下执行:
   npm install jquery --save
-  npm install magic-input
   npm install bootstrap --save
   npm install font-awesome --save
+  npm install magic-input
   npm install ng-easyui --save | npm update ng-easyui
   npm install @ng-bootstrap/ng-bootstrap --save
+  npm install angular-progress-http
     编辑angular.json文件
     "styles": [
       "src/styles.css",
@@ -183,10 +184,12 @@ AngularJS 不适合用来构建DOM操作很频繁也很复杂的应用像,这种
     b.模型驱动表单及验证: 同步
       在组件中通过代码的形式创建表单控件
 
-======RxJS库======
-使用Observable可观察对象进行响应式编程(面向数据流和变更传播的异步编程)的库
-Observable可观察对象用于在发布者和订阅者之间传递消息
-从Observable可观察对象中获取消息需要调用它的subscribe订阅函数,该函数会传递一个Observer观察者对象用于处理消息(next,error,complete)
+======RxJS（Reactive Extensions是 Angular 认可的第三方库）======
+通过Observable可观察对象进行响应式编程,实现了【异步可观察对象模式,在发布者和订阅者之间传递消息】
+从Observable可观察对象中获取消息需要调用它的subscribe订阅函数,该函数会传递一个Observer观察者对象处理消息
+    next - 当 Observable 发送新值的时候，next 方法会被调用
+    error - 当 Observable 内发生错误时，error 方法会被调用
+    complete - 当 Observable 数据终止后，complete 方法会被调用，在调用 complete 方法之后，next 方法就不会再次被调用
 1)创建可观察对象的函数:
   //创建一个可观测的承诺
   import { fromPromise } from 'rxjs';
@@ -201,7 +204,7 @@ Observable可观察对象用于在发布者和订阅者之间传递消息
   import { ajax } from 'rxjs/ajax';
     const apiData = ajax('/api/data');
   //构造函数
-2)使用管道来把操作符链接起来:
+2)使用管道把操作符连接起来多对事件流进行处理:
     import { filter, map, tap, retry } from 'rxjs/operators';
     const squareOdd = of(1, 2, 3, 4, 5).pipe(
         filter(n => n % 2 !== 0),
@@ -209,7 +212,6 @@ Observable可观察对象用于在发布者和订阅者之间传递消息
         tap(n => console.log(n)),
         retry(2)
       );
-
 
 
 ======Content-Type(表示请求中的媒体类型信息)======

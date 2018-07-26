@@ -52,8 +52,8 @@ export class AdminComponent implements OnInit {
    * @param item
    */
   onItemClick(item) {
-    console.log('onItemClick');
-    console.log(item);
+    // console.log('onItemClick');
+    // console.log(item);
     this.selectedMenu = item; // 当前选中的菜单栏
     this.router.navigateByUrl(`admin/${item.link}`);
   }

@@ -90,7 +90,7 @@ const appRoutes: Routes = [
     // event with reactive form directives has been deprecated in Angular v6 and will be removed in Angular v7
     // ReactiveFormsModule,
     ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
-    // HttpClient模块
+    // HttpClient模块（默认 JSON 解析、支持拦截器、支持进度事件）
     HttpClientModule,
     // bootstrap模块
     NgbModule.forRoot(),

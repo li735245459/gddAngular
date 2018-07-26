@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpRequest} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +48,8 @@ export class CoverService {
    * @param coverFormValue
    */
   importCover(formData: FormData): Observable<any> {
-    return this.http.post<any>(`/gdd/file/importCover`, formData);
+    // return this.http.post<any>(`/gdd/file/importCover`, formData);
+    return this.http.request(new HttpRequest('POST', '/gdd/file/importCover', formData));
   }
 
   /**

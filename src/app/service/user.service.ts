@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 import {User} from '../globalModel/User';
@@ -8,7 +8,8 @@ import {User} from '../globalModel/User';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient) {
   }
 
   /**
@@ -97,7 +98,8 @@ export class UserService {
    * @returns {Observable<any>}
    */
   export(itemForPage): Observable<any> {
-    return this.http.post<any>(`/gdd/file/exportUser`, itemForPage);
+    // return this.http.post<any>(`/gdd/file/exportUser`, itemForPage);
+    return this.http.request(new HttpRequest('POST', '/gdd/file/exportUser', itemForPage));
   }
 
   /**
@@ -106,7 +108,8 @@ export class UserService {
    * @returns {Observable<any>}
    */
   import(formData: FormData): Observable<any> {
-    return this.http.post<any>(`/gdd/file/importUser`, formData);
+    // return this.http.post<any>(`/gdd/file/importUser`, formData);
+    return this.http.request(new HttpRequest('POST', '/gdd/file/importUser', formData));
   }
 
 

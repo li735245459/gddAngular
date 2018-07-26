@@ -61,8 +61,8 @@
       <eui-menu-item text="导出(xls)" iconCls="icon-undo" value="export"></eui-menu-item>
     </eui-menu>
     <div style="display: inline-block;float: right;">
-      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onSearch()">查询</eui-linkbutton>
-      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanSearch()">清空条件</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-search" [plain]="true" (click)="onScreening()">查询</eui-linkbutton>
+      <eui-linkbutton iconCls="icon-clear" [plain]="true" (click)="onCleanScreening()">清空条件</eui-linkbutton>
     </div>
   </eui-panel-footer>
 </eui-panel>
@@ -72,7 +72,7 @@
               [pageNumber]="pageNumber" [pageSize]="pageSize" [pageOptions]="pageOptions" [lazy]="true"
               (pageChange)="onPageChange($event)"
               idField="id" [rowCss]="setRowCss" [loading]="loading" [loadMsg]="loadMsg"
-              selectionMode="multiple" [(selection)]="selectedRow" (rowDblClick)="onOpenEditDlg($event)">
+              selectionMode="multiple" [(selection)]="selectRow" (rowDblClick)="onOpenEditDlg($event)">
   <!--1-->
   <eui-grid-column-group frozen="true" align="left" width="710">
     <eui-grid-header-row>
@@ -127,7 +127,7 @@
 </eui-datagrid>
 
 <!--添加、编辑弹框-->
-<eui-dialog [closed]="editDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+<eui-dialog [closed]="editDlgClosed" [closable]="true" [modal]="true" (close)="onCloseDlg()"
             [panelStyle]="{width:'60%',textAlign:'center'}" [headerStyle]="{padding:'10px 0px'}"
             [bodyStyle]="{padding:'5px 2px'}"
             [footerStyle]="{padding: '10px 0px'}">
@@ -136,9 +136,9 @@
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
       <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
         <!--全局消息-->
-        <div class="form-group">
-          <div class="alert" [ngClass]="formValidStyle?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
-        </div>
+        <!--<div class="form-group">-->
+        <!--<div class="alert" [ngClass]="formValidSuccess?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>-->
+        <!--</div>-->
         <!--姓名-->
         <div class="form-group user-field">
           <i class="fa fa-user fa-lg"></i>
@@ -164,12 +164,12 @@
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input mgr mgr-sm" formControlName="sex" value="男" /> 男
+              <input type="radio" class="form-check-input mgr mgr-sm" formControlName="sex" value="男"/> 男
             </label>
           </div>
           <div class="form-check form-check-inline">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input mgr mgr-sm" formControlName="sex" value="女" /> 女
+              <input type="radio" class="form-check-input mgr mgr-sm" formControlName="sex" value="女"/> 女
             </label>
           </div>
         </div>
@@ -180,7 +180,8 @@
           </div>
           <div class="form-check form-check-inline" *ngFor="let item of hobby;let i = index;">
             <label class="form-check-label">
-              <input type="checkbox" class="form-check-input mgc mgr-sm" formControlName="hobby{{i+1}}" value="{{item.name}}"
+              <input type="checkbox" class="form-check-input mgc mgr-sm" formControlName="hobby{{i+1}}"
+                     value="{{item.name}}"
                      (change)="onChangeHobby($event.target)"> {{item.name}}
             </label>
           </div>
@@ -224,7 +225,7 @@
   <!--提交按钮-->
   <eui-panel-footer>
     <button type="button" class="btn" (click)="onSubmitForm(itemForForm)"
-            [disabled]="formSubmitState||itemForForm.controls['hobby'].value==''||itemForForm.invalid">保存
+            [disabled]="formBtnDisabled||itemForForm.controls['hobby'].value==''||itemForForm.invalid">保存
     </button>&nbsp;&nbsp;
     <button type="button" class="btn" (click)="onEditCancel()">取消</button>
     <!--<div>{{formSubmitState}}</div>-->
@@ -245,16 +246,16 @@
 </eui-dialog>
 
 <!--删除提示弹框-->
-<eui-dialog [closed]="deleteDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
+<eui-dialog [closed]="deleteDlgClosed" [closable]="true" [modal]="true" (close)="onCloseDlg()" borderType="none"
             panelCls="deleteDlg" headerCls="deleteDlg-header" bodyCls="deleteDlg-body" footerCls="deleteDlg-footer">
   <eui-panel-header>{{deleteDlgTitle}}</eui-panel-header>
   <div>{{msg}}</div>
   <eui-panel-footer>
     <eui-button-group style="width:100%;height:50px">
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnDisabled"
                       (click)="onDeleteSure()">确定
       </eui-linkbutton>
-      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnState"
+      <eui-linkbutton class="f-full" [plain]="true" btnCls="deleteDlgBtn" [disabled]="deleteDlgBtnDisabled"
                       (click)="onDeleteCancel()">取消
       </eui-linkbutton>
     </eui-button-group>
@@ -262,19 +263,23 @@
 </eui-dialog>
 
 <!-- 上传文件弹框  -->
-<eui-dialog [title]="upExcelDlgTitle" [closed]="upExcelDlgState" [closable]="true" [modal]="true" (close)="onCloseDlg()"
+<eui-dialog [title]="upExcelDlgTitle" [closed]="upExcelDlgClosed" [closable]="true" [modal]="true"
+            (close)="onCloseDlg()"
             [panelStyle]="{width:'400px'}">
-  <eui-filebutton style="width:100%;" btnCls="c2" [autoUpload]="false" [multiple]="false"
+  <!--进度条-->
+  <eui-progressbar barCls="c1" [value]="upProgressValue" [showValue]="true" *ngIf="upProgressValue > 0"></eui-progressbar>
+  <!--文件上传按钮-->
+  <eui-filebutton style="width:100%;" btnCls="c6" [autoUpload]="false" [multiple]="false"
                   accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                   [fileId]="'upExcelFile'"
-                  (select)="onFileSelect($event)">选择文件(xls或xlsx)
+                  (select)="onFileSelect($event)">选择文件(.xls或.xlsx格式,大小5M以内)
   </eui-filebutton>
 </eui-dialog>
 
-<!-- 进度条弹框 -->
-<eui-dialog [closed]="progressDlgState" [closable]="true" [modal]="true" [panelStyle]="{width:'400px'}"
+<!-- 导出进度条弹框 -->
+<eui-dialog [closed]="downProgressValue==0" [closable]="true" [modal]="true" [panelStyle]="{width:'400px'}"
             borderType="none">
   <div style="padding: 1px;">
-    <eui-progressbar [value]="progressValue" barCls="c1"></eui-progressbar>
+    <eui-progressbar [value]="downProgressValue" [showValue]="true" barCls="c1"></eui-progressbar>
   </div>
 </eui-dialog>

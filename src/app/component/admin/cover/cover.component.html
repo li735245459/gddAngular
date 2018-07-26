@@ -71,7 +71,7 @@
   <eui-grid-column-group>
     <eui-grid-header-row>
       <eui-grid-column field="src" title="下载地址" width="500"></eui-grid-column>
-      <eui-grid-column field="link" title="外链" width="500"></eui-grid-column>
+      <eui-grid-column field="href" title="外链" width="500"></eui-grid-column>
       <eui-grid-column field="introduce" title="说明" width="500"></eui-grid-column>
     </eui-grid-header-row>
   </eui-grid-column-group>
@@ -86,9 +86,11 @@
   <div class="container user">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin: 0 auto;"><!--自适应设置-->
       <form role="form" novalidate [formGroup]="itemForForm" (ngSubmit)="onSubmitForm(itemForForm)">
-        <!--全局消息-->
-        <div class="form-group">
-          <div class="alert" [ngClass]="formValidSuccess?'alert-success':'alert-danger'" *ngIf="msg">{{msg}}</div>
+        <!--进度条-->
+        <div class="form-group" *ngIf="progressValue > 0">
+          <div style="padding:1px;margin-top:5px;">
+            <eui-progressbar barCls="c1" [value]="progressValue" [showValue]="true"></eui-progressbar>
+          </div>
         </div>
         <!--封面类型comboTree-->
         <div class="form-group text-left">
